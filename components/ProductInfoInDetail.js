@@ -21,9 +21,7 @@ const ProductInfoInDetail = ({
           <Text style={styles.numberRating}>{`(${numberRating})`}</Text>
         </View>
       </View>
-      <Text style={styles.productName} >
-        {productName}
-      </Text>
+      <Text style={styles.productName}>{productName}</Text>
       <View style={styles.priceRow}>
         <Text style={styles.newPrice}>${newPrice}</Text>
         <Text style={styles.oldPrice}>${oldPrice}</Text>

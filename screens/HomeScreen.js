@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ExploreScreen from "./ExploreScreen";
 import NotificationScreen from "./NotificationScreen";
 import ProfileScreen from "./ProfileScreen";
-import HomeContentScreen from "../components/HomeContentScreen";
+import HomeContentScreen from "./HomeContentScreen";
 import CustomTabLabel from "../components/CustomTabLabel ";
 import CustomTabNavigator from "../components/CustomTabNavigator";
 

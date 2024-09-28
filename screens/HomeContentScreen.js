@@ -7,11 +7,37 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import CategoriesScreen from "./CategoriesScreen";
-import ProductForm from "./ProductForm";
-import ProductInfo from "./ProductInfo";
-
+import ProductForm from "../components/ProductForm";
+import ProductInfo from "../components/ProductInfo";
 import imageBanner from "../assets/banner.jpg";
+import CategoryForm from "../components/CategoryForm";
+import category1Image from "../assets/women.jpg";
+import category2Image from "../assets/men.jpg";
+import category3Image from "../assets/teen.jpg";
+import category4Image from "../assets/kid.jpg";
+
+const categories = [
+  {
+    id: 1,
+    name: "Women",
+    imageSource: category1Image,
+  },
+  {
+    id: 2,
+    name: "Men",
+    imageSource: category2Image,
+  },
+  {
+    id: 3,
+    name: "Teens",
+    imageSource: category3Image,
+  },
+  {
+    id: 4,
+    name: "Kids",
+    imageSource: category4Image,
+  },
+];
 
 export default function HomeContentScreen() {
   return (
@@ -26,7 +52,10 @@ export default function HomeContentScreen() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.productList}
       >
-        <CategoriesScreen />
+        <CategoryForm
+          categories={categories}
+          containerStyle={styles.customContainer}
+        />
       </ScrollView>
       <View style={styles.itemBar}>
         <Text style={styles.titleText}>Curated For You</Text>
