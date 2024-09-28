@@ -10,23 +10,30 @@
 // }
 
 
-
-// App.js
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import CategoryScreen from './screens/CategoryScreen';
 import ProductDetailScreen from './screens/DetailProductScreen';
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    // Hiển thị ProductDetailScreen mà không cần NavigationContainer
-    <View style={styles.container}>
-      <ProductDetailScreen />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Category">
+        <Stack.Screen 
+          name="Category" 
+          component={CategoryScreen} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="ProductDetail" 
+          component={ProductDetailScreen} 
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1, // Để ProductDetailScreen chiếm toàn bộ màn hình
-  },
-});

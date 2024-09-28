@@ -22,7 +22,7 @@ const { width, height } = Dimensions.get("window");
 const images = [
   require("../assets/shirt-1.jpg"),
   require("../assets/shirt-2.jpg"),
-  require("../assets/shirt-3.jpg"),
+  // require("../assets/shirt-3.jpg"),
 ];
 
 export default function ProductDetailScreen({ navigation }) {
@@ -82,19 +82,20 @@ export default function ProductDetailScreen({ navigation }) {
       </View>
       <View style={styles.itemTwo}>
         <View style={styles.infoIcon}>
-        <ProductInfoInDetail
-          brandName="H&M"
-          rating="4.9"
-          numberRating="136"
-          productName="Oversized Fit Printed Mesh T-Shirt"
-          oldPrice="550.00"
-          newPrice="295.00"
-        />
-        <Feather name="heart" size={22} color="#333" />
+          <ProductInfoInDetail
+            brandName="H&M"
+            rating="4.9"
+            numberRating="136"
+            productName="Oversized Fit Printed Mesh T-Shirt"
+            oldPrice="550.00"
+            newPrice="295.00"
+          />
+          <Feather name="heart" size={22} color="#333" />
         </View>
         <Text style={styles.productDescription}>
           Mô tả sản phẩm: Oversized t-shirt in printed mesh with a V-neck,
-          dropped shoulders and a straight-cut hem. Oversized t-shirt in printed mesh with a V-neck, dropped shoulders and a straight-cut hem.
+          dropped shoulders and a straight-cut hem. Oversized t-shirt in printed
+          mesh with a V-neck, dropped shoulders and a straight-cut hem.
         </Text>
         <View style={styles.selectionRow}>
           <View style={styles.column}>
@@ -198,7 +199,7 @@ const styles = StyleSheet.create({
   },
   infoIcon: {
     flexDirection: "row",
-    paddingRight: 20
+    paddingRight: 20,
   },
   productDescription: {
     fontSize: 18,
