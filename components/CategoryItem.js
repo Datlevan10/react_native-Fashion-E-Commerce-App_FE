@@ -13,7 +13,8 @@ const CategoryItem = ({ imageSource, categoryName, onPress }) => {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    margin: 10,
+    // margin: 10,
+    paddingHorizontal: 15,
   },
   image: {
     width: 70,
