@@ -5,10 +5,8 @@ import ExploreScreen from "./ExploreScreen";
 import NotificationScreen from "./NotificationScreen";
 import ProfileScreen from "./ProfileScreen";
 import HomeContentScreen from "../components/HomeContentScreen";
-import Feather from "react-native-vector-icons/Feather";
-import { Ionicons } from "@expo/vector-icons";
-import IconWithBadge from "../components/IconWithBadge";
 import CustomTabLabel from "../components/CustomTabLabel ";
+import CustomTabNavigator from "../components/CustomTabNavigator";
 
 const Tab = createBottomTabNavigator();
 // import logoFashion from "../assets/wattpad.png"
@@ -16,54 +14,7 @@ import logoFashion from "../assets/silhouette.png";
 
 export default function HomeScreen() {
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => {
-          if (route.name === "Home") {
-            return <Feather name="home" size={size} color={color} />;
-          } else if (route.name === "Explore") {
-            return <Feather name="search" size={size} color={color} />;
-          } else if (route.name === "Notification") {
-            return (
-              <Ionicons
-                name="notifications-outline"
-                size={size}
-                color={color}
-              />
-            );
-          } else if (route.name === "Profile") {
-            return <Ionicons name="person-outline" size={size} color={color} />;
-          }
-        },
-        tabBarActiveTintColor: "black",
-        tabBarInactiveTintColor: "gray",
-        headerTitle: route.name === "Home" ? "" : route.name,
-        headerLeft: () => (
-          <View style={styles.headerLeft}>
-            <Image source={logoFashion} style={styles.image} />
-            {/* <Text style={styles.textLogo}>Fashion Store</Text> */}
-          </View>
-          // <Feather
-          //   name="menu"
-          //   size={24}
-          //   color="black"
-          //   style={styles.headerLeft}
-          // />
-        ),
-        headerRight: () => (
-          <View style={styles.headerRightView}>
-            {/* <Feather name="shopping-bag" size={24} color="black" style={styles.headerRight} /> */}
-            <IconWithBadge
-              name="shopping-bag"
-              badgeCount={3}
-              size={25}
-              color="black"
-              style={styles.headerRightIcon}
-            />
-          </View>
-        ),
-      })}
-    >
+    <CustomTabNavigator>
       <Tab.Screen
         name="Home"
         component={HomeContentScreen}
@@ -92,7 +43,7 @@ export default function HomeScreen() {
           tabBarLabel: ({ focused }) => <CustomTabLabel label="Profile" />,
         }}
       />
-    </Tab.Navigator>
+    </CustomTabNavigator>
   );
 }
 
@@ -101,7 +52,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 18
+    marginHorizontal: 18,
   },
   headerRightView: {
     flexDirection: "row",
@@ -116,7 +67,7 @@ const styles = StyleSheet.create({
   },
   textLogo: {
     fontFamily: "serif",
-    color: '#e91e63',
-    fontSize: 30
+    color: "#e91e63",
+    fontSize: 30,
   },
 });

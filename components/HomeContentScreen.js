@@ -21,7 +21,13 @@ export default function HomeContentScreen() {
         <Text style={styles.titleText}>Shop By Category</Text>
         <Text style={styles.moreText}>See All</Text>
       </View>
-      <CategoriesScreen />
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.productList}
+      >
+        <CategoriesScreen />
+      </ScrollView>
       <View style={styles.itemBar}>
         <Text style={styles.titleText}>Curated For You</Text>
         <Text style={styles.moreText}>See All</Text>
@@ -87,6 +93,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 13,
     paddingHorizontal: 18,
+    marginTop: 5,
   },
   titleText: {
     fontSize: 20,
@@ -95,7 +102,7 @@ const styles = StyleSheet.create({
   },
   moreText: {
     fontSize: 14,
-    color: "grey",
+    color: "#7d7979",
   },
   productList: {
     paddingHorizontal: 9,

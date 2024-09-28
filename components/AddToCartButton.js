@@ -1,0 +1,40 @@
+import React from 'react';
+import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
+import { Feather } from 'react-native-vector-icons';
+
+export default function AddToCartButton({ iconName, title, backgroundColor, color, borderColor }) {
+  return (
+    <TouchableOpacity
+      style={[
+        styles.button,
+        { backgroundColor: backgroundColor, borderColor: borderColor }
+      ]}
+    >
+      <View style={styles.content}>
+        {iconName && <Feather name={iconName} size={20} color={color} style={styles.icon} />}
+        <Text style={[styles.text, { color: color }]}>{title}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+const styles = StyleSheet.create({
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 15,
+    borderWidth: 1,
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  icon: {
+    marginRight: 8,
+  },
+  text: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});
