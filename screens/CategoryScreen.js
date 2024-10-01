@@ -6,35 +6,100 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ScrollView,
+  Dimensions,
 } from "react-native";
+import ProductCard from "../components/ProductCard";
 import Feather from "react-native-vector-icons/Feather";
 import FilterBox from "../components/FilterBox";
 import CategoryForm from "../components/CategoryForm";
-import category1Image from "../assets/women.jpg";
-import category2Image from "../assets/men.jpg";
-import category3Image from "../assets/teen.jpg";
-import category4Image from "../assets/kid.jpg";
+import category1Image from "../assets/image/bag.jpg";
+import category2Image from "../assets/image/jean.jpg";
+import category3Image from "../assets/image/footwear.jpg";
+import category4Image from "../assets/image/clothes.jpg";
 
 const categories = [
   {
     id: 1,
-    name: "Women",
+    name: "Bags",
     imageSource: category1Image,
   },
   {
     id: 2,
-    name: "Men",
+    name: "Jeans",
     imageSource: category2Image,
   },
   {
     id: 3,
-    name: "Teens",
+    name: "Footwear",
     imageSource: category3Image,
   },
   {
     id: 4,
-    name: "Kids",
+    name: "Clothes",
     imageSource: category4Image,
+  },
+];
+
+const products = [
+  {
+    id: 1,
+    imageSource: require("../assets/image/kid-2.jpg"),
+    brandName: "Nike",
+    rating: 4.5,
+    numberRating: 150,
+    productName: "Nike Air Max",
+    oldPrice: 200,
+    newPrice: 150,
+  },
+  {
+    id: 2,
+    imageSource: require("../assets/image/kid-3.jpg"),
+    brandName: "Adidas",
+    rating: 4.8,
+    numberRating: 200,
+    productName: "Adidas Superstar",
+    oldPrice: 250,
+    newPrice: 180,
+  },
+  {
+    id: 3,
+    imageSource: require("../assets/image/kid-4.jpg"),
+    brandName: "Adidas",
+    rating: 4.8,
+    numberRating: 200,
+    productName: "Adidas Superstar",
+    oldPrice: 250,
+    newPrice: 180,
+  },
+  {
+    id: 4,
+    imageSource: require("../assets/image/kid-5.jpg"),
+    brandName: "Adidas",
+    rating: 4.8,
+    numberRating: 200,
+    productName: "Adidas Superstar",
+    oldPrice: 250,
+    newPrice: 180,
+  },
+  {
+    id: 5,
+    imageSource: require("../assets/image/kid-6.jpg"),
+    brandName: "Adidas",
+    rating: 4.8,
+    numberRating: 200,
+    productName: "Adidas Superstar",
+    oldPrice: 250,
+    newPrice: 180,
+  },
+  {
+    id: 6,
+    imageSource: require("../assets/image/kid-7.jpg"),
+    brandName: "Adidas",
+    rating: 4.8,
+    numberRating: 200,
+    productName: "Adidas Superstar",
+    oldPrice: 250,
+    newPrice: 180,
   },
 ];
 
@@ -78,9 +143,32 @@ const CategoryScreen = () => {
             contentContainerStyle={styles.productList}
           >
             <CategoryForm
+              key={categories.id}
               categories={categories}
               containerStyle={styles.customContainer}
             />
+          </ScrollView>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.productList}
+          >
+            <View style={styles.productContainer}>
+              {products.map((product, index) => (
+                <ProductCard
+                  key={index}
+                  imageSource={product.imageSource}
+                  brandName={product.brandName}
+                  rating={product.rating}
+                  numberRating={product.numberRating}
+                  productName={product.productName}
+                  oldPrice={product.oldPrice}
+                  newPrice={product.newPrice}
+                  cardWidth={Dimensions.get("window").width * 0.43}
+                  imageWidth={"125%"}
+                  imageHeight={"125%"}
+                />
+              ))}
+            </View>
           </ScrollView>
         </View>
       </View>
@@ -114,8 +202,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     backgroundColor: "#f4f4f4",
-    // borderWidth: 1,
-    // borderColor: "#fff",
     borderRadius: 8,
     paddingHorizontal: 10,
   },
@@ -129,10 +215,22 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
   },
   filterList: {
+    height: 50,
     gap: 5,
+    marginBottom: 30,
+  },
+  productList: {
+    // paddingVertical: 10,
+    marginBottom: 50,
+  },
+  productContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
 });
 

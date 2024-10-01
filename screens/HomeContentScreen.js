@@ -7,14 +7,13 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import ProductForm from "../components/ProductForm";
-import ProductInfo from "../components/ProductInfo";
-import imageBanner from "../assets/banner.jpg";
+import ProductCard from "../components/ProductCard";
+import imageBanner from "../assets/image/banner.jpg";
 import CategoryForm from "../components/CategoryForm";
-import category1Image from "../assets/women.jpg";
-import category2Image from "../assets/men.jpg";
-import category3Image from "../assets/teen.jpg";
-import category4Image from "../assets/kid.jpg";
+import category1Image from "../assets/image/women.jpg";
+import category2Image from "../assets/image/men.jpg";
+import category3Image from "../assets/image/teen.jpg";
+import category4Image from "../assets/image/kid.jpg";
 
 const categories = [
   {
@@ -39,6 +38,39 @@ const categories = [
   },
 ];
 
+const products = [
+  {
+    id: 1,
+    imageSource: require("../assets/image/shirt-1.jpg"),
+    brandName: "H&M",
+    rating: 4.9,
+    numberRating: 150,
+    productName: "Oversized Fit Printed Mesh T-Shirt",
+    oldPrice: "550.00",
+    newPrice: "295.00",
+  },
+  {
+    id: 2,
+    imageSource: require("../assets/image/shirt-2.jpg"),
+    brandName: "H&M",
+    rating: 4.8,
+    numberRating: 200,
+    productName: "Printed Sweatshirt",
+    oldPrice: "414.00",
+    newPrice: "314.00",
+  },
+  {
+    id: 3,
+    imageSource: require("../assets/image/kid-2.jpg"),
+    brandName: "H&M",
+    rating: 4.8,
+    numberRating: 200,
+    productName: "Textured Jersey Dress",
+    oldPrice: "399.00",
+    newPrice: "300.00",
+  },
+];
+
 export default function HomeContentScreen() {
   return (
     <View style={styles.container}>
@@ -50,7 +82,7 @@ export default function HomeContentScreen() {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.productList}
+        contentContainerStyle={styles.categoryList}
       >
         <CategoryForm
           categories={categories}
@@ -66,39 +98,21 @@ export default function HomeContentScreen() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.productList}
       >
-        <View style={styles.productContainer}>
-          <ProductForm imageSource={require("../assets/shirt-1.jpg")} />
-          <ProductInfo
-            brandName="H&M"
-            rating="4.9"
-            numberRating="136"
-            productName="Oversized Fit Printed Mesh T-Shirt"
-            oldPrice="550.00"
-            newPrice="295.00"
+        {products.map((product) => (
+          <ProductCard
+            key={product.id}
+            imageSource={product.imageSource}
+            brandName={product.brandName}
+            rating={product.rating}
+            numberRating={product.numberRating}
+            productName={product.productName}
+            oldPrice={product.oldPrice}
+            newPrice={product.newPrice}
+            cardWidth={Dimensions.get("window").width * 0.50}
+            imageWidth={"150%"}
+            imageHeight={"150%"}
           />
-        </View>
-        <View style={styles.productContainer}>
-          <ProductForm imageSource={require("../assets/shirt-2.jpg")} />
-          <ProductInfo
-            brandName="H&M"
-            rating="4.8"
-            numberRating="178"
-            productName="Printed Sweatshirt"
-            oldPrice="414.00"
-            newPrice="314.00"
-          />
-        </View>
-        <View style={styles.productContainer}>
-          <ProductForm imageSource={require("../assets/kid-2.jpg")} />
-          <ProductInfo
-            brandName="H&M"
-            rating="5.0"
-            numberRating="599"
-            productName="Textured Jersey Dress"
-            oldPrice="399.00"
-            newPrice="200.00"
-          />
-        </View>
+        ))}
       </ScrollView>
     </View>
   );
@@ -108,8 +122,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    // justifyContent: "center",
-    // paddingHorizontal: 18
   },
   imageBanner: {
     height: 170,
@@ -122,7 +134,7 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingVertical: 13,
     paddingHorizontal: 18,
-    marginTop: 5,
+    marginTop: 10,
   },
   titleText: {
     fontSize: 20,
@@ -133,8 +145,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#7d7979",
   },
+  categoryList: {
+    paddingHorizontal: 9
+  },
   productList: {
-    paddingHorizontal: 9,
-    // width: Dimensions.get("window").width * 0.5,
+    paddingHorizontal: 18,
+    gap: 18,
   },
 });

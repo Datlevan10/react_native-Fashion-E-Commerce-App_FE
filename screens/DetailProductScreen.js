@@ -20,9 +20,9 @@ import ProductInfoInDetail from "../components/ProductInfoInDetail";
 const { width, height } = Dimensions.get("window");
 
 const images = [
-  require("../assets/shirt-1.jpg"),
-  require("../assets/shirt-2.jpg"),
-  // require("../assets/shirt-3.jpg"),
+  require("../assets/image/shirt-1.jpg"),
+  require("../assets/image/shirt-2.jpg"),
+  // require("../assets/image/shirt-3.jpg"),
 ];
 
 export default function ProductDetailScreen({ navigation }) {
