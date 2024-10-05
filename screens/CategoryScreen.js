@@ -44,7 +44,7 @@ const products = [
   {
     id: 1,
     imageSource: require("../assets/image/kid-2.jpg"),
-    brandName: "Nike",
+    brandName: "H&M",
     rating: 4.5,
     numberRating: 150,
     productName: "Textured Jersey Dress",
@@ -54,7 +54,7 @@ const products = [
   {
     id: 2,
     imageSource: require("../assets/image/kid-3.jpg"),
-    brandName: "Adidas",
+    brandName: "H&M",
     rating: 4.8,
     numberRating: 200,
     productName: "Button Front Dress",
