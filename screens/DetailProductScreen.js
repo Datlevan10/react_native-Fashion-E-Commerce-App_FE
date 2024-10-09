@@ -16,6 +16,7 @@ import ColorSelector from "../components/ColorSelector";
 import SizeSelector from "../components/SizeSelector";
 import ProductInfo from "../components/ProductInfo";
 import ProductInfoInDetail from "../components/ProductInfoInDetail";
+import Colors from "../themes/Color";
 
 const { width, height } = Dimensions.get("window");
 
@@ -59,14 +60,14 @@ export default function ProductDetailScreen({ navigation }) {
             style={styles.backButton}
             onPress={() => navigation.goBack()}
           >
-            <Feather name="arrow-left" size={22} color="black" />
+            <Feather name="arrow-left" size={22} color={Colors.blackColor} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Detail Product</Text>
           <IconWithBadge
             name="shopping-bag"
             badgeCount={3}
             size={25}
-            color="black"
+            color={Colors.blackColor}
           />
         </View>
         <View style={styles.indicatorWrapper}>
@@ -91,7 +92,7 @@ export default function ProductDetailScreen({ navigation }) {
             oldPrice="550.00"
             newPrice="295.00"
           />
-          <Feather name="heart" size={22} color="#333" />
+          <Feather name="heart" size={22} color={Colors.blackColor} />
         </View>
         <Text style={styles.productDescription}>
           Mô tả sản phẩm: Oversized t-shirt in printed mesh with a V-neck,
@@ -110,11 +111,11 @@ export default function ProductDetailScreen({ navigation }) {
           <AddToCartButton
             iconName="shopping-bag"
             title="ADD TO CART"
-            backgroundColor="#fff"
-            color="#000"
-            borderColor="#333"
+            backgroundColor={Colors.whiteColor}
+            color={Colors.blackColor}
+            borderColor={Colors.blackColor}
           />
-          <CustomButton title="BUY NOW" backgroundColor="#333" />
+          <CustomButton title="BUY NOW" backgroundColor={Colors.blackColor} />
         </View>
       </View>
     </View>
@@ -124,12 +125,12 @@ export default function ProductDetailScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f4f4f4",
+    backgroundColor: Colors.grayBgColor,
     paddingTop: 10,
   },
   itemOne: {
     height: height / 2,
-    backgroundColor: "#f4f4f4",
+    backgroundColor: Colors.grayBgColor,
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
@@ -137,7 +138,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: width,
     height: height / 2,
-    backgroundColor: "#f4f4f4",
+    backgroundColor: Colors.grayBgColor,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -161,7 +162,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    color: "black",
+    color: Colors.blackColor,
     fontWeight: "bold",
   },
   indicatorWrapper: {
@@ -176,26 +177,20 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#ccc",
+    backgroundColor: Colors.indicatorDefaultColor,
     marginHorizontal: 4,
   },
   activeIndicator: {
-    backgroundColor: "#007AFF",
+    backgroundColor: Colors.indicatorActiveColor,
   },
   itemTwo: {
     height: height / 2,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.whiteBgColor,
     padding: 18,
   },
   productName: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 10,
-  },
-  productPrice: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "green",
     marginBottom: 10,
   },
   infoIcon: {
@@ -204,7 +199,7 @@ const styles = StyleSheet.create({
   },
   productDescription: {
     fontSize: 18,
-    color: "#666",
+    color: Colors.textDescription,
     marginTop: 25,
     marginBottom: 20,
   },

@@ -5,10 +5,11 @@ import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import IconWithBadge from "./IconWithBadge";
 import logoFashion from "../assets/image/silhouette.png";
+import Colors from "../themes/Color";
 
 const Tab = createBottomTabNavigator();
 
-const CustomTabNavigator = ({ children, colorBackGround = 'white' }) => {
+const CustomTabNavigator = ({ children, colorBackGround = Colors.whiteColor }) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -29,8 +30,8 @@ const CustomTabNavigator = ({ children, colorBackGround = 'white' }) => {
             return <Ionicons name="person-outline" size={size} color={color} />;
           }
         },
-        tabBarActiveTintColor: "black",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: Colors.blackColor,
+        tabBarInactiveTintColor: Colors.darkGray,
         headerStyle: {
             backgroundColor: colorBackGround,
           },
@@ -46,7 +47,7 @@ const CustomTabNavigator = ({ children, colorBackGround = 'white' }) => {
               name="shopping-bag"
               badgeCount={3}
               size={25}
-              color="black"
+              color={Colors.blackColor}
               style={styles.headerRightIcon}
             />
           </View>

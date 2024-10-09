@@ -2,6 +2,7 @@ import React from "react";
 import { View, Image, Text, StyleSheet, Dimensions } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import Colors from "../themes/Color";
 
 const ProductCard = ({
   imageSource,
@@ -24,14 +25,14 @@ const ProductCard = ({
           resizeMode="contain"
         />
         <View style={styles.heartIconContainer}>
-          <Feather name="heart" size={20} color="white" />
+          <Feather name="heart" size={20} color={Colors.whiteColor} />
         </View>
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.row}>
           <Text style={styles.brandText}>{brandName}</Text>
           <View style={styles.ratingContainer}>
-            <AntDesign name="star" size={16} color="#ffc32b" />
+            <AntDesign name="star" size={16} color={Colors.yellowColor} />
             <Text style={styles.ratingText}>{rating}</Text>
             <Text style={styles.numberRating}>{`(${numberRating})`}</Text>
           </View>
@@ -50,7 +51,7 @@ const ProductCard = ({
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: "#ffffff",
+    backgroundColor: Colors.whiteBgColor,
     borderRadius: 8,
     overflow: "visible",
     marginVertical: 10,
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   imageContainer: {
-    backgroundColor: "#f4f4f4",
+    backgroundColor: Colors.grayBgColor,
     width: "100%",
     height: 200,
     justifyContent: "center",
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     right: 10,
-    backgroundColor: "#b4b3b3",
+    backgroundColor: Colors.darkGray,
     borderRadius: 20,
     padding: 5,
     justifyContent: "center",
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     width: "100%",
 
-    backgroundColor: "#ffffff",
+    backgroundColor: Colors.whiteBgColor,
     // borderRadius: 8,
     // shadowColor: '#000',
     // shadowOffset: { width: 0, height: 2 },
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
   },
   brandText: {
     fontSize: 16,
-    color: "gray",
+    color: Colors.darkGray,
   },
   ratingContainer: {
     flexDirection: "row",
@@ -110,17 +111,17 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 16,
     fontWeight: "bold",
-    color: "black",
+    color: Colors.blackColor,
   },
   numberRating: {
-    color: "gray",
+    color: Colors.darkGray,
   },
   productName: {
     width: "100%",
     fontSize: 20,
     marginVertical: 5,
     fontWeight: "600",
-    color: "black",
+    color: Colors.blackColor,
   },
   priceRow: {
     flexDirection: "row",
@@ -131,12 +132,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textDecorationLine: "line-through",
     marginRight: 10,
-    color: "gray",
+    color: Colors.darkGray,
   },
   newPrice: {
     fontSize: 22,
     fontWeight: "500",
-    color: "#ed1b41",
+    color: Colors.redColor,
   },
 });
 

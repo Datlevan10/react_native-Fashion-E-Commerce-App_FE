@@ -16,6 +16,7 @@ import category1Image from "../assets/image/bag.jpg";
 import category2Image from "../assets/image/jean.jpg";
 import category3Image from "../assets/image/footwear.jpg";
 import category4Image from "../assets/image/clothes.jpg";
+import Colors from "../themes/Color";
 
 const categories = [
   {
@@ -109,7 +110,7 @@ const CategoryScreen = () => {
       <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity style={styles.backButton}>
-            <Feather name="arrow-left" size={24} color="#333" />
+            <Feather name="arrow-left" size={24} color={Colors.blackColor} />
           </TouchableOpacity>
           <View style={styles.searchContainer}>
             <Feather
@@ -179,19 +180,19 @@ const CategoryScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.whiteBgColor,
   },
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.whiteColor,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 15,
     paddingVertical: 10,
-    borderBottomColor: "#f4f4f4",
-    backgroundColor: "#fff",
+    borderBottomColor: Colors.grayBgColor,
+    backgroundColor: Colors.whiteColor,
   },
   backButton: {
     marginRight: 15,
@@ -201,7 +202,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
-    backgroundColor: "#f4f4f4",
+    backgroundColor: Colors.grayBgColor,
     borderRadius: 8,
     paddingHorizontal: 10,
   },
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: "#333",
+    color: Colors.blackColor,
   },
   content: {
     flex: 1,

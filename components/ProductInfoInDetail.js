@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
     // width: Dimensions.get("window").width * 0.5,
     fontSize: 24,
     marginVertical: 5,
+    // textTransform: "uppercase",
     fontWeight: "600",
     color: "black",
   },
