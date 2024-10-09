@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Colors from '../themes/Color';
 
 export default function SizeSelector() {
   const [selectedSize, setSelectedSize] = useState('M');
@@ -54,20 +55,20 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#ccc',
-    backgroundColor: '#fff',
+    borderColor: Colors.borderColor,
+    backgroundColor: Colors.whiteBgColor,
     justifyContent: "center",
     alignItems: "center"
   },
   selectedSizeButton: {
-    backgroundColor: '#000',
+    backgroundColor: Colors.darkBlack,
     borderColor: 'transparent',
   },
   sizeText: {
     fontSize: 16,
-    color: '#000',
+    color: Colors.darkBlack,
   },
   selectedSizeText: {
-    color: '#fff',
+    color: Colors.whiteColor,
   },
 });

@@ -2,13 +2,14 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Colors from "../themes/Color";
 
 const FilterBox = ({ text, icon }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{text}</Text>
       <View style={styles.iconContainer}>
-        <MaterialIcons name={icon} size={18} color="#333" />
+        <MaterialIcons name={icon} size={18} color={Colors.blackColor} />
       </View>
     </View>
   );
@@ -19,9 +20,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "flex-start",
-    backgroundColor: "#ffffff",
+    backgroundColor: Colors.whiteBgColor,
     borderWidth: 1,
-    borderColor: "#cccccc",
+    borderColor: Colors.borderColor,
     borderRadius: 8,
     padding: 8,
     gap: 5,
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#333333",
+    color: Colors.blackColor,
   },
 });
 

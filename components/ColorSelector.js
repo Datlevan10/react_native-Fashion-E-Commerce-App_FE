@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
+import Colors from '../themes/Color';
 
 export default function ColorSelector() {
   const [selectedColor, setSelectedColor] = useState(null);
 
-  const colors = ['#191925', '#0763b3', '#bad6ec'];
+  const colors = [Colors.blackProduct, Colors.blueProduct, Colors.lightBlueProduct];
 
   return (
     <View style={styles.container}>
@@ -24,7 +25,7 @@ export default function ColorSelector() {
             onPress={() => setSelectedColor(color)}
           >
             {selectedColor === color && (
-              <Feather name="check" size={20} color="white"  />
+              <Feather name="check" size={20} color={Colors.whiteColor}  />
             )}
           </TouchableOpacity>
         ))}
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   selectedColorButton: {
-    borderColor: '#FFFFFF',
+    borderColor: Colors.whiteColor
     // opacity: 0.9,
   },
   checkIcon: {

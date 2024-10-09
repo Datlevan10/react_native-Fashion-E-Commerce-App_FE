@@ -14,6 +14,7 @@ import category1Image from "../assets/image/women.jpg";
 import category2Image from "../assets/image/men.jpg";
 import category3Image from "../assets/image/teen.jpg";
 import category4Image from "../assets/image/kid.jpg";
+import Colors from "../themes/Color";
 
 const categories = [
   {
@@ -121,7 +122,7 @@ export default function HomeContentScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: Colors.whiteBgColor,
   },
   imageBanner: {
     height: 170,
@@ -139,11 +140,11 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 20,
     fontWeight: "500",
-    color: "black",
+    color: Colors.blackColor,
   },
   moreText: {
     fontSize: 14,
-    color: "#7d7979",
+    color: Colors.textSecondary,
   },
   categoryList: {
     paddingHorizontal: 9
