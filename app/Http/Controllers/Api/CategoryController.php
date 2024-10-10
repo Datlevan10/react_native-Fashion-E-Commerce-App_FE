@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -26,8 +27,8 @@ class CategoryController extends Controller
 
         $validator = Validator::make($request->all(), [
             'categoryName' => 'required|string|max:255',
+            'imageCategory' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'required|string',
-            // 'description' => 'required|string|max:255',
         ]);
 
         if($validator->fails()){
@@ -37,8 +38,17 @@ class CategoryController extends Controller
             ], 422);
         }
 
+        // Handle image with Storage
+        if ($request->hasFile('imageCategory')) {
+            $image = $request->file('imageCategory');
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('categories', $imageName, 'public');
+            $imageUrl = Storage::url($imagePath);
+        }
+
         $categories = Category::create([
             'categoryName' => $request->categoryName,
+            'imageCategory' => $imageUrl ?? null,
             'description' => $request->description,
         ]);
 
@@ -57,6 +67,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category) {
         $validator = Validator::make($request->all(), [
             'categoryName' => 'required|string|max:255',
+            'imageCategory' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'required|string|max:255',
         ]);
 
@@ -67,8 +78,21 @@ class CategoryController extends Controller
             ], 422);
         }
 
+        // Handle image with Storage
+        if ($request->hasFile('imageCategory')) {
+            $image = $request->file('imageCategory');
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('categories', $imageName, 'public');
+            $imageUrl = Storage::url($imagePath);
+
+            if ($category->imageCategory) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $category->imageCategory));
+            }
+        }
+
         $category->update([
-            'name' => $request->name,
+            'categoryName' => $request->categoryName,
+            'imageCategory' => $imageUrl ?? $category->imageCategory,
             'description' => $request->description,
         ]);
 
@@ -80,6 +104,10 @@ class CategoryController extends Controller
 
     // method DELETE
     public function destroy(Category $category) {
+        if ($category->imageCategory) {
+            Storage::disk('public')->delete(str_replace('/storage/', '', $category->imageCategory));
+        }
+
         $category->delete();
 
         return response()->json([
