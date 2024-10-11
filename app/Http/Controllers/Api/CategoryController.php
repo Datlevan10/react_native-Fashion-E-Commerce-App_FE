@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
@@ -66,14 +66,14 @@ class CategoryController extends Controller
     // method PUT
     public function update(Request $request, Category $category) {
         $validator = Validator::make($request->all(), [
-            'categoryName' => 'required|string|max:255',
+            'categoryName' => 'sometimes|string|max:255',
             'imageCategory' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'description' => 'required|string|max:255',
+            'description' => 'sometimes|string|max:255',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json([
-                'message' => 'Field is empty',
+                'message' => 'Field validation error',
                 'error' => $validator->messages(),
             ], 422);
         }
@@ -81,7 +81,7 @@ class CategoryController extends Controller
         // Handle image with Storage
         if ($request->hasFile('imageCategory')) {
             $image = $request->file('imageCategory');
-            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
             $imagePath = $image->storeAs('categories', $imageName, 'public');
             $imageUrl = Storage::url($imagePath);
 
@@ -91,16 +91,17 @@ class CategoryController extends Controller
         }
 
         $category->update([
-            'categoryName' => $request->categoryName,
+            'categoryName' => $request->categoryName ?? $category->categoryName,
             'imageCategory' => $imageUrl ?? $category->imageCategory,
-            'description' => $request->description,
+            'description' => $request->description ?? $category->description,
         ]);
 
         return response()->json([
-            'message' => 'Category updated success',
+            'message' => 'Category updated successfully',
             'data' => new CategoryResource($category)
         ], 200);
     }
+
 
     // method DELETE
     public function destroy(Category $category) {
