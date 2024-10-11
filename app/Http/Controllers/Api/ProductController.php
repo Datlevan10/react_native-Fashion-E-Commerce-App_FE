@@ -25,6 +25,7 @@ class ProductController extends Controller
         }
     }
 
+    // method POST
     public function store(Request $request) {
         $validator = Validator::make($request->all(), [
             'categoryId' => 'required|exists:categories,categoryId',
@@ -81,5 +82,69 @@ class ProductController extends Controller
     }
 
     // method PUT
+    public function update(Request $request, Product $product) {
+        $validator = Validator::make($request->all(), [
+            'categoryId' => 'sometimes|exists:categories,categoryId',
+            'productName' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string',
+            'color' => 'sometimes|array|min:1',
+            'color.*' => 'string|max:50',
+            'size' => 'sometimes|array|min:1',
+            'size.*' => 'string|max:10',
+            'image' => 'nullable|array|min:1',
+            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'oldPrice' => 'sometimes|numeric|min:0',
+            'newPrice' => 'nullable|numeric|min:0',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Field is empty',
+                'error' => $validator->messages(),
+            ], 422);
+        }
+
+        $imagePaths = $product->image;
+        if ($request->hasFile('image')) {
+            $imagePaths = [];
+            foreach ($request->file('image') as $image) {
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $imagePath = $image->storeAs('products', $imageName, 'public');
+                $imagePaths[] = Storage::url($imagePath);
+            }
+        }
+
+        $product->update([
+            'categoryId' => $request->categoryId ?? $product->categoryId,
+            'productName' => $request->productName ?? $product->productName,
+            'description' => $request->description ?? $product->description,
+            'color' => $request->color ?? $product->color,
+            'size' => $request->size ?? $product->size,
+            'image' => !empty($imagePaths) ? $imagePaths : $product->image,
+            'oldPrice' => $request->oldPrice ?? $product->oldPrice,
+            'newPrice' => $request->newPrice ?? $product->newPrice,
+        ]);
+
+        return response()->json([
+            'message' => 'Product updated success',
+            'data' => new ProductResource($product)
+        ], 200);
+    }
+
+    // method DELETE
+    public function destroy(Product $product) {
+        if ($product->image) {
+            $imagePaths = json_decode($product->image);
+            foreach ($imagePaths as $imagePath) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $imagePath));
+            }
+        }
+
+        $product->delete();
+
+        return response()->json([
+            'message' => 'Product deleted successfully',
+        ], 200);
+    }
 
 }

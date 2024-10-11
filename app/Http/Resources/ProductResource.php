@@ -25,8 +25,11 @@ class ProductResource extends JsonResource
             'image' => $this->image,
             'oldPrice' => $this->oldPrice,
             'newPrice' => $this->newPrice,
-            'totalReview' => $this->ratingCount,
-            'averageReview' => $this->color,
+            // Handle data when returning json (490000.00 -> 490000)
+            // 'oldPrice' => rtrim(rtrim($this->oldPrice, '0'), '.'),
+            // 'newPrice' => rtrim(rtrim($this->newPrice, '0'), '.'),
+            'totalReview' => $this->totalReview,
+            'averageReview' => $this->averageReview,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
