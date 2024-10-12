@@ -6,6 +6,7 @@ export default function CustomButton({ title, onPress, backgroundColor }) {
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: backgroundColor }]}
+      onPress={onPress}
     >
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>

@@ -14,9 +14,9 @@ import AddToCartButton from "../components/AddToCartButton";
 import CustomButton from "../components/CustomButton";
 import ColorSelector from "../components/ColorSelector";
 import SizeSelector from "../components/SizeSelector";
-import ProductInfo from "../components/ProductInfo";
 import ProductInfoInDetail from "../components/ProductInfoInDetail";
 import Colors from "../themes/Color";
+import ShowAlertWithTitleContentAndOneActions from "../components/ShowAlertWithTitleContentAndOneActions ";
 
 const { width, height } = Dimensions.get("window");
 
@@ -114,8 +114,18 @@ export default function ProductDetailScreen({ navigation }) {
             backgroundColor={Colors.whiteColor}
             color={Colors.blackColor}
             borderColor={Colors.blackColor}
+            onPress={() =>
+              ShowAlertWithTitleContentAndOneActions(
+                "Notification",
+                "Product added to cart successfully"
+              )
+            }
           />
-          <CustomButton title="BUY NOW" backgroundColor={Colors.blackColor} />
+          <CustomButton
+            title="BUY NOW"
+            backgroundColor={Colors.blackColor}
+            onPress={() => console.log("BUY NOW Clicked")}
+          />
         </View>
       </View>
     </View>

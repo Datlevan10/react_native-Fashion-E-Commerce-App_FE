@@ -21,7 +21,7 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Category">
+      <Stack.Navigator initialRouteName="ProductDetail">
         <Stack.Screen 
           name="Category" 
           component={CategoryScreen} 
