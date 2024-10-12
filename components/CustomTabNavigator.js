@@ -42,7 +42,7 @@ const CustomTabNavigator = ({ children, colorBackGround = Colors.whiteColor }) =
           </View>
         ),
         headerRight: () => (
-          <View style={styles.headerRightView}>
+          <View style={styles.headerRight}>
             <IconWithBadge
               name="shopping-bag"
               badgeCount={3}
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: 18,
   },
-  headerRightView: {
+  headerRight: {
     flexDirection: "row",
     marginRight: 15,
   },
