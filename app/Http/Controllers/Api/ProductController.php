@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use Illuminate\Support\Facades\Storage;
@@ -41,9 +42,14 @@ class ProductController extends Controller
             'newPrice' => 'nullable|numeric|min:0',
         ]);
 
-        if ($validator->fails()) {
+        if($validator->fails()){
+            Log::error('Validation failed', [
+                'errors' => $validator->messages(),
+                'request' => $request->all(),
+            ]);
+
             return response()->json([
-                'message' => 'Field is empty',
+                'message' => 'Field is empty or invalid',
                 'error' => $validator->messages(),
             ], 422);
         }
@@ -97,9 +103,14 @@ class ProductController extends Controller
             'newPrice' => 'nullable|numeric|min:0',
         ]);
 
-        if ($validator->fails()) {
+        if($validator->fails()){
+            Log::error('Validation failed', [
+                'errors' => $validator->messages(),
+                'request' => $request->all(),
+            ]);
+
             return response()->json([
-                'message' => 'Field is empty',
+                'message' => 'Field is empty or invalid',
                 'error' => $validator->messages(),
             ], 422);
         }
