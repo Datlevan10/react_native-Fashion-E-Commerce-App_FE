@@ -14,7 +14,7 @@ const CartForm = ({
   const [quantity, setQuantity] = useState(initialQuantity);
   const [selectedColor, setSelectedColor] = useState(initialColor);
   const [selectedSize, setSelectedSize] = useState(initialSize);
-  const [isSizePickerOpen, setSizePickerOpen] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
   const sizes = ["S", "M", "L"];
   const colors = ["Red", "Blue", "Green"];
@@ -47,13 +47,22 @@ const CartForm = ({
     if (quantity > 1) setQuantity(quantity - 1);
   };
 
+  const toggleCheckbox = () => {
+    setIsChecked(!isChecked);
+  };
+
   return (
     <View style={styles.cartBox}>
       <View style={styles.row}>
         <View style={styles.column}>
           <View style={styles.checkboxRow}>
-            <Feather name="check-square" size={24} color="black" />
-            {/* <Image source={{ uri: productImage }} style={styles.productImage} /> */}
+            <TouchableOpacity onPress={toggleCheckbox} style={styles.checkbox}>
+              {isChecked ? (
+                <Feather name="check-square" size={24} color="green" />
+              ) : (
+                <Feather name="square" size={24} color="black" />
+              )}
+            </TouchableOpacity>
             <View style={styles.imageContainer}>
               <Image source={productImage} style={styles.productImage} />
             </View>
@@ -178,7 +187,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: "hidden",
     backgroundColor: "#e0e0e0",
-    alignItems : "center",
+    alignItems: "center",
     justifyContent: "center",
   },
   productImage: {
