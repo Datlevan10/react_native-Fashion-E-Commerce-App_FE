@@ -35,8 +35,8 @@ class CustomerController extends Controller
             'gender' => 'required|string|max:255',
             'dateOfBirth' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'email' => ['required', 'string', 'regex:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$/i'],
-            'phoneNumber' => ['required', 'string', 'regex:/^[0-9]{10}$/'],
+            'email' => ['required', 'string', 'email', 'regex:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$/i', 'unique:customers,email'],
+            'phoneNumber' => ['required', 'string', 'regex:/^[0-9]{10}$/', 'unique:customers,phoneNumber'],
             'passWord' => 'required|string|min:8',
             'address' => 'required|string|max:255',
         ]);
@@ -85,5 +85,72 @@ class CustomerController extends Controller
         return new CustomerResource($customer);
     }
 
+    // method PUT
+    public function update(Request $request, Customer $customer) {
 
+        $validator = Validator::make($request->all(), [
+            'customerName' => 'sometimes|string|max:255',
+            'gender' => 'sometimes|string|max:255',
+            'dateOfBirth' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'email' => ['sometimes', 'string', 'email', 'regex:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$/i', 'unique:customers,email'],
+            'phoneNumber' => ['sometimes', 'string', 'regex:/^[0-9]{10}$/', 'unique:customers,phoneNumber'],
+            'passWord' => 'sometimes|string|min:8',
+            'address' => 'sometimes|string|max:255',
+        ]);
+
+        if($validator->fails()){
+            Log::error('Validation failed', [
+                'errors' => $validator->messages(),
+                'request' => $request->all(),
+            ]);
+
+            return response()->json([
+                'message' => 'Field is empty or invalid',
+                'error' => $validator->messages(),
+            ], 422);
+        }
+
+        $hashedPassword = Hash::make($request->passWord);
+
+        // Handle image with Storage
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('customers', $imageName, 'public');
+            $imageUrl = Storage::url($imagePath);
+        }
+
+        $customer->update([
+            'customerName' => $request->customerName ?? $customer->customerName,
+            'gender' => $request->gender ?? $customer->gender,
+            'dateOfBirth' => $request->dateOfBirth ?? $customer->dateOfBirth,
+            'image' => $imageUrl ?? $customer->image,
+            'email' => $request->email ?? $customer->email,
+            'phoneNumber' => $request->phoneNumber ?? $customer->phoneNumber,
+            'passWord' => $hashedPassword ?? $customer->passWord,
+            'address' => $request->address ?? $customer->address,
+        ]);
+
+        return response()->json([
+            'message' => 'Customer updated success',
+            'data' => new CustomerResource($customer)
+        ], 200);
+    }
+
+    // method DELETE
+    public function destroy(Customer $customer) {
+        if ($customer->image) {
+            $imagePaths = json_decode($customer->image);
+            foreach ($imagePaths as $imagePath) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $imagePath));
+            }
+        }
+
+        $customer->delete();
+
+        return response()->json([
+            'message' => 'Customer deleted successfully',
+        ], 200);
+    }
 }
