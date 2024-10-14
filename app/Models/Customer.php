@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Customer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -17,7 +16,8 @@ class Customer extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'customerName',
+        'userName',
+        'fullName',
         'gender',
         'dateOfBirth',
         'image',
@@ -25,6 +25,9 @@ class Customer extends Model
         'phoneNumber',
         'passWord',
         'address',
+        'role',
+        'is_active',
+        'last_login',
     ];
 
     protected static function boot()
@@ -42,5 +45,10 @@ class Customer extends Model
 
             $customer->customerId = 'customer' . $nextId;
         });
+    }
+    public function updateLastLogin()
+    {
+        $this->last_login = now();
+        $this->save();
     }
 }

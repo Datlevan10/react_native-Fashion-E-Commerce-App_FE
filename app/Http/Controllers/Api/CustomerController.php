@@ -14,24 +14,32 @@ use Illuminate\Support\Facades\Validator;
 class CustomerController extends Controller
 {
     // method GET
-    public function index() {
+    public function index()
+    {
         $customers = Customer::get();
         if ($customers->count() > 0) {
             return response()->json([
                 // 'message' => 'Get customer success',
                 'data' => CustomerResource::collection($customers)
             ], 200);
-        }
-        else {
+        } else {
             return response()->json(['message' => 'No record available'], 200);
         }
     }
 
     // method POST
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
-            'customerName' => 'required|string|max:255',
+            'userName' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:customers,userName',
+                'regex:/^[a-zA-Z0-9_]+$/',
+            ],
+            'fullName' => 'required|string|max:255',
             'gender' => 'required|string|max:255',
             'dateOfBirth' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -41,7 +49,7 @@ class CustomerController extends Controller
             'address' => 'required|string|max:255',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             Log::error('Validation failed', [
                 'errors' => $validator->messages(),
                 'request' => $request->all(),
@@ -58,13 +66,14 @@ class CustomerController extends Controller
         // Handle image with Storage
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
             $imagePath = $image->storeAs('customers', $imageName, 'public');
             $imageUrl = Storage::url($imagePath);
         }
 
         $customers = Customer::create([
-            'customerName' => $request->customerName,
+            'userName' => $request->userName,
+            'fullName' => $request->userName,
             'gender' => $request->gender,
             'dateOfBirth' => $request->dateOfBirth,
             'image' => $imageUrl ?? null,
@@ -81,15 +90,24 @@ class CustomerController extends Controller
     }
 
     // method GET Detail
-    public function show(Customer $customer) {
+    public function show(Customer $customer)
+    {
         return new CustomerResource($customer);
     }
 
     // method PUT
-    public function update(Request $request, Customer $customer) {
+    public function update(Request $request, Customer $customer)
+    {
 
         $validator = Validator::make($request->all(), [
-            'customerName' => 'sometimes|string|max:255',
+            'userName' => [
+                'sometimes',
+                'string',
+                'max:255',
+                'unique:customers,userName',
+                'regex:/^[a-zA-Z0-9_]+$/',
+            ],
+            'fullName' => 'sometimes|string|max:255',
             'gender' => 'sometimes|string|max:255',
             'dateOfBirth' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -99,7 +117,7 @@ class CustomerController extends Controller
             'address' => 'sometimes|string|max:255',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             Log::error('Validation failed', [
                 'errors' => $validator->messages(),
                 'request' => $request->all(),
@@ -116,13 +134,14 @@ class CustomerController extends Controller
         // Handle image with Storage
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
             $imagePath = $image->storeAs('customers', $imageName, 'public');
             $imageUrl = Storage::url($imagePath);
         }
 
         $customer->update([
-            'customerName' => $request->customerName ?? $customer->customerName,
+            'userName' => $request->userName ?? $customer->userName,
+            'fullName' => $request->fullName ?? $customer->fullName,
             'gender' => $request->gender ?? $customer->gender,
             'dateOfBirth' => $request->dateOfBirth ?? $customer->dateOfBirth,
             'image' => $imageUrl ?? $customer->image,
@@ -139,7 +158,8 @@ class CustomerController extends Controller
     }
 
     // method DELETE
-    public function destroy(Customer $customer) {
+    public function destroy(Customer $customer)
+    {
         if ($customer->image) {
             $imagePaths = json_decode($customer->image);
             foreach ($imagePaths as $imagePath) {
