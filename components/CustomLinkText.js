@@ -20,12 +20,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   text: {
-    fontSize: 14,
+    fontSize: 18,
     color: "#555",
   },
   highlight: {
     fontWeight: "bold",
-    color: "#0066cc",
+    color: "#0098fd",
   },
 });
 
