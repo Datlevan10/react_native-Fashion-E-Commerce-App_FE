@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Colors from '../themes/Color';
 
 const CustomTextInput = ({ value, onChangeText, placeholder, prefixIcon }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -20,7 +21,7 @@ const CustomTextInput = ({ value, onChangeText, placeholder, prefixIcon }) => {
       />
       {isFocused && value ? (
         <TouchableOpacity onPress={() => onChangeText('')}>
-          <MaterialIcons name="clear" size={20} color="gray" style={styles.icon} />
+          <MaterialIcons name="clear" size={20} color="#db4437" style={styles.icon} />
         </TouchableOpacity>
       ) : null}
     </View>
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderBottomWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors.borderColor,
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 10,
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 18,
     paddingVertical: 8,
   },
   icon: {

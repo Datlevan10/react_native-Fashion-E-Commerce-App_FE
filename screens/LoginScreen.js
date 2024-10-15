@@ -4,10 +4,13 @@ import CustomTextInput from "../components/CustomTextInput";
 import PasswordTextInput from "../components/PasswordTextInput";
 import SocialLoginButton from "../components/SocialLoginButton";
 import CustomLinkText from "../components/CustomLinkText";
+import Checkbox from 'expo-checkbox';
+import Colors from "../themes/Color";
 
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isRemember, setIsRemember] = useState(false);
 
   const handleLogin = () => {
     Alert.alert(
@@ -34,9 +37,9 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-        <View>
-            <Text>Welcome Back</Text>
-        </View>
+      <View>
+        <Text style={styles.loginText}>Welcome Back!</Text>
+      </View>
       <CustomTextInput
         value={username}
         onChangeText={setUsername}
@@ -48,12 +51,20 @@ export default function LoginScreen({ navigation }) {
         onChangeText={setPassword}
         placeholder="Enter your password"
       />
-      <TouchableOpacity
-        onPress={handleForgotPassword}
-        style={styles.forgotButton}
-      >
-        <Text style={styles.forgotText}>Forgot Password?</Text>
-      </TouchableOpacity>
+      <View style={styles.rememberForgotContainer}>
+        <View style={styles.rememberContainer}>
+          <Checkbox
+            value={isRemember}
+            onValueChange={setIsRemember}
+            color={isRemember ? "#0098fd" : undefined}
+            style={styles.checkbox}
+          />
+          <Text style={styles.rememberText}>Remember Password</Text>
+        </View>
+        <TouchableOpacity onPress={handleForgotPassword}>
+          <Text style={styles.forgotText}>Forgot Password?</Text>
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
         <Text style={styles.loginButtonText}>Login</Text>
@@ -61,7 +72,7 @@ export default function LoginScreen({ navigation }) {
 
       <View style={styles.dividerContainer}>
         <View style={styles.divider} />
-        <Text style={styles.orText}>OR</Text>
+        <Text style={styles.orText}>Or</Text>
         <View style={styles.divider} />
       </View>
 
@@ -88,7 +99,7 @@ export default function LoginScreen({ navigation }) {
           buttonText="Login with Apple"
         />
         <CustomLinkText
-          text="Don't have an account"
+          text="Don't have an account?"
           highlightText="Register"
           onPress={() => navigation.navigate("RegisterScreen")}
         />
@@ -103,17 +114,46 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 20,
   },
+  loginText: {
+    fontSize: 50,
+    fontWeight: "bold",
+    // color: "#db93ff",
+    marginBottom: 80,
+  },
+  rememberForgotContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 10,
+  },
+  rememberContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  checkbox: {
+    width: 18,
+    height: 18,
+    borderWidth: 1,
+    borderColor: Colors.borderColor,
+    borderRadius: 3,
+  },
+  rememberText: {
+    marginLeft: 8,
+    fontSize: 16,
+    color: "#555",
+  },
   forgotButton: {
     alignItems: "flex-end",
     marginVertical: 10,
   },
   forgotText: {
-    color: "#0066cc",
-    fontSize: 14,
+    color: "#0098fd",
+    fontSize: 16,
+    fontWeight: "600",
   },
   loginButton: {
-    backgroundColor: "#10b982",
-    paddingVertical: 12,
+    backgroundColor: "#179e7a",
+    paddingVertical: 15,
     borderRadius: 8,
     alignItems: "center",
     marginVertical: 10,
@@ -125,14 +165,14 @@ const styles = StyleSheet.create({
   },
   orText: {
     textAlign: "center",
-    fontSize: 16,
+    fontSize: 20,
     marginVertical: 10,
     color: "#555",
   },
   dividerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 20,
+    marginVertical: 30,
   },
   divider: {
     flex: 1,
@@ -146,5 +186,6 @@ const styles = StyleSheet.create({
   },
   socialLoginContainer: {
     marginTop: 10,
+    gap: 10,
   },
 });

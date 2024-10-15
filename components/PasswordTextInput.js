@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Colors from '../themes/Color';
 
 const PasswordTextInput = ({ value, onChangeText, placeholder }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -23,7 +24,7 @@ const PasswordTextInput = ({ value, onChangeText, placeholder }) => {
           <MaterialIcons
             name={showPassword ? 'visibility' : 'visibility-off'}
             size={20}
-            color="gray"
+            color="#179e7a"
             style={styles.icon}
           />
         </TouchableOpacity>
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderBottomWidth: 1,
-    borderColor: '#ccc',
+    borderColor: Colors.borderColor,
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 10,
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 18,
     paddingVertical: 8,
   },
   icon: {
