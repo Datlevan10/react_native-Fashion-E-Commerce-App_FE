@@ -26,8 +26,8 @@ class Customer extends Model
         'passWord',
         'address',
         'role',
-        'is_active',
-        'last_login',
+        'isActive',
+        'lasLogin',
     ];
 
     protected static function boot()
@@ -48,7 +48,7 @@ class Customer extends Model
     }
     public function updateLastLogin()
     {
-        $this->last_login = now();
+        $this->lasLogin = now();
         $this->save();
     }
 }
