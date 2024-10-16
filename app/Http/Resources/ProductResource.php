@@ -16,20 +16,20 @@ class ProductResource extends JsonResource
     {
         // return parent::toArray($request);
         return [
-            'productId' => $this->productId,
-            'categoryId' => $this->categoryId,
-            'productName' => $this->productName,
+            'product_id' => $this->product_id,
+            'category_id' => $this->category_id,
+            'product_name' => $this->product_name,
             'description' => $this->description,
             'color' => $this->color,
             'size' => $this->size,
             'image' => $this->image,
-            'oldPrice' => $this->oldPrice,
-            'newPrice' => $this->newPrice,
+            'old_price' => $this->old_price,
+            'new_price' => $this->new_price,
             // Handle data when returning json (490000.00 -> 490000)
-            // 'oldPrice' => rtrim(rtrim($this->oldPrice, '0'), '.'),
-            // 'newPrice' => rtrim(rtrim($this->newPrice, '0'), '.'),
-            'totalReview' => $this->totalReview,
-            'averageReview' => $this->averageReview,
+            // 'old_price' => rtrim(rtrim($this->old_price, '0'), '.'),
+            // 'new_price' => rtrim(rtrim($this->new_price, '0'), '.'),
+            'total_review' => $this->total_review,
+            'average_review' => $this->average_review,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
