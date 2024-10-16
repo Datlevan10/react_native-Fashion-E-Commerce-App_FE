@@ -32,20 +32,20 @@ class CustomerController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'userName' => [
+            'user_name' => [
                 'required',
                 'string',
                 'max:255',
-                'unique:customers,userName',
+                'unique:customers,user_name',
                 'regex:/^[a-zA-Z0-9_]+$/',
             ],
-            'fullName' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
             'gender' => 'required|string|max:255',
-            'dateOfBirth' => 'nullable|string|max:255',
+            'date_of_birth' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'email' => ['required', 'string', 'email', 'regex:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$/i', 'unique:customers,email'],
-            'phoneNumber' => ['required', 'string', 'regex:/^[0-9]{10}$/', 'unique:customers,phoneNumber'],
-            'passWord' => 'required|string|min:8',
+            'phone_number' => ['required', 'string', 'regex:/^[0-9]{10}$/', 'unique:customers,phone_number'],
+            'password' => 'required|string|min:8',
             'address' => 'required|string|max:255',
         ]);
 
@@ -61,7 +61,7 @@ class CustomerController extends Controller
             ], 422);
         }
 
-        $hashedPassword = Hash::make($request->passWord);
+        $hashed_password = Hash::make($request->password);
 
         // Handle image with Storage
         if ($request->hasFile('image')) {
@@ -72,14 +72,14 @@ class CustomerController extends Controller
         }
 
         $customers = Customer::create([
-            'userName' => $request->userName,
-            'fullName' => $request->fullName,
+            'user_name' => $request->user_name,
+            'full_name' => $request->full_name,
             'gender' => $request->gender,
-            'dateOfBirth' => $request->dateOfBirth,
+            'date_of_birth' => $request->date_of_birth,
             'image' => $imageUrl ?? null,
             'email' => $request->email,
-            'phoneNumber' => $request->phoneNumber,
-            'passWord' => $hashedPassword,
+            'phone_number' => $request->phone_number,
+            'password' => $hashed_password,
             'address' => $request->address,
         ]);
 
@@ -100,20 +100,20 @@ class CustomerController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'userName' => [
+            'user_name' => [
                 'sometimes',
                 'string',
                 'max:255',
-                'unique:customers,userName',
+                'unique:customers,user_name',
                 'regex:/^[a-zA-Z0-9_]+$/',
             ],
-            'fullName' => 'sometimes|string|max:255',
+            'full_name' => 'sometimes|string|max:255',
             'gender' => 'sometimes|string|max:255',
-            'dateOfBirth' => 'sometimes|string|max:255',
+            'date_of_birth' => 'sometimes|string|max:255',
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'email' => ['sometimes', 'string', 'email', 'regex:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$/i', 'unique:customers,email'],
-            'phoneNumber' => ['sometimes', 'string', 'regex:/^[0-9]{10}$/', 'unique:customers,phoneNumber'],
-            'passWord' => 'sometimes|string|min:8',
+            'phone_number' => ['sometimes', 'string', 'regex:/^[0-9]{10}$/', 'unique:customers,phone_number'],
+            'password' => 'sometimes|string|min:8',
             'address' => 'sometimes|string|max:255',
         ]);
 
@@ -129,7 +129,7 @@ class CustomerController extends Controller
             ], 422);
         }
 
-        $hashedPassword = Hash::make($request->passWord);
+        $hashed_password = Hash::make($request->password);
 
         // Handle image with Storage
         if ($request->hasFile('image')) {
@@ -140,14 +140,14 @@ class CustomerController extends Controller
         }
 
         $customer->update([
-            'userName' => $request->userName ?? $customer->userName,
-            'fullName' => $request->fullName ?? $customer->fullName,
+            'user_name' => $request->user_name ?? $customer->user_name,
+            'full_name' => $request->full_name ?? $customer->full_name,
             'gender' => $request->gender ?? $customer->gender,
-            'dateOfBirth' => $request->dateOfBirth ?? $customer->dateOfBirth,
+            'date_of_birth' => $request->date_of_birth ?? $customer->date_of_birth,
             'image' => $imageUrl ?? $customer->image,
             'email' => $request->email ?? $customer->email,
-            'phoneNumber' => $request->phoneNumber ?? $customer->phoneNumber,
-            'passWord' => $hashedPassword ?? $customer->passWord,
+            'phone_number' => $request->phone_number ?? $customer->phone_number,
+            'password' => $hashed_password ?? $customer->password,
             'address' => $request->address ?? $customer->address,
         ]);
 

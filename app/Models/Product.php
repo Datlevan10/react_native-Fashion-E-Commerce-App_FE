@@ -11,7 +11,7 @@ class Product extends Model
 
     protected $table = 'products';
 
-    protected $primaryKey = 'productId';
+    protected $primaryKey = 'product_id';
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -22,16 +22,16 @@ class Product extends Model
     ];
 
     protected $fillable = [
-        'categoryId',
-        'productName',
+        'category_id',
+        'product_name',
         'description',
         'color',
         'size',
         'image',
-        'oldPrice',
-        'newPrice',
-        'ratingCount',
-        'ratingAverage',
+        'old_price',
+        'new_price',
+        'rating_count',
+        'rating_average',
     ];
 
     protected static function boot()
@@ -39,15 +39,15 @@ class Product extends Model
         parent::boot();
 
         static::creating(function ($product) {
-            $lastProduct = Product::orderBy('productId', 'desc')->first();
+            $last_product = Product::orderBy('product_id', 'desc')->first();
             $nextId = 1;
 
-            if ($lastProduct) {
-                $lastId = intval(str_replace('product', '', $lastProduct->productId));
+            if ($last_product) {
+                $lastId = intval(str_replace('product', '', $last_product->product_id));
                 $nextId = $lastId + 1;
             }
 
-            $product->productId = 'product' . $nextId;
+            $product->product_id = 'product' . $nextId;
         });
     }
 }

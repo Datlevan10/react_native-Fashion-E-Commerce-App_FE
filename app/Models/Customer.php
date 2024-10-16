@@ -11,23 +11,23 @@ class Customer extends Model
 
     protected $table = 'customers';
 
-    protected $primaryKey = 'customerId';
+    protected $primaryKey = 'customer_id';
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
-        'userName',
-        'fullName',
+        'user_name',
+        'full_name',
         'gender',
-        'dateOfBirth',
+        'date_of_birth',
         'image',
         'email',
-        'phoneNumber',
-        'passWord',
+        'phone_number',
+        'password',
         'address',
         'role',
-        'isActive',
-        'lasLogin',
+        'is_active',
+        'last_login',
     ];
 
     protected static function boot()
@@ -35,15 +35,15 @@ class Customer extends Model
         parent::boot();
 
         static::creating(function ($customer) {
-            $lastCustomer = Customer::orderBy('customerId', 'desc')->first();
+            $last_customer = Customer::orderBy('customer_id', 'desc')->first();
             $nextId = 1;
 
-            if ($lastCustomer) {
-                $lastId = intval(str_replace('customer', '', $lastCustomer->customerId));
+            if ($last_customer) {
+                $lastId = intval(str_replace('customer', '', $last_customer->customer_id));
                 $nextId = $lastId + 1;
             }
 
-            $customer->customerId = 'customer' . $nextId;
+            $customer->customer_id = 'customer' . $nextId;
         });
     }
     public function updateLastLogin()

@@ -16,18 +16,18 @@ class CustomerResource extends JsonResource
     {
         // return parent::toArray($request);
         return [
-            'customerId' => $this->customerId,
-            'userName' => $this->userName,
-            'fullName' => $this->fullName,
+            'customer_id' => $this->customer_id,
+            'user_name' => $this->user_name,
+            'full_name' => $this->full_name,
             'gender' => $this->gender,
-            'dateOfBirth' => $this->dateOfBirth,
+            'date_of_birth' => $this->date_of_birth,
             'image' => $this->image,
             'email' => $this->email,
-            'phoneNumber' => $this->phoneNumber,
+            'phone_number' => $this->phone_number,
             'address' => $this->address,
             'role' => $this->role,
-            'isActive' => $this->isActive,
-            'lasLogin' => $this->lasLogin,
+            'is_active' => $this->is_active,
+            'last_login' => $this->last_login,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -11,24 +11,24 @@ class Admin extends Model
 
     protected $table = 'admins';
 
-    protected $primaryKey = 'adminId';
+    protected $primaryKey = 'admin_id';
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
-        'userName',
-        'fullName',
+        'user_name',
+        'full_name',
         'gender',
-        'dateOfBirth',
+        'date_of_birth',
         'image',
         'email',
-        'phoneNumber',
-        'passWord',
+        'phone_number',
+        'password',
         'address',
         'role',
         'permissions',
-        'isActive',
-        'lasLogin',
+        'is_active',
+        'last_login',
     ];
 
     protected static function boot()
@@ -36,15 +36,15 @@ class Admin extends Model
         parent::boot();
 
         static::creating(function ($admin) {
-            $lastAdmin = Admin::orderBy('adminId', 'desc')->first();
+            $last_admin = Admin::orderBy('admin_id', 'desc')->first();
             $nextId = 1;
 
-            if ($lastAdmin) {
-                $lastId = intval(str_replace('admin', '', $lastAdmin->adminId));
+            if ($last_admin) {
+                $lastId = intval(str_replace('admin', '', $last_admin->admin_id));
                 $nextId = $lastId + 1;
             }
 
-            $admin->adminId = 'admin' . $nextId;
+            $admin->admin_id = 'admin' . $nextId;
         });
     }
     public function updateLastLogin()

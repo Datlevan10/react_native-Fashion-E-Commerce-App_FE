@@ -11,13 +11,13 @@ class Category extends Model
 
     protected $table = 'categories';
 
-    protected $primaryKey = 'categoryId';
+    protected $primaryKey = 'category_id';
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
-        'categoryName',
-        'imageCategory',
+        'category_name',
+        'image_category',
         'description',
     ];
 
@@ -26,15 +26,15 @@ class Category extends Model
         parent::boot();
 
         static::creating(function ($category) {
-            $lastCategory = Category::orderBy('categoryId', 'desc')->first();
+            $last_category = Category::orderBy('category_id', 'desc')->first();
             $nextId = 1;
 
-            if ($lastCategory) {
-                $lastId = intval(str_replace('category', '', $lastCategory->categoryId));
+            if ($last_category) {
+                $lastId = intval(str_replace('category', '', $last_category->category_id));
                 $nextId = $lastId + 1;
             }
 
-            $category->categoryId = 'category' . $nextId;
+            $category->category_id = 'category' . $nextId;
         });
     }
 }

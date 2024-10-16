@@ -29,8 +29,8 @@ class ProductController extends Controller
     // method POST
     public function store(Request $request) {
         $validator = Validator::make($request->all(), [
-            'categoryId' => 'required|exists:categories,categoryId',
-            'productName' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,category_id',
+            'product_name' => 'required|string|max:255',
             'description' => 'required|string',
             'color' => 'required|array|min:1',
             'color.*' => 'string|max:50',
@@ -38,8 +38,8 @@ class ProductController extends Controller
             'size.*' => 'string|max:10',
             'image' => 'required|array|min:1',
             'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'oldPrice' => 'nullable|numeric|min:0',
-            'newPrice' => 'required|numeric|min:0',
+            'old_price' => 'nullable|numeric|min:0',
+            'new_price' => 'required|numeric|min:0',
         ]);
 
         if($validator->fails()){
@@ -64,16 +64,16 @@ class ProductController extends Controller
         }
 
         $product = Product::create([
-            'categoryId' => $request->categoryId,
-            'productName' => $request->productName,
+            'category_id' => $request->category_id,
+            'product_name' => $request->product_name,
             'description' => $request->description,
             'color' => $request->color,
             'size' => $request->size,
             'image' => $imagePaths,
-            'oldPrice' => $request->oldPrice,
-            'newPrice' => $request->newPrice ?? $request->oldPrice,
-            'totalReview' => 0,
-            'averageReview' => 0,
+            'old_price' => $request->old_price,
+            'new_price' => $request->new_price ?? $request->old_price,
+            'total_review' => 0,
+            'average_review' => 0,
         ]);
 
         return response()->json([
@@ -90,8 +90,8 @@ class ProductController extends Controller
     // method PUT
     public function update(Request $request, Product $product) {
         $validator = Validator::make($request->all(), [
-            'categoryId' => 'sometimes|exists:categories,categoryId',
-            'productName' => 'sometimes|string|max:255',
+            'category_id' => 'sometimes|exists:categories,category_id',
+            'product_name' => 'sometimes|string|max:255',
             'description' => 'sometimes|string',
             'color' => 'sometimes|array|min:1',
             'color.*' => 'string|max:50',
@@ -99,8 +99,8 @@ class ProductController extends Controller
             'size.*' => 'string|max:10',
             'image' => 'sometimes|array|min:1',
             'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'oldPrice' => 'sometimes|numeric|min:0',
-            'newPrice' => 'sometimes|numeric|min:0',
+            'old_price' => 'sometimes|numeric|min:0',
+            'new_price' => 'sometimes|numeric|min:0',
         ]);
 
         if($validator->fails()){
@@ -126,14 +126,14 @@ class ProductController extends Controller
         }
 
         $product->update([
-            'categoryId' => $request->categoryId ?? $product->categoryId,
-            'productName' => $request->productName ?? $product->productName,
+            'category_id' => $request->category_id ?? $product->category_id,
+            'product_name' => $request->product_name ?? $product->product_name,
             'description' => $request->description ?? $product->description,
             'color' => $request->color ?? $product->color,
             'size' => $request->size ?? $product->size,
             'image' => !empty($imagePaths) ? $imagePaths : $product->image,
-            'oldPrice' => $request->oldPrice ?? $product->oldPrice,
-            'newPrice' => $request->newPrice ?? $product->newPrice,
+            'old_price' => $request->old_price ?? $product->old_price,
+            'new_price' => $request->new_price ?? $product->new_price,
         ]);
 
         return response()->json([
