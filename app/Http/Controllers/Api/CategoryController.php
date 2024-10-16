@@ -73,7 +73,7 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category) {
         $validator = Validator::make($request->all(), [
             'categoryName' => 'sometimes|string|max:255',
-            'imageCategory' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'imageCategory' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'sometimes|string|max:255',
         ]);
 

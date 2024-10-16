@@ -73,7 +73,7 @@ class AdminController extends Controller
 
         $admins = Admin::create([
             'userName' => $request->userName,
-            'fullName' => $request->userName,
+            'fullName' => $request->fullName,
             'gender' => $request->gender,
             'dateOfBirth' => $request->dateOfBirth,
             'image' => $imageUrl ?? null,
@@ -109,8 +109,8 @@ class AdminController extends Controller
             ],
             'fullName' => 'sometimes|string|max:255',
             'gender' => 'sometimes|string|max:255',
-            'dateOfBirth' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'dateOfBirth' => 'sometimes|string|max:255',
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'email' => ['sometimes', 'string', 'email', 'regex:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$/i', 'unique:admins,email'],
             'phoneNumber' => ['sometimes', 'string', 'regex:/^[0-9]{10}$/', 'unique:admins,phoneNumber'],
             'passWord' => 'sometimes|string|min:8',

@@ -38,8 +38,8 @@ class ProductController extends Controller
             'size.*' => 'string|max:10',
             'image' => 'required|array|min:1',
             'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'oldPrice' => 'required|numeric|min:0',
-            'newPrice' => 'nullable|numeric|min:0',
+            'oldPrice' => 'nullable|numeric|min:0',
+            'newPrice' => 'required|numeric|min:0',
         ]);
 
         if($validator->fails()){
@@ -97,10 +97,10 @@ class ProductController extends Controller
             'color.*' => 'string|max:50',
             'size' => 'sometimes|array|min:1',
             'size.*' => 'string|max:10',
-            'image' => 'nullable|array|min:1',
+            'image' => 'sometimes|array|min:1',
             'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'oldPrice' => 'sometimes|numeric|min:0',
-            'newPrice' => 'nullable|numeric|min:0',
+            'newPrice' => 'sometimes|numeric|min:0',
         ]);
 
         if($validator->fails()){
