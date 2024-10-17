@@ -145,9 +145,12 @@ class ProductController extends Controller
     // method DELETE
     public function destroy(Product $product) {
         if ($product->image) {
-            $imagePaths = json_decode($product->image);
-            foreach ($imagePaths as $imagePath) {
-                Storage::disk('public')->delete(str_replace('/storage/', '', $imagePath));
+            $imagePaths = is_string($product->image) ? json_decode($product->image) : $product->image;
+
+            if (is_array($imagePaths)) {
+                foreach ($imagePaths as $imagePath) {
+                    Storage::disk('public')->delete(str_replace('/storage/', '', $imagePath));
+                }
             }
         }
 
@@ -157,5 +160,6 @@ class ProductController extends Controller
             'message' => 'Product deleted successfully',
         ], 200);
     }
+
 
 }
