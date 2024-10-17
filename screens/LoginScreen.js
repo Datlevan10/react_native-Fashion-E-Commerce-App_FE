@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import CustomTextInput from "../components/CustomTextInput";
 import PasswordTextInput from "../components/PasswordTextInput";
+import CustomLoginAndRegisterButton from "../components/CustomLoginAndRegisterButton";
 import SocialLoginButton from "../components/SocialLoginButton";
 import CustomLinkText from "../components/CustomLinkText";
-import Checkbox from 'expo-checkbox';
+import Checkbox from "expo-checkbox";
 import Colors from "../themes/Color";
 
 export default function LoginScreen({ navigation }) {
@@ -38,7 +39,7 @@ export default function LoginScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.loginText}>Welcome Back!</Text>
+        <Text style={styles.loginText}>Welcome Back</Text>
       </View>
       <CustomTextInput
         value={username}
@@ -61,21 +62,20 @@ export default function LoginScreen({ navigation }) {
           />
           <Text style={styles.rememberText}>Remember Password</Text>
         </View>
-        <TouchableOpacity onPress={handleForgotPassword}>
+        <TouchableOpacity onPress={() => navigation.navigate('ForgotPasswordScreen')}>
           <Text style={styles.forgotText}>Forgot Password?</Text>
         </TouchableOpacity>
       </View>
-
-      <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
-        <Text style={styles.loginButtonText}>Login</Text>
-      </TouchableOpacity>
-
+      <CustomLoginAndRegisterButton
+        buttonText="Login"
+        buttonColor="#179e7a"
+        onPress={handleLogin}
+      />
       <View style={styles.dividerContainer}>
         <View style={styles.divider} />
         <Text style={styles.orText}>Or</Text>
         <View style={styles.divider} />
       </View>
-
       <View style={styles.socialLoginContainer}>
         <SocialLoginButton
           onPress={handleFacebookLogin}
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: 10,
+    marginVertical: 15,
   },
   rememberContainer: {
     flexDirection: "row",
@@ -150,18 +150,6 @@ const styles = StyleSheet.create({
     color: "#0098fd",
     fontSize: 16,
     fontWeight: "600",
-  },
-  loginButton: {
-    backgroundColor: "#179e7a",
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginVertical: 10,
-  },
-  loginButtonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
   },
   orText: {
     textAlign: "center",

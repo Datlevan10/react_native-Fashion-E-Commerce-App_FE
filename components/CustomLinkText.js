@@ -1,12 +1,15 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
-const CustomLinkText = ({ text, highlightText, onPress }) => {
+const CustomLinkText = ({ text, highlightText, onPress, highlightColor }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>
         {text}{" "}
-        <Text style={styles.highlight} onPress={onPress}>
+        <Text
+          style={[styles.highlight, { color: highlightColor || "#0098fd" }]}
+          onPress={onPress}
+        >
           {highlightText}
         </Text>
       </Text>
@@ -25,7 +28,6 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: "bold",
-    color: "#0098fd",
   },
 });
 
