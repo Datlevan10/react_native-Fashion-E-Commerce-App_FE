@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import CustomTextInput from "../components/CustomTextInput";
 import PasswordTextInput from "../components/PasswordTextInput";
+import CustomLoginAndRegisterButton from "../components/CustomLoginAndRegisterButton";
 import CustomLinkText from "../components/CustomLinkText";
 import Checkbox from "expo-checkbox";
 import Colors from "../themes/Color";
@@ -73,14 +74,16 @@ export default function RegisterScreen({ navigation }) {
         />
         <Text style={styles.acceptText}>I accept the <Text style={styles.privacyText}>Privacy Policy</Text> </Text>
       </View>
-      <TouchableOpacity onPress={handleRegister} style={styles.registerButton}>
-        <Text style={styles.registerButtonText}>Register</Text>
-      </TouchableOpacity>
-
+      <CustomLoginAndRegisterButton
+        buttonText="Register"
+        buttonColor="#0288d1"
+        onPress={handleRegister}
+      />
       <CustomLinkText
         text="Already have an account?"
         highlightText="Login"
         onPress={() => navigation.navigate("LoginScreen")}
+        highlightColor="#179e7a"
       />
     </View>
   );
@@ -119,17 +122,5 @@ const styles = StyleSheet.create({
     color: Colors.blackColor,
     fontSize: 18,
     fontWeight: "500"
-  },
-  registerButton: {
-    backgroundColor: "#0288d1",
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: "center",
-    marginVertical: 10,
-  },
-  registerButtonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
   },
 });
