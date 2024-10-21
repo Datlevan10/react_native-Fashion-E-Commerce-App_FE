@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -25,6 +26,27 @@ class ProductController extends Controller
             return response()->json(['message' => 'No record available'], 200);
         }
     }
+
+    // method GET Product by category_id
+    public function getByCategory($category_id) {
+        $categoryExists = Category::where('category_id', $category_id)->exists();
+
+        if (!$categoryExists) {
+            return response()->json(['message' => 'Category not found'], 404);
+        }
+
+        $products = Product::where('category_id', $category_id)->get();
+
+        if ($products->count() > 0) {
+            return response()->json([
+                'message' => 'Get product by category_id successfully',
+                'data' => ProductResource::collection($products)
+            ], 200);
+        } else {
+            return response()->json(['message' => 'No products found in this category'], 200);
+        }
+    }
+
 
     // method POST
     public function store(Request $request) {
