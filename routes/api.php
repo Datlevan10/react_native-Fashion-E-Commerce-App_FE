@@ -14,6 +14,8 @@ Route::apiResource('products', ProductController::class);
 Route::apiResource('admins', AdminController::class);
 Route::apiResource('customers', CustomerController::class);
 
+Route::get('products/category/{category_id}', [ProductController::class, 'getByCategory']);
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
