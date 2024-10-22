@@ -17,13 +17,15 @@ import imageTest from "../assets/image/kid-2.jpg";
 import imageTest1 from "../assets/image/kid-3.jpg";
 import imageTest2 from "../assets/image/kid-4.jpg";
 import imageTest3 from "../assets/image/kid-5.jpg";
+import imageTest4 from "../assets/image/kid-6.jpg";
+import imageTest5 from "../assets/image/kid-7.jpg";
 
 const products = [
   {
     id: 1,
     productImage: imageTest,
-    categoryName: "Electronics",
-    productName: "Smartphone",
+    categoryName: "Dresses",
+    productName: "Crinkled bow-detail dress",
     initialColor: "Blue",
     initialSize: "M",
     price: 299.99,
@@ -31,9 +33,9 @@ const products = [
   },
   {
     id: 2,
-    productImage: imageTest1,
-    categoryName: "Electronics",
-    productName: "Tablet",
+    productImage: imageTest5,
+    categoryName: "Dresses",
+    productName: "Tulle dress",
     initialColor: "Red",
     initialSize: "L",
     price: 399.99,
@@ -42,8 +44,8 @@ const products = [
   {
     id: 3,
     productImage: imageTest2,
-    categoryName: "Electronics",
-    productName: "Laptop",
+    categoryName: "Dresses",
+    productName: "Polo dress",
     initialColor: "Green",
     initialSize: "S",
     price: 599.99,
@@ -95,12 +97,16 @@ export default function CartScreen({ navigation }) {
           <Text style={styles.headerTitle}>Cart Page</Text>
           <View style={styles.placeholder} />
         </View>
-        <View style={styles.content}>
+        <View style={styles.body}>
           <View style={styles.divider} />
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
+            scrollEnabled={true}
+            bounces={false}
+            nestedScrollEnabled={false}
+            directionalLockEnabled={true}
             contentContainerStyle={styles.filterList}
           >
             <FilterBox text="Sort" icon="keyboard-arrow-down" />
@@ -158,7 +164,7 @@ export default function CartScreen({ navigation }) {
                 style={styles.checkoutButton}
               >
                 <Text style={styles.checkoutText}>Checkout</Text>
-                <MaterialIcons name="shopping-cart-checkout" size={22} color={Colors.whiteColor} />
+                {/* <MaterialIcons name="shopping-cart-checkout" size={22} color={Colors.whiteColor} /> */}
               </TouchableOpacity>
             </View>
           </View>
@@ -195,12 +201,14 @@ const styles = StyleSheet.create({
   placeholder: {
     width: 40,
   },
-  content: {
+  body: {
     flex: 1,
     paddingHorizontal: 18,
   },
   filterList: {
-    height: 50,
+    flexDirection: "row",
+    height: 55,
+    alignItems: "center",
     gap: 10,
     marginTop: 5,
   },
@@ -235,19 +243,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   summaryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: 10,
-    width: '100%',
+    width: "100%",
   },
   itemCountContainer: {
     flex: 1,
   },
   totalAmountContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   itemCountText: {
     fontSize: 20,
@@ -255,7 +263,7 @@ const styles = StyleSheet.create({
   },
   totalAmountText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: Colors.blackColor,
     marginRight: 10,
   },
@@ -265,11 +273,11 @@ const styles = StyleSheet.create({
     gap: 10,
     borderRadius: 5,
     paddingVertical: 12,
-    paddingHorizontal: 20,
+    paddingHorizontal: 25,
   },
   checkoutText: {
     color: Colors.whiteColor,
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
