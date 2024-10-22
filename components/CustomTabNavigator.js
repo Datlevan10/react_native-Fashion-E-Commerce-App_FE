@@ -4,7 +4,7 @@ import { View, Image, StyleSheet } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import IconWithBadge from "./IconWithBadge";
-import logoFashion from "../assets/image/silhouette.png";
+import logoFashion from "../assets/image/logo_store.jpeg";
 import Colors from "../themes/Color";
 
 const Tab = createBottomTabNavigator();
@@ -75,7 +75,8 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 40,
-    width: 40,
+    width: 60,
+    marginBottom: 10
   },
   textLogo: {
     fontFamily: "serif",
