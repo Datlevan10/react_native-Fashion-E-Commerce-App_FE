@@ -17,6 +17,7 @@ class Cart extends Model
 
     protected $fillable = [
         'customer_id',
+        'total_price',
         'cart_status',
     ];
 
@@ -25,7 +26,7 @@ class Cart extends Model
         parent::boot();
 
         static::creating(function ($cart) {
-            $last_cart = cart::orderBy('cart_id', 'desc')->first();
+            $last_cart = Cart::orderBy('cart_id', 'desc')->first();
             $nextId = 1;
 
             if ($last_cart) {
