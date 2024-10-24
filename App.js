@@ -21,6 +21,7 @@ import RegisterScreen from './screens/RegisterScreen';
 import WelcomeScreen from './screens/WelcomeScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import CheckoutScreen from './screens/CheckoutScreen';
+import TrackingDetailScreen from './screens/TrackingDetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -61,6 +62,11 @@ export default function App() {
         <Stack.Screen 
           name="CheckoutScreen" 
           component={CheckoutScreen} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="TrackingDetailScreen" 
+          component={TrackingDetailScreen} 
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

@@ -8,8 +8,8 @@ import Checkbox from "expo-checkbox";
 import Colors from "../themes/Color";
 
 export default function RegisterScreen({ navigation }) {
-  const [username, setUsername] = useState("");
-  const [fullname, setFullname] = useState("");
+  const [userName, setUsername] = useState("");
+  const [fullName, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
@@ -19,8 +19,8 @@ export default function RegisterScreen({ navigation }) {
   const handleRegister = () => {
     Alert.alert(
       "Register Pressed",
-      `Username: ${username}, Fullname: ${fullname}, Email: ${email}, Phone: ${phoneNumber}, Address: ${address}`
-    );
+      `Username: ${username}, Fullname: ${fullName}, Email: ${email}, Phone: ${phoneNumber}, Address: ${address}`
+    );userName
   };
 
   return (
@@ -29,13 +29,13 @@ export default function RegisterScreen({ navigation }) {
         <Text style={styles.registerText}>Create an Account</Text>
       </View>
       <CustomTextInput
-        value={username}
+        value={userName}
         onChangeText={setUsername}
         placeholder="Enter your username"
         prefixIcon="person"
       />
       <CustomTextInput
-        value={fullname}
+        value={fullName}
         onChangeText={setFullname}
         placeholder="Enter your full name"
         prefixIcon="account-circle"

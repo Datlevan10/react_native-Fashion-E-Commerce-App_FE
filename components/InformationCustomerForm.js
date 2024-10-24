@@ -1,13 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from "@expo/vector-icons";
 
 
 const InformationCustomerForm = ({ address, customerName, phoneNumber }) => {
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
-        <MaterialIcons name="location-on" size={26} color="#036f48" />
+        <FontAwesome5 name="map-marker-alt" size={25} color="#036f48" />
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Shipping Address</Text>
