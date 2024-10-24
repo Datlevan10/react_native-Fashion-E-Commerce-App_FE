@@ -26,7 +26,7 @@ class CartController extends Controller
     }
 
     // method GET Cart by cart_id
-    public function getCartById($cart_id) {
+    public function getCartByCartId($cart_id) {
         $cart = Cart::with('cartDetails')->where('cart_id', $cart_id)->first();
 
         if (!$cart) {
