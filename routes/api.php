@@ -18,9 +18,11 @@ Route::apiResource('customers', CustomerController::class);
 Route::apiResource('carts', CartController::class);
 Route::apiResource('cart_details', CartDetailController::class);
 
-Route::get('products/category/{category_id}', [ProductController::class, 'getByCategory']);
-Route::get('carts/{cart_id}', [CartController::class, 'getCartById']);
+Route::get('products/category/{category_id}', [ProductController::class, 'getProductByCategoryId']);
+Route::get('carts/{cart_id}', [CartController::class, 'getCartByCartId']);
 Route::get('carts/customer/{customer_id}', [CartController::class, 'getCartByCustomerId']);
+Route::get('cart_details/cart/{cart_id}', [CartDetailController::class, 'getCartDetailByCartId']);
+Route::get('cart_details/customer/{customer_id}', [CartDetailController::class, 'getCartDetailByCustomerId']);
 
 
 Route::get('/user', function (Request $request) {

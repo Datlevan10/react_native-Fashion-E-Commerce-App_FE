@@ -28,7 +28,7 @@ class ProductController extends Controller
     }
 
     // method GET Product by category_id
-    public function getByCategory($category_id) {
+    public function getProductByCategoryId($category_id) {
         $categoryExists = Category::where('category_id', $category_id)->exists();
 
         if (!$categoryExists) {
