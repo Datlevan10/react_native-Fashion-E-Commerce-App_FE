@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -49,6 +50,23 @@ class AdminController extends Controller
             'address' => 'nullable|string|max:255',
         ]);
 
+        $date_of_birth = null;
+        if ($request->date_of_birth) {
+            if (Carbon::hasFormat($request->date_of_birth, 'd/m/Y')) {
+                $date_of_birth = Carbon::createFromFormat('d/m/Y', $request->date_of_birth)->format('Y-m-d');
+            } elseif (Carbon::hasFormat($request->date_of_birth, 'd-m-Y')) {
+                $date_of_birth = Carbon::createFromFormat('d-m-Y', $request->date_of_birth)->format('Y-m-d');
+            } elseif (Carbon::hasFormat($request->date_of_birth, 'Y/m/d')) {
+                $date_of_birth = Carbon::createFromFormat('Y/m/d', $request->date_of_birth)->format('Y-m-d');
+            } elseif (Carbon::hasFormat($request->date_of_birth, 'Y-m-d')) {
+                $date_of_birth = Carbon::createFromFormat('Y-m-d', $request->date_of_birth)->format('Y-m-d');
+            } else {
+                return response()->json([
+                    'message' => 'Invalid date format. Accepted formats are d/m/Y, d-m-Y, Y/m/d, Y-m-d.',
+                ], 422);
+            }
+        }
+
         if ($validator->fails()) {
             Log::error('Validation failed', [
                 'errors' => $validator->messages(),
@@ -75,7 +93,7 @@ class AdminController extends Controller
             'user_name' => $request->user_name,
             'full_name' => $request->full_name,
             'gender' => $request->gender,
-            'date_of_birth' => $request->date_of_birth,
+            'date_of_birth' => $date_of_birth,
             'image' => $imageUrl ?? null,
             'email' => $request->email,
             'phone_number' => $request->phone_number,
@@ -117,6 +135,18 @@ class AdminController extends Controller
             'address' => 'sometimes|string|max:255',
         ]);
 
+        if ($request->date_of_birth) {
+            if (Carbon::hasFormat($request->date_of_birth, 'd/m/Y')) {
+                $date_of_birth = Carbon::createFromFormat('d/m/Y', $request->date_of_birth)->format('Y-m-d');
+            } elseif (Carbon::hasFormat($request->date_of_birth, 'd-m-Y')) {
+                $date_of_birth = Carbon::createFromFormat('d-m-Y', $request->date_of_birth)->format('Y-m-d');
+            } elseif (Carbon::hasFormat($request->date_of_birth, 'Y/m/d')) {
+                $date_of_birth = Carbon::createFromFormat('Y/m/d', $request->date_of_birth)->format('Y-m-d');
+            } elseif (Carbon::hasFormat($request->date_of_birth, 'Y-m-d')) {
+                $date_of_birth = Carbon::createFromFormat('Y-m-d', $request->date_of_birth)->format('Y-m-d');
+            }
+        }
+
         if ($validator->fails()) {
             Log::error('Validation failed', [
                 'errors' => $validator->messages(),
@@ -143,7 +173,7 @@ class AdminController extends Controller
             'user_name' => $request->user_name ?? $admin->user_name,
             'full_name' => $request->full_name ?? $admin->full_name,
             'gender' => $request->gender ?? $admin->gender,
-            'date_of_birth' => $request->date_of_birth ?? $admin->date_of_birth,
+            'date_of_birth' => $date_of_birth ?? $admin->date_of_birth,
             'image' => $imageUrl ?? $admin->image,
             'email' => $request->email ?? $admin->email,
             'phone_number' => $request->phone_number ?? $admin->phone_number,
