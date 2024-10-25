@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\CartDetailResource;
+use App\Models\Cart;
 use App\Models\CartDetail;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\CartDetailResource;
 
 class CartDetailController extends Controller
 {
@@ -54,5 +55,29 @@ class CartDetailController extends Controller
     // method GET Detail
     public function show(CartDetail $cart_detail) {
         return new CartDetailResource($cart_detail);
+    }
+
+    // method DELETE a cart item by cart_detail_id
+    public function deleteItem($cart_detail_id)
+    {
+        $cartDetail = CartDetail::find($cart_detail_id);
+
+        if (!$cartDetail) {
+            return response()->json(['message' => 'Cart item not found'], 404);
+        }
+
+        $cart_id = $cartDetail->cart_id;
+
+        $cartDetail->delete();
+
+        $cartTotal = CartDetail::where('cart_id', $cart_id)->sum('total_price');
+        $cart = Cart::find($cart_id);
+
+        if ($cart) {
+            $cart->total_price = $cartTotal;
+            $cart->save();
+        }
+
+        return response()->json(['message' => 'Item removed from cart and total price updated successfully'], 200);
     }
 }
