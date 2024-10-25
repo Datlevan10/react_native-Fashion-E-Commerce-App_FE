@@ -8,12 +8,13 @@ use App\Http\Controllers\Api\CartDetailController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CustomerController;
-
+use App\Http\Controllers\Api\StaffController;
 
 // Route
 Route::apiResource('categories', CategoryController::class);
 Route::apiResource('products', ProductController::class);
 Route::apiResource('admins', AdminController::class);
+Route::apiResource('staffs', StaffController::class);
 Route::apiResource('customers', CustomerController::class);
 Route::apiResource('carts', CartController::class);
 Route::apiResource('cart_details', CartDetailController::class);
