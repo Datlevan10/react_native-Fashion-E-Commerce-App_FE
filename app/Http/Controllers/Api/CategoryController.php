@@ -64,9 +64,32 @@ class CategoryController extends Controller
         ], 200);
     }
 
-    // method GET Detail
-    public function show(Category $category) {
-        return new CategoryResource($category);
+    // method GET Detail with category_id
+    public function show($category_id) {
+        try {
+            $category = Category::where('category_id', $category_id)->first();
+            if (!$category) {
+                return response()->json([
+                    'message' => 'Category not found',
+                    'category_id' => $category_id
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Get category success with category_id',
+                'data' => new CategoryResource($category)
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Failed to get category information', [
+                'error' => $e->getMessage(),
+                'category_id' => $category_id
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to get category information',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     // method PUT
