@@ -24,11 +24,13 @@ Route::prefix('')->group(function () {
     // Cart and CartDetail Routes
     Route::apiResource('carts', CartController::class);
     Route::get('carts/{cart_id}', [CartController::class, 'getCartByCartId']);
-    Route::get('carts/customer/{customer_id}', [CartController::class, 'getCartByCustomerId']);
+    Route::get('carts/all_carts/customer/{customer_id}', [CartController::class, 'getAllCartByCustomerId']);
+    Route::get('carts/not_ordered_carts/customer/{customer_id}', [CartController::class, 'getNotOrderedCartByCustomerId']);
 
     Route::resource('cart_details', CartDetailController::class)->except(['destroy']);
     Route::get('cart_details/cart/{cart_id}', [CartDetailController::class, 'getCartDetailByCartId']);
-    Route::get('cart_details/customer/{customer_id}', [CartDetailController::class, 'getCartDetailByCustomerId']);
+    Route::get('cart_details/all_cart_details/customer/{customer_id}', [CartDetailController::class, 'getAllCartDetailByCustomerId']);
+    Route::get('cart_details/not_ordered_cart_details/customer/{customer_id}', [CartDetailController::class, 'getNotOrderedCartDetailByCustomerId']);
     Route::delete('cart_details/{cart_detail_id}', [CartDetailController::class, 'deleteItem']);
 
     // Order and Order Detail Routes

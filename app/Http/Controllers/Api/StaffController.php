@@ -129,10 +129,33 @@ class StaffController extends Controller
         ], 200);
     }
 
-    // method GET Detail
-    public function show(Staff $staff)
+    // method GET Detail with staff_id
+    public function show($staff_id)
     {
-        return new StaffResource($staff);
+        try {
+            $staff = Staff::where('staff_id', $staff_id)->first();
+            if (!$staff) {
+                return response()->json([
+                    'message' => 'Staff not found',
+                    'staff_id' => $staff_id
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Get staff success with staff_id',
+                'data' => new StaffResource($staff)
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Failed to get staff information', [
+                'error' => $e->getMessage(),
+                'staff_id' => $staff_id
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to get staff information',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     // method PUT

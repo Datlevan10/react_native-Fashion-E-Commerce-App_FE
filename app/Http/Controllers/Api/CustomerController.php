@@ -107,10 +107,33 @@ class CustomerController extends Controller
         ], 200);
     }
 
-    // method GET Detail
-    public function show(Customer $customer)
+    // method GET Detail with customer_id
+    public function show($customer_id)
     {
-        return new CustomerResource($customer);
+        try {
+            $customer = Customer::where('customer_id', $customer_id)->first();
+            if (!$customer) {
+                return response()->json([
+                    'message' => 'Customer not found',
+                    'customer_id' => $customer_id
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Get customer success with customer_id',
+                'data' => new CustomerResource($customer)
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Failed to get customer information', [
+                'error' => $e->getMessage(),
+                'customer_id' => $customer_id
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to get customer information',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     // method PUT

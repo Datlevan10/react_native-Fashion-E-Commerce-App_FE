@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Cart;
 use App\Models\CartDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CartDetailResource;
 
@@ -38,8 +39,8 @@ class CartDetailController extends Controller
         }
     }
 
-    // method GET CartDetail by customer_id
-    public function getCartDetailByCustomerId($customer_id) {
+    // method GET all CartDetail by customer_id
+    public function getAllCartDetailByCustomerId($customer_id) {
         $cart_details = CartDetail::where('customer_id', $customer_id)->get();
 
         if ($cart_details->count() > 0) {
@@ -52,9 +53,47 @@ class CartDetailController extends Controller
         }
     }
 
-    // method GET Detail
-    public function show(CartDetail $cart_detail) {
-        return new CartDetailResource($cart_detail);
+    // method GET CartDetails with is_checked_out = false
+    public function getNotOrderedCartDetailByCustomerId() {
+        $uncheckedCartDetails = CartDetail::where('is_checked_out', false)->get();
+
+        if ($uncheckedCartDetails->count() > 0) {
+            return response()->json([
+                'message' => 'Get unchecked cart details successfully',
+                'data' => CartDetailResource::collection($uncheckedCartDetails)
+            ], 200);
+        } else {
+            return response()->json(['message' => 'No unchecked cart details found'], 404);
+        }
+    }
+
+
+    // method GET Detail with cart_detail_id
+    public function show($cart_detail_id) {
+        try {
+            $cart_detail = CartDetail::where('cart_detail_id', $cart_detail_id)->first();
+            if (!$cart_detail) {
+                return response()->json([
+                    'message' => 'Cart detail not found',
+                    'cart_detail_id' => $cart_detail_id
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Get cart detail success with cart_detail_id',
+                'data' => new CartDetailResource($cart_detail)
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Failed to get cart detail information', [
+                'error' => $e->getMessage(),
+                'cart_detail_id' => $cart_detail_id
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to get cart detail information',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     // method DELETE a cart item by cart_detail_id

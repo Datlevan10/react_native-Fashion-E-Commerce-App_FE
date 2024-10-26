@@ -20,7 +20,7 @@ class AdminController extends Controller
         $admins = Admin::get();
         if ($admins->count() > 0) {
             return response()->json([
-                // 'message' => 'Get admin success',
+                'message' => 'Get admin success',
                 'data' => AdminResource::collection($admins)
             ], 200);
         } else {
@@ -108,9 +108,32 @@ class AdminController extends Controller
     }
 
     // method GET Detail
-    public function show(Admin $admin)
+    public function show($admin_id)
     {
-        return new AdminResource($admin);
+        try {
+            $admin = Admin::where('admin_id', $admin_id)->first();
+            if (!$admin) {
+                return response()->json([
+                    'message' => 'Admin not found',
+                    'admin_id' => $admin_id
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Get admin success with admin_id',
+                'data' => new AdminResource($admin)
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Failed to get admin information', [
+                'error' => $e->getMessage(),
+                'admin_id' => $admin_id
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to get admin information',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     // method PUT

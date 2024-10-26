@@ -22,7 +22,7 @@ class OrderController extends Controller
         $orders = Order::get();
         if ($orders->count() > 0) {
             return response()->json([
-                // 'message' => 'Get order success',
+                'message' => 'Get order success',
                 'data' => OrderResource::collection($orders)
             ], 200);
         }
@@ -120,4 +120,35 @@ class OrderController extends Controller
             return response()->json(['message' => 'Failed to create order', 'error' => $e->getMessage()], 500);
         }
     }
+
+    // method GET Detail with order_id
+    public function show($order_id)
+    {
+        try {
+            $order = Order::where('order_id', $order_id)->first();
+            if (!$order) {
+                return response()->json([
+                    'message' => 'Order not found',
+                    'order_id' => $order_id
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Get order success with order_id',
+                'data' => new OrderResource($order)
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Failed to get order information', [
+                'error' => $e->getMessage(),
+                'order_id' => $order_id
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to get order information',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    //
 }

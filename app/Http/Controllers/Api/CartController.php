@@ -6,6 +6,7 @@ use App\Models\Cart;
 use App\Models\Product;
 use App\Models\CartDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CartResource;
 
@@ -39,8 +40,22 @@ class CartController extends Controller
         ], 200);
     }
 
+    // method GET all Cart by customer_id
+    public function getAllCartByCustomerId($customer_id) {
+        $carts = Cart::where('customer_id', $customer_id)->get();
+
+        if ($carts->count() > 0) {
+            return response()->json([
+                'message' => 'Get cart by customer_id successfully',
+                'data' => CartResource::collection($carts)
+            ], 200);
+        } else {
+            return response()->json(['message' => 'No cart found for this customer_id'], 404);
+        }
+    }
+
     // method GET Cart by customer_id
-    public function getCartByCustomerId($customer_id) {
+    public function getNotOrderedCartByCustomerId($customer_id) {
         $cart = Cart::with('cartDetails')->where('customer_id', $customer_id)
             ->where('cart_status', false)
             ->first();
@@ -117,8 +132,31 @@ class CartController extends Controller
         return response()->json(['message' => 'Product added to cart successfully'], 200);
     }
 
-    // method GET Detail
-    public function show(Cart $cart) {
-        return new CartResource($cart);
+    // method GET Detail with cart_id
+    public function show($cart_id) {
+        try {
+            $cart = Cart::where('cart_id', $cart_id)->first();
+            if (!$cart) {
+                return response()->json([
+                    'message' => 'Cart not found',
+                    'cart_id' => $cart_id
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Get cart success with cart_id',
+                'data' => new CartResource($cart)
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Failed to get cart information', [
+                'error' => $e->getMessage(),
+                'cart_id' => $cart_id
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to get cart information',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

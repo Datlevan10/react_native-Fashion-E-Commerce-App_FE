@@ -104,11 +104,33 @@ class ProductController extends Controller
         ], 200);
     }
 
-    // method GET Detail
-    public function show(Product $product) {
-        return new ProductResource($product);
-    }
+    // method GET Detail with product_id
+    public function show($product_id) {
+        try {
+            $product = Product::where('product_id', $product_id)->first();
+            if (!$product) {
+                return response()->json([
+                    'message' => 'Product not found',
+                    'product_id' => $product_id
+                ], 404);
+            }
 
+            return response()->json([
+                'message' => 'Get product success with product_id',
+                'data' => new ProductResource($product)
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Failed to get product information', [
+                'error' => $e->getMessage(),
+                'product_id' => $product_id
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to get product information',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
     // method PUT
     public function update(Request $request, Product $product) {
         $validator = Validator::make($request->all(), [
