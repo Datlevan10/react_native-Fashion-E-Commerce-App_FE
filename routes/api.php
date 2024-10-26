@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\{
     AdminController, CartController, CartDetailController,
     ProductController, CategoryController, CustomerController,
+    OrderController,
+    OrderDetailController,
     StaffController
 };
 
@@ -28,6 +30,11 @@ Route::prefix('')->group(function () {
     Route::get('cart_details/cart/{cart_id}', [CartDetailController::class, 'getCartDetailByCartId']);
     Route::get('cart_details/customer/{customer_id}', [CartDetailController::class, 'getCartDetailByCustomerId']);
     Route::delete('cart_details/{cart_detail_id}', [CartDetailController::class, 'deleteItem']);
+
+    // Order and Order Detail Routes
+    Route::apiResource('orders', OrderController::class);
+
+    Route::apiResource('order_details', OrderDetailController::class);
 
     // Authenticated User Route
     Route::get('/user', function (Request $request) {
