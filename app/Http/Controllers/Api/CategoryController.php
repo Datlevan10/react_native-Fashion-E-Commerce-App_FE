@@ -61,7 +61,7 @@ class CategoryController extends Controller
         return response()->json([
             'message' => 'Category created success',
             'data' => new CategoryResource($categories)
-        ], 200);
+        ], 201);
     }
 
     // method GET Detail with category_id

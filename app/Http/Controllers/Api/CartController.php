@@ -129,7 +129,7 @@ class CartController extends Controller
         $cart->total_price = $cartTotal;
         $cart->save();
 
-        return response()->json(['message' => 'Product added to cart successfully'], 200);
+        return response()->json(['message' => 'Product added to cart successfully'], 201);
     }
 
     // method GET Detail with cart_id

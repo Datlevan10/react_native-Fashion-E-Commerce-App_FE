@@ -104,7 +104,7 @@ class AdminController extends Controller
         return response()->json([
             'message' => 'Admin created success',
             'data' => new AdminResource($admins)
-        ], 200);
+        ], 201);
     }
 
     // method GET Detail
