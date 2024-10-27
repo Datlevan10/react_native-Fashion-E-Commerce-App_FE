@@ -104,7 +104,7 @@ class CustomerController extends Controller
         return response()->json([
             'message' => 'Customer created success',
             'data' => new CustomerResource($customers)
-        ], 200);
+        ], 201);
     }
 
     // method GET Detail with customer_id

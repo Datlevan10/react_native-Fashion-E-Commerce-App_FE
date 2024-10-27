@@ -101,7 +101,7 @@ class ProductController extends Controller
         return response()->json([
             'message' => 'Product created successfully',
             'data' => new ProductResource($product)
-        ], 200);
+        ], 201);
     }
 
     // method GET Detail with product_id

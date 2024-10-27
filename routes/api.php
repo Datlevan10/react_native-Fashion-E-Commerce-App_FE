@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\{
     ProductController, CategoryController, CustomerController,
     OrderController,
     OrderDetailController,
+    ProductFavoriteController,
     StaffController
 };
 
@@ -20,6 +21,9 @@ Route::prefix('')->group(function () {
     Route::apiResource('admins', AdminController::class);
     Route::apiResource('staffs', StaffController::class);
     Route::apiResource('customers', CustomerController::class);
+
+    // Product favorite Routes
+    Route::apiResource('product_favorites', ProductFavoriteController::class);
 
     // Cart and CartDetail Routes
     Route::apiResource('carts', CartController::class);

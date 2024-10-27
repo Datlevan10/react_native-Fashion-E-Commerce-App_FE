@@ -126,7 +126,7 @@ class StaffController extends Controller
         return response()->json([
             'message' => 'Staff created success',
             'data' => new StaffResource($staffs)
-        ], 200);
+        ], 201);
     }
 
     // method GET Detail with staff_id
