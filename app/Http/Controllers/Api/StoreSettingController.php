@@ -51,7 +51,7 @@ class StoreSettingController extends Controller
         }
 
         $storeSetting = StoreSetting::create([
-            'setting_id' => uniqid(),
+            // 'setting_id' => uniqid(),
             'store_id' => $request->store_id,
             'is_open' => $request->is_open ?? true,
             'open_time' => $request->open_time,

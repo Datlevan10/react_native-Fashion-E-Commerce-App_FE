@@ -50,16 +50,30 @@ class ProductController extends Controller
 
     // method POST
     public function store(Request $request) {
+        // $validator = Validator::make($request->all(), [
+        //     'category_id' => 'required|exists:categories,category_id',
+        //     'product_name' => 'required|string|max:255',
+        //     'description' => 'required|string',
+        //     'color' => 'required|array|min:1',
+        //     'color.*' => 'string|max:50',
+        //     'size' => 'required|array|min:1',
+        //     'size.*' => 'string|max:10',
+        //     'image' => 'required|array|min:1',
+        //     'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        //     'old_price' => 'nullable|numeric|min:0',
+        //     'new_price' => 'required|numeric|min:0',
+        // ]);
+
         $validator = Validator::make($request->all(), [
             'category_id' => 'required|exists:categories,category_id',
             'product_name' => 'required|string|max:255',
             'description' => 'required|string',
             'color' => 'required|array|min:1',
-            'color.*' => 'string|max:50',
+            'color.*.color_code' => 'string|max:50',
             'size' => 'required|array|min:1',
-            'size.*' => 'string|max:10',
+            'size.*.size' => 'string|max:10',
             'image' => 'required|array|min:1',
-            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image.*.url' => 'string|max:255',
             'old_price' => 'nullable|numeric|min:0',
             'new_price' => 'required|numeric|min:0',
         ]);
@@ -89,9 +103,12 @@ class ProductController extends Controller
             'category_id' => $request->category_id,
             'product_name' => $request->product_name,
             'description' => $request->description,
-            'color' => $request->color,
-            'size' => $request->size,
-            'image' => $imagePaths,
+            // 'color' => $request->color,
+            // 'size' => $request->size,
+            // 'image' => $imagePaths,
+            'color' => array_map(fn($color) => ['color_code' => $color], $request->color),
+            'size' => array_map(fn($size) => ['size' => $size], $request->size),
+            'image' => array_map(fn($url) => ['url' => $url], $imagePaths),
             'old_price' => $request->old_price,
             'new_price' => $request->new_price ?? $request->old_price,
             'total_review' => 0,
@@ -186,14 +203,34 @@ class ProductController extends Controller
         ], 200);
     }
 
+    // // method DELETE
+    // public function destroy(Product $product) {
+    //     if ($product->image) {
+    //         $imagePaths = is_string($product->image) ? json_decode($product->image) : $product->image;
+
+    //         if (is_array($imagePaths)) {
+    //             foreach ($imagePaths as $imagePath) {
+    //                 Storage::disk('public')->delete(str_replace('/storage/', '', $imagePath));
+    //             }
+    //         }
+    //     }
+
+    //     $product->delete();
+
+    //     return response()->json([
+    //         'message' => 'Product deleted successfully',
+    //     ], 200);
+    // }
+
     // method DELETE
     public function destroy(Product $product) {
         if ($product->image) {
-            $imagePaths = is_string($product->image) ? json_decode($product->image) : $product->image;
+            $imagePaths = is_string($product->image) ? json_decode($product->image, true) : $product->image;
 
             if (is_array($imagePaths)) {
                 foreach ($imagePaths as $imagePath) {
-                    Storage::disk('public')->delete(str_replace('/storage/', '', $imagePath));
+                    $path = is_array($imagePath) && isset($imagePath['url']) ? $imagePath['url'] : $imagePath;
+                    Storage::disk('public')->delete(str_replace('/storage/', '', $path));
                 }
             }
         }
@@ -204,6 +241,5 @@ class ProductController extends Controller
             'message' => 'Product deleted successfully',
         ], 200);
     }
-
 
 }
