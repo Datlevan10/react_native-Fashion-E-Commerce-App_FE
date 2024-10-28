@@ -17,7 +17,7 @@ class CartController extends Controller
         $carts = Cart::get();
         if ($carts->count() > 0) {
             return response()->json([
-                // 'message' => 'Get cart success',
+                'message' => 'Get cart success',
                 'data' => CartResource::collection($carts)
             ], 200);
         }
