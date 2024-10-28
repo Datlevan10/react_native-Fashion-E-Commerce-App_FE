@@ -16,7 +16,7 @@ class CartDetailController extends Controller
         $cart_details = CartDetail::get();
         if ($cart_details->count() > 0) {
             return response()->json([
-                // 'message' => 'Get cart detail success',
+                'message' => 'Get cart detail success',
                 'data' => CartDetailResource::collection($cart_details)
             ], 200);
         }

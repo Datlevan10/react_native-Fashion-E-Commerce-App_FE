@@ -8,10 +8,16 @@ use App\Http\Controllers\Api\{
     OrderController,
     OrderDetailController,
     ProductFavoriteController,
-    StaffController
+    StaffController,
+    StoreController,
+    StoreSettingController
 };
 
 Route::prefix('')->group(function () {
+    // Store Routes Store and Store Settings
+    Route::apiResource('stores', StoreController::class);
+    Route::apiResource('store_settings', StoreSettingController::class);
+
     // Category and Product Routes
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('products', ProductController::class);
@@ -24,6 +30,7 @@ Route::prefix('')->group(function () {
 
     // Product favorite Routes
     Route::apiResource('product_favorites', ProductFavoriteController::class);
+    Route::get('product_favorites/customer/{customer_id}', [ProductFavoriteController::class, 'getFavoriteProductByCustomerId']);
 
     // Cart and CartDetail Routes
     Route::apiResource('carts', CartController::class);

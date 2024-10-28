@@ -16,7 +16,10 @@ class CategoryController extends Controller
     public function index() {
         $categories = Category::get();
         if ($categories->count() > 0) {
-            return CategoryResource::collection($categories);
+            return response()->json([
+                'message' => 'Get Category success',
+                'data' => CategoryResource::collection($categories)
+            ], 200);
         }
         else {
             return response()->json(['message' => 'No Record Available'], 200);
