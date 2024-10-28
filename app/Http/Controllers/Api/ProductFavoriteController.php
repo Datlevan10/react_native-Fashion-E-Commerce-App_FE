@@ -15,13 +15,27 @@ class ProductFavoriteController extends Controller
         $product_favorites = ProductFavorite::get();
         if ($product_favorites->count() > 0) {
             return response()->json([
-                // 'message' => 'Get cart success',
+                // 'message' => 'Get product favorite success',
                 'data' => ProductFavoriteResource::collection($product_favorites)
             ], 200);
         }
         else {
             return response()->json(['message' => 'No record available'], 200);
         }
+    }
+
+    // method GET by customer_id
+    public function getFavoriteProductByCustomerId($customer_id) {
+        $product_favorites = ProductFavorite::where('customer_id', $customer_id)->get();
+
+        if ($product_favorites->isEmpty()) {
+            return response()->json(['message' => 'No favorite products found for this customer'], 200);
+        }
+
+        return response()->json([
+            'message' => 'Get favorite products success',
+            'data' => ProductFavoriteResource::collection($product_favorites)
+        ], 200);
     }
 
     // method POST

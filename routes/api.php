@@ -30,6 +30,7 @@ Route::prefix('')->group(function () {
 
     // Product favorite Routes
     Route::apiResource('product_favorites', ProductFavoriteController::class);
+    Route::get('product_favorites/customer/{customer_id}', [ProductFavoriteController::class, 'getFavoriteProductByCustomerId']);
 
     // Cart and CartDetail Routes
     Route::apiResource('carts', CartController::class);
