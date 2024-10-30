@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\{
     OrderController,
     OrderDetailController,
     ProductFavoriteController,
+    ReviewController,
     StaffController,
     StoreController,
     StoreSettingController
@@ -48,6 +49,15 @@ Route::prefix('')->group(function () {
     Route::apiResource('orders', OrderController::class);
 
     Route::apiResource('order_details', OrderDetailController::class);
+
+    // Review Routes
+    Route::apiResource('reviews', ReviewController::class);
+    Route::get('/reviews/product/{product_id}', [ReviewController::class, 'getReviewsByProductId']);
+    Route::get('/reviews/status/pending', [ReviewController::class, 'getPendingReviews']);
+    Route::get('/reviews/status/approved', [ReviewController::class, 'getApprovedReviews']);
+    Route::get('/reviews/status/unpublished', [ReviewController::class, 'getUnpublishedReviews']);
+    Route::put('/reviews/publish/{review_id}', [ReviewController::class, 'publishReview']);
+    Route::put('/reviews/unpublish/{review_id}', [ReviewController::class, 'unpublishReview']);
 
     // Authenticated User Route
     Route::get('/user', function (Request $request) {
