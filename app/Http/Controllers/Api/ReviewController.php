@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Review;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -77,6 +78,17 @@ class ReviewController extends Controller
             'status' => $status,
             'review_date' => now(),
         ]);
+
+        $product = Product::find($request->product_id);
+
+        if ($product) {
+            $total_review = $product->total_review + 1;
+            $average_review = ($product->average_review * $product->total_review + $request->stars_review) / $total_review;
+
+            $product->total_review = $total_review;
+            $product->average_review = $average_review;
+            $product->save();
+        }
 
         return response()->json([
             'message' => 'Review created successfully',
