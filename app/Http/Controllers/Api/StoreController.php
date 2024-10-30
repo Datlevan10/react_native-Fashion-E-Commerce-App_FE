@@ -146,6 +146,33 @@ class StoreController extends Controller
         ], 200);
     }
 
+    // method GET Detail with store_id
+    public function show($store_id) {
+        try {
+            $store = Store::where('store_id', $store_id)->first();
+            if (!$store) {
+                return response()->json([
+                    'message' => 'Store not found',
+                    'store_id' => $store_id
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Get store success with store_id',
+                'data' => new StoreResource($store)
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error('Failed to get store information', [
+                'error' => $e->getMessage(),
+                'store_id' => $store_id
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to get store information',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 
     // method DELETE
     public function destroy(Store $store) {
