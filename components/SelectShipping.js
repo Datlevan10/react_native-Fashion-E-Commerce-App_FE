@@ -9,7 +9,7 @@ export default function SelectShipping({ shippingMethod, estimatedTime, price })
         <Text style={styles.estimatedTimeText}>{estimatedTime}</Text>
       </View>
       <View style={styles.priceColumn}>
-        <Text style={styles.priceText}>{price}</Text>
+        <Text style={styles.priceText}>$ {price}</Text>
       </View>
     </View>
   );

@@ -16,6 +16,7 @@ import Colors from "../themes/Color";
 import Feather from "react-native-vector-icons/Feather";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import InformationCustomerForm from "../components/InformationCustomerForm";
+import ItemInCart from "../components/ItemInCart";
 import ItemDetail from "../components/ItemDetail";
 import SelectShipping from "../components/SelectShipping";
 import PaymentMethod from "../components/PaymentMethod";
@@ -64,13 +65,13 @@ export default function CheckoutScreen({ navigation }) {
           >
             <Feather name="arrow-left" size={22} color={Colors.blackColor} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Confirm Your Order</Text>
+          <Text style={styles.headerTitle}>Checkout</Text>
           <View style={styles.placeholder} />
         </View>
       </View>
       <View style={styles.body}>
         <View style={styles.titleEditText}>
-          <Text style={styles.title}>Delivery information</Text>
+          <Text style={styles.title}></Text>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <Text style={styles.editText}>Change</Text>
           </TouchableOpacity>
@@ -80,10 +81,18 @@ export default function CheckoutScreen({ navigation }) {
           customerName={customerName}
           phoneNumber={phoneNumber}
         />
-        <View style={styles.titleEditText}>
-          <Text style={styles.title}>Item Detail</Text>
-        </View>
-        <ItemDetail
+        {/* <View style={styles.titleEditText}>
+          <Text style={styles.title}></Text>
+        </View> */}
+        <ItemInCart
+          image={imageTest}
+          productName="Wrapover cotton dress"
+          price="399.00"
+          color="Space White Color"
+          size="S"
+          quantity="1"
+        />
+        {/* <ItemDetail
           productImage={imageTest}
           categoryName="Dress"
           productName="Dress Kid"
@@ -91,7 +100,7 @@ export default function CheckoutScreen({ navigation }) {
           color="White"
           size="S"
           quantity="1"
-        />
+        /> */}
         <View style={styles.titleEditText}>
           <Text style={styles.title}>Select Shipping</Text>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
@@ -101,7 +110,7 @@ export default function CheckoutScreen({ navigation }) {
         <SelectShipping
           shippingMethod="Standard Shipping"
           estimatedTime="Estimated arrived 3-5 days"
-          price="$5.99"
+          price="5.99"
         />
         <View style={styles.noteContainer}>
           <Text style={styles.noteTitle}>Note:</Text>
@@ -117,7 +126,7 @@ export default function CheckoutScreen({ navigation }) {
             <Text style={styles.subTotalText}>Subtotal,</Text>
             <Text style={styles.itemCountText}>3 items</Text>
           </View>
-          <Text style={styles.totalSubText}>$404.99</Text>
+          <Text style={styles.totalSubText}>$ 404.99</Text>
         </View>
         <View style={styles.divider} />
         <View style={styles.titleEditText}>
@@ -167,7 +176,7 @@ export default function CheckoutScreen({ navigation }) {
         <View style={styles.totalAmountContainer}>
           <View>
             <Text style={styles.totalAmountTitle}>Total</Text>
-            <Text style={styles.totalPriceText}>${totalAmount.toFixed(2)}</Text>
+            <Text style={styles.totalPriceText}>$ {totalAmount.toFixed(2)}</Text>
           </View>
           <TouchableOpacity
             onPress={handleSubmitOrder}
@@ -273,7 +282,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 25,
     color: Colors.blackColor,
     fontWeight: "bold",
     flex: 1,
@@ -368,7 +377,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 5,
+    marginTop: 10,
   },
   noteTitle: {
     fontSize: 18,
@@ -404,6 +413,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginTop: 5
   },
   itemCountText: {
     fontSize: 20,

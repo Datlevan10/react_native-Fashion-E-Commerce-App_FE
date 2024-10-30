@@ -28,10 +28,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderColor: '#d3d3d3',
     borderWidth: 1,
-    padding: 10,
+    padding: 15,
     borderRadius: 10,
     backgroundColor: '#fff',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   iconContainer: {
     justifyContent: 'flex-start',
