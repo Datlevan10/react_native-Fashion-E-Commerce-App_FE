@@ -22,13 +22,14 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import CheckoutScreen from './screens/CheckoutScreen';
 import TrackingDetailScreen from './screens/TrackingDetailScreen';
+import ProfileScreen from './screens/ProfileScreen';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="CheckoutScreen">
+      <Stack.Navigator initialRouteName="ProfileScreen">
         <Stack.Screen 
           name="WelcomeScreen" 
           component={WelcomeScreen} 
@@ -67,6 +68,11 @@ export default function App() {
         <Stack.Screen 
           name="TrackingDetailScreen" 
           component={TrackingDetailScreen} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="ProfileScreen" 
+          component={ProfileScreen} 
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
