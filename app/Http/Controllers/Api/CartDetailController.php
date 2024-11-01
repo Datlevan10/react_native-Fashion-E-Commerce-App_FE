@@ -97,7 +97,7 @@ class CartDetailController extends Controller
     }
 
     // method DELETE a cart item by cart_detail_id
-    public function deleteItem($cart_detail_id)
+    public function deleteItemInCart($cart_detail_id)
     {
         $cartDetail = CartDetail::find($cart_detail_id);
 
