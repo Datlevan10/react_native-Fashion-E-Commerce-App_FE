@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-const CustomLoginAndRegisterButton = ({ buttonText, buttonColor, onPress }) => {
+const CustomHandleButton = ({ buttonText, buttonColor, onPress }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -14,6 +14,7 @@ const CustomLoginAndRegisterButton = ({ buttonText, buttonColor, onPress }) => {
 
 const styles = StyleSheet.create({
   button: {
+    width : "100%",
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',
@@ -26,4 +27,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomLoginAndRegisterButton;
+export default CustomHandleButton;

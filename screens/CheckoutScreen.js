@@ -13,8 +13,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import Colors from "../themes/Color";
-import Feather from "react-native-vector-icons/Feather";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import { MaterialIcons, Feather } from "@expo/vector-icons";
 import InformationCustomerForm from "../components/InformationCustomerForm";
 import ItemInCart from "../components/ItemInCart";
 import ItemDetail from "../components/ItemDetail";

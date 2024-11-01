@@ -3,7 +3,7 @@ import { View, Text, Alert, StyleSheet, TouchableOpacity } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import CustomTextInput from "../components/CustomTextInput";
 import Colors from "../themes/Color";
-import CustomLoginAndRegisterButton from "../components/CustomLoginAndRegisterButton";
+import CustomLoginAndRegisterButton from "../components/CustomHandleButton";
 import CustomLinkText from "../components/CustomLinkText";
 
 const ForgotPasswordScreen = ({ navigation }) => {

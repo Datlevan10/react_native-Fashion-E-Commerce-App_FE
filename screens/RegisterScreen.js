@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import CustomTextInput from "../components/CustomTextInput";
 import PasswordTextInput from "../components/PasswordTextInput";
-import CustomLoginAndRegisterButton from "../components/CustomLoginAndRegisterButton";
+import CustomHandleButton from "../components/CustomHandleButton";
 import CustomLinkText from "../components/CustomLinkText";
 import Checkbox from "expo-checkbox";
 import Colors from "../themes/Color";
@@ -74,7 +74,7 @@ export default function RegisterScreen({ navigation }) {
         />
         <Text style={styles.acceptText}>I accept the <Text style={styles.privacyText}>Privacy Policy</Text> </Text>
       </View>
-      <CustomLoginAndRegisterButton
+      <CustomHandleButton
         buttonText="Register"
         buttonColor="#0288d1"
         onPress={handleRegister}

@@ -54,7 +54,7 @@ export default function ProfileScreen({ navigation }) {
               imageCustomer={imageTest}
               customerName="John Doe"
               address="123 Main St, City, Country"
-              onManageProfilePress={() => alert("Manage Profile")}
+              onManageProfilePress={() => navigation.navigate("ManagerProfileScreen")}
               onDetailPress={() => alert("Detail")}
             />
           </View>
