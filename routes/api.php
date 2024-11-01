@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\{
     AdminController, CartController, CartDetailController,
     ProductController, CategoryController, CustomerController,
+    EventController,
     OrderController,
     OrderDetailController,
     ProductFavoriteController,
@@ -18,6 +19,14 @@ Route::prefix('')->group(function () {
     // Store Routes Store and Store Settings
     Route::apiResource('stores', StoreController::class);
     Route::apiResource('store_settings', StoreSettingController::class);
+
+    // Event Routes
+    Route::apiResource('events', EventController::class);
+    Route::get('events/is_active/active', [EventController::class, 'getActiveEvents']);
+    Route::get('events/is_active/inactive', [EventController::class, 'getInactiveEvents']);
+    Route::put('events/set-active/{event_id}', [EventController::class, 'activateEvent']);
+    Route::put('events/set-inactive/{event_id}', [EventController::class, 'deactivateEvent']);
+
 
     // Category and Product Routes
     Route::apiResource('categories', CategoryController::class);
@@ -36,14 +45,14 @@ Route::prefix('')->group(function () {
     // Cart and CartDetail Routes
     Route::apiResource('carts', CartController::class);
     Route::get('carts/{cart_id}', [CartController::class, 'getCartByCartId']);
-    Route::get('carts/all_carts/customer/{customer_id}', [CartController::class, 'getAllCartByCustomerId']);
-    Route::get('carts/not_ordered_carts/customer/{customer_id}', [CartController::class, 'getNotOrderedCartByCustomerId']);
+    Route::get('carts/all-carts/customer/{customer_id}', [CartController::class, 'getAllCartByCustomerId']);
+    Route::get('carts/not-ordered-carts/customer/{customer_id}', [CartController::class, 'getNotOrderedCartByCustomerId']);
 
     Route::resource('cart_details', CartDetailController::class)->except(['destroy']);
     Route::get('cart_details/cart/{cart_id}', [CartDetailController::class, 'getCartDetailByCartId']);
-    Route::get('cart_details/all_cart_details/customer/{customer_id}', [CartDetailController::class, 'getAllCartDetailByCustomerId']);
-    Route::get('cart_details/not_ordered_cart_details/customer/{customer_id}', [CartDetailController::class, 'getNotOrderedCartDetailByCustomerId']);
-    Route::delete('cart_details/{cart_detail_id}', [CartDetailController::class, 'deleteItem']);
+    Route::get('cart_details/all-cart-details/customer/{customer_id}', [CartDetailController::class, 'getAllCartDetailByCustomerId']);
+    Route::get('cart_details/not-ordered-cart_details/customer/{customer_id}', [CartDetailController::class, 'getNotOrderedCartDetailByCustomerId']);
+    Route::delete('cart_details/{cart_detail_id}', [CartDetailController::class, 'deleteItemInCart']);
 
     // Order and Order Detail Routes
     Route::apiResource('orders', OrderController::class);
