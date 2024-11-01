@@ -23,6 +23,7 @@ import ForgotPasswordScreen from './screens/ForgotPasswordScreen';
 import CheckoutScreen from './screens/CheckoutScreen';
 import TrackingDetailScreen from './screens/TrackingDetailScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import ManagerProfileScreen from './screens/ManagerProfileScreen';
 
 const Stack = createStackNavigator();
 
@@ -56,6 +57,11 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen 
+          name="RegisterScreen" 
+          component={RegisterScreen} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
           name="ForgotPasswordScreen" 
           component={ForgotPasswordScreen} 
           options={{ headerShown: false }}
@@ -73,6 +79,11 @@ export default function App() {
         <Stack.Screen 
           name="ProfileScreen" 
           component={ProfileScreen} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="ManagerProfileScreen" 
+          component={ManagerProfileScreen} 
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

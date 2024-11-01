@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import CustomTextInput from "../components/CustomTextInput";
 import PasswordTextInput from "../components/PasswordTextInput";
-import CustomLoginAndRegisterButton from "../components/CustomLoginAndRegisterButton";
+import CustomHandleButton from "../components/CustomHandleButton";
 import SocialLoginButton from "../components/SocialLoginButton";
 import CustomLinkText from "../components/CustomLinkText";
 import Checkbox from "expo-checkbox";
@@ -66,7 +66,7 @@ export default function LoginScreen({ navigation }) {
           <Text style={styles.forgotText}>Forgot Password?</Text>
         </TouchableOpacity>
       </View>
-      <CustomLoginAndRegisterButton
+      <CustomHandleButton
         buttonText="Login"
         buttonColor="#179e7a"
         onPress={handleLogin}

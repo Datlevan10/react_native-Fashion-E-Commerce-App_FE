@@ -16,7 +16,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Colors from "../themes/Color";
 import ProductInOrder from "../components/ProductInOrder";
 import TrackingInfo from "../components/TrackingForm";
-import CustomLoginAndRegisterButton from "../components/CustomLoginAndRegisterButton";
+import CustomLoginAndRegisterButton from "../components/CustomHandleButton";
 
 import imageTest from "../assets/image/nguyen_thanh_chuc.jpg";
 
