@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import CustomTextInput from "../components/CustomTextInput";
 import PasswordTextInput from "../components/PasswordTextInput";
 import CustomHandleButton from "../components/CustomHandleButton";
@@ -7,6 +15,7 @@ import SocialLoginButton from "../components/SocialLoginButton";
 import CustomLinkText from "../components/CustomLinkText";
 import Checkbox from "expo-checkbox";
 import Colors from "../themes/Color";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function LoginScreen({ navigation }) {
   const [username, setUsername] = useState("");
@@ -37,78 +46,98 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.loginText}>Welcome Back</Text>
-      </View>
-      <CustomTextInput
-        value={username}
-        onChangeText={setUsername}
-        placeholder="Enter your username, email, phone number"
-        prefixIcon="person"
-      />
-      <PasswordTextInput
-        value={password}
-        onChangeText={setPassword}
-        placeholder="Enter your password"
-      />
-      <View style={styles.rememberForgotContainer}>
-        <View style={styles.rememberContainer}>
-          <Checkbox
-            value={isRemember}
-            onValueChange={setIsRemember}
-            color={isRemember ? "#0098fd" : undefined}
-            style={styles.checkbox}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.body}
+    >
+      <LinearGradient
+        colors={["#029a67", "#e0e0e0"]}
+        style={styles.gradientBackground}
+        start={{ x: 0.25, y: 0 }}
+        end={{ x: 0.25, y: 0.25 }}
+      >
+        <View style={styles.container}>
+          <View>
+            <Text style={styles.loginText}>Welcome Back</Text>
+          </View>
+          <CustomTextInput
+            value={username}
+            onChangeText={setUsername}
+            placeholder="Enter your username, email, phone number"
+            prefixIcon="person"
           />
-          <Text style={styles.rememberText}>Remember Password</Text>
+          <PasswordTextInput
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Enter your password"
+          />
+          <View style={styles.rememberForgotContainer}>
+            <View style={styles.rememberContainer}>
+              <Checkbox
+                value={isRemember}
+                onValueChange={setIsRemember}
+                color={isRemember ? "#0098fd" : undefined}
+                style={styles.checkbox}
+              />
+              <Text style={styles.rememberText}>Remember Password</Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("ForgotPasswordScreen")}
+            >
+              <Text style={styles.forgotText}>Forgot Password?</Text>
+            </TouchableOpacity>
+          </View>
+          <CustomHandleButton
+            buttonText="Login"
+            buttonColor="#179e7a"
+            onPress={handleLogin}
+          />
+          <View style={styles.dividerContainer}>
+            <View style={styles.divider} />
+            <Text style={styles.orText}>Or</Text>
+            <View style={styles.divider} />
+          </View>
+          <View style={styles.socialLoginContainer}>
+            <SocialLoginButton
+              onPress={handleFacebookLogin}
+              iconName="facebook"
+              iconLibrary="FontAwesome"
+              buttonColor="#3b5998"
+              buttonText="Login with Facebook"
+            />
+            <SocialLoginButton
+              onPress={handleGoogleLogin}
+              iconName="google"
+              iconLibrary="FontAwesome"
+              buttonColor="#db4437"
+              buttonText="Login with Google"
+            />
+            <SocialLoginButton
+              onPress={handleAppleLogin}
+              iconName="apple"
+              iconLibrary="FontAwesome5"
+              buttonColor="#000"
+              buttonText="Login with Apple"
+            />
+            <CustomLinkText
+              text="Don't have an account?"
+              highlightText="Register"
+              onPress={() => navigation.navigate("RegisterScreen")}
+            />
+          </View>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('ForgotPasswordScreen')}>
-          <Text style={styles.forgotText}>Forgot Password?</Text>
-        </TouchableOpacity>
-      </View>
-      <CustomHandleButton
-        buttonText="Login"
-        buttonColor="#179e7a"
-        onPress={handleLogin}
-      />
-      <View style={styles.dividerContainer}>
-        <View style={styles.divider} />
-        <Text style={styles.orText}>Or</Text>
-        <View style={styles.divider} />
-      </View>
-      <View style={styles.socialLoginContainer}>
-        <SocialLoginButton
-          onPress={handleFacebookLogin}
-          iconName="facebook"
-          iconLibrary="FontAwesome"
-          buttonColor="#3b5998"
-          buttonText="Login with Facebook"
-        />
-        <SocialLoginButton
-          onPress={handleGoogleLogin}
-          iconName="google"
-          iconLibrary="FontAwesome"
-          buttonColor="#db4437"
-          buttonText="Login with Google"
-        />
-        <SocialLoginButton
-          onPress={handleAppleLogin}
-          iconName="apple"
-          iconLibrary="FontAwesome5"
-          buttonColor="#000"
-          buttonText="Login with Apple"
-        />
-        <CustomLinkText
-          text="Don't have an account?"
-          highlightText="Register"
-          onPress={() => navigation.navigate("RegisterScreen")}
-        />
-      </View>
-    </View>
+      </LinearGradient>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+  },
+  gradientBackground: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -117,7 +146,7 @@ const styles = StyleSheet.create({
   loginText: {
     fontSize: 50,
     fontWeight: "bold",
-    // color: "#db93ff",
+    color: "#fff",
     marginBottom: 80,
   },
   rememberForgotContainer: {
