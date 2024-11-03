@@ -17,8 +17,8 @@ import Colors from "../themes/Color";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function RegisterScreen({ navigation }) {
-  const [userName, setUsername] = useState("");
-  const [fullName, setFullname] = useState("");
+  const [username, setUsername] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +30,6 @@ export default function RegisterScreen({ navigation }) {
       "Register Pressed",
       `Username: ${username}, Fullname: ${fullName}, Email: ${email}, Phone: ${phoneNumber}, Address: ${address}`
     );
-    userName;
   };
 
   return (
@@ -56,7 +55,7 @@ export default function RegisterScreen({ navigation }) {
           />
           <CustomTextInput
             value={fullName}
-            onChangeText={setFullname}
+            onChangeText={setFullName}
             placeholder="Enter your full name"
             prefixIcon="account-circle"
           />

@@ -16,7 +16,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Colors from "../themes/Color";
 import ProductInOrder from "../components/ProductInOrder";
 import TrackingInfo from "../components/TrackingForm";
-import CustomLoginAndRegisterButton from "../components/CustomHandleButton";
+import CustomHandleButton from "../components/CustomHandleButton";
 
 import imageTest from "../assets/image/nguyen_thanh_chuc.jpg";
 
@@ -49,7 +49,7 @@ export default function TrackingDetailScreen({ navigation }) {
           weight="0.2 kg"
         />
         <View style={styles.divider} />
-        <CustomLoginAndRegisterButton
+        <CustomHandleButton
           buttonText="Live Tracking"
           buttonColor="#036f48"
           onPress={() => console.log("Tracking clicked")}
