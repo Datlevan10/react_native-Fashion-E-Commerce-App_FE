@@ -8,6 +8,8 @@ import {
   ScrollView,
   Image,
   Modal,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { PanGestureHandler } from "react-native-gesture-handler";
@@ -48,6 +50,10 @@ export default function ManagerProfileScreen({ navigation }) {
   };
 
   return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.body}
+    >
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.header}>
@@ -165,10 +171,14 @@ export default function ManagerProfileScreen({ navigation }) {
         </Modal>
       </ScrollView>
     </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  body: {
+    flex: 1,
+  },
   safeArea: {
     flex: 1,
     backgroundColor: "#fff",

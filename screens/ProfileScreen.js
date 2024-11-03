@@ -55,7 +55,14 @@ export default function ProfileScreen({ navigation }) {
               customerName="John Doe"
               address="123 Main St, City, Country"
               onManageProfilePress={() => navigation.navigate("ManagerProfileScreen")}
-              onDetailPress={() => alert("Detail")}
+              onDetailPress={() => navigation.navigate("DetailProfileScreen", {
+                image: imageTest,
+                username: "john_doe",
+                fullName: "John Doe",
+                email: "johndoe@example.com",
+                phoneNumber: "123-456-7890",
+                address: "123 Main St, Cityville",
+              })}
             />
           </View>
           <View style={styles.profileStats}>

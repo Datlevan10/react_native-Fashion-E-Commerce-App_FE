@@ -24,13 +24,14 @@ import CheckoutScreen from './screens/CheckoutScreen';
 import TrackingDetailScreen from './screens/TrackingDetailScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import ManagerProfileScreen from './screens/ManagerProfileScreen';
+import DetailProfileScreen from './screens/DetailProfileScreen';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="WelcomeScreen">
+      <Stack.Navigator initialRouteName="ProfileScreen">
         <Stack.Screen 
           name="WelcomeScreen" 
           component={WelcomeScreen} 
@@ -84,6 +85,11 @@ export default function App() {
         <Stack.Screen 
           name="ManagerProfileScreen" 
           component={ManagerProfileScreen} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="DetailProfileScreen" 
+          component={DetailProfileScreen} 
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
