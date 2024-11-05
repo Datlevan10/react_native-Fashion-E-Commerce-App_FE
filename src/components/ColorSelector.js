@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
-import Colors from '../themes/Color';
+import Colors from '../styles/Color';
 
 export default function ColorSelector() {
   const [selectedColor, setSelectedColor] = useState(null);

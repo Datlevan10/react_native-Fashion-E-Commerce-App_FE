@@ -6,15 +6,15 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import Colors from "../themes/Color";
+import Colors from "../../styles/Color";
 import Feather from "react-native-vector-icons/Feather";
 import { LinearGradient } from "expo-linear-gradient";
-import ProfileInfoForm from "../components/ProfileInfoForm";
-import ProfileStats from "../components/ProfileStats";
-import OtherInformationForm from "../components/OtherInformationForm";
-import ShowAlertWithTitleContentAndTwoActions from "../components/ShowAlertWithTitleContentAndTwoActions ";
+import ProfileInfoForm from "../../components/ProfileInfoForm";
+import ProfileStats from "../../components/ProfileStats";
+import OtherInformationForm from "../../components/OtherInformationForm";
+import ShowAlertWithTitleContentAndTwoActions from "../../components/ShowAlertWithTitleContentAndTwoActions ";
 
-import imageTest from "../assets/image/men.jpg";
+import imageTest from "../../../assets/image/men.jpg";
 
 export default function ProfileScreen({ navigation }) {
   const itemOtherInformation = [

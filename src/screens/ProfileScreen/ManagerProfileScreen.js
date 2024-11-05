@@ -13,11 +13,11 @@ import {
 } from "react-native";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { PanGestureHandler } from "react-native-gesture-handler";
-import CustomTextInput from "../components/CustomTextInput";
-import PasswordTextInput from "../components/PasswordTextInput";
-import CustomHandleButton from "../components/CustomHandleButton";
-import imageTest from "../assets/image/profile.png";
-import Colors from "../themes/Color";
+import CustomTextInput from "../../components/CustomTextInput";
+import PasswordTextInput from "../../components/PasswordTextInput";
+import CustomHandleButton from "../../components/CustomHandleButton";
+import imageTest from "../../../assets/image/profile.png";
+import Colors from "../../styles/Color";
 
 export default function ManagerProfileScreen({ navigation }) {
   const [userName, setUserName] = useState("");

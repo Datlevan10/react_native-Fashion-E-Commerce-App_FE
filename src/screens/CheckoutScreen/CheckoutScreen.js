@@ -12,15 +12,15 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useState } from "react";
-import Colors from "../themes/Color";
+import Colors from "../../styles/Color";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
-import InformationCustomerForm from "../components/InformationCustomerForm";
-import ItemInCart from "../components/ItemInCart";
-import ItemDetail from "../components/ItemDetail";
-import SelectShipping from "../components/SelectShipping";
-import PaymentMethod from "../components/PaymentMethod";
+import InformationCustomerForm from "../../components/InformationCustomerForm";
+import ItemInCart from "../../components/ItemInCart";
+import ItemDetail from "../../components/ItemDetail";
+import SelectShipping from "../../components/SelectShipping";
+import PaymentMethod from "../../components/PaymentMethod";
 
-import imageTest from "../assets/image/kid-2.jpg";
+import imageTest from "../../../assets/image/kid-2.jpg";
 
 export default function CheckoutScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);

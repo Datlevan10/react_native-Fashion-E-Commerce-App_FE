@@ -1,12 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import ExploreScreen from "./ExploreScreen";
-import NotificationScreen from "./NotificationScreen";
-import ProfileScreen from "./ProfileScreen";
+import ExploreScreen from "../ExploreScreen/ExploreScreen";
+import NotificationScreen from "../NotificationScreen/NotificationScreen";
+import ProfileScreen from "../ProfileScreen";
 import HomeContentScreen from "./HomeContentScreen";
-import CustomTabLabel from "../components/CustomTabLabel ";
-import CustomTabNavigator from "../components/CustomTabNavigator";
+import CustomTabLabel from "../../components/CustomTabLabel ";
+import CustomTabNavigator from "../../components/CustomTabNavigator";
 
 const Tab = createBottomTabNavigator();
 // import logoFashion from "../assets/image/wattpad.png"

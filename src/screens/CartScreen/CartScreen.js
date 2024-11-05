@@ -7,18 +7,18 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
-import FilterBox from "../components/FilterBox";
-import CartForm from "../components/CartForm";
+import FilterBox from "../../components/FilterBox";
+import CartForm from "../../components/CartForm";
 import Feather from "react-native-vector-icons/Feather";
-import Colors from "../themes/Color";
+import Colors from "../../styles/Color";
 import { Linking } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import imageTest from "../assets/image/kid-2.jpg";
-import imageTest1 from "../assets/image/kid-3.jpg";
-import imageTest2 from "../assets/image/kid-4.jpg";
-import imageTest3 from "../assets/image/kid-5.jpg";
-import imageTest4 from "../assets/image/kid-6.jpg";
-import imageTest5 from "../assets/image/kid-7.jpg";
+import imageTest from "../../../assets/image/kid-2.jpg";
+import imageTest1 from "../../../assets/image/kid-3.jpg";
+import imageTest2 from "../../../assets/image/kid-4.jpg";
+import imageTest3 from "../../../assets/image/kid-5.jpg";
+import imageTest4 from "../../../assets/image/kid-6.jpg";
+import imageTest5 from "../../../assets/image/kid-7.jpg";
 
 const products = [
   {

@@ -8,15 +8,15 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../../components/ProductCard";
 import Feather from "react-native-vector-icons/Feather";
-import FilterBox from "../components/FilterBox";
-import CategoryForm from "../components/CategoryForm";
-import category1Image from "../assets/image/bag.jpg";
-import category2Image from "../assets/image/jean.jpg";
-import category3Image from "../assets/image/footwear.jpg";
-import category4Image from "../assets/image/clothes.jpg";
-import Colors from "../themes/Color";
+import FilterBox from "../../components/FilterBox";
+import CategoryForm from "../../components/CategoryForm";
+import category1Image from "../../../assets/image/bag.jpg";
+import category2Image from "../../../assets/image/jean.jpg";
+import category3Image from "../../../assets/image/footwear.jpg";
+import category4Image from "../../../assets/image/clothes.jpg";
+import Colors from "../../styles/Color";
 
 const categories = [
   {
@@ -44,7 +44,7 @@ const categories = [
 const products = [
   {
     id: 1,
-    imageSource: require("../assets/image/kid-2.jpg"),
+    imageSource: require("../../../assets/image/kid-2.jpg"),
     brandName: "H&M",
     rating: 4.5,
     numberRating: 150,
@@ -54,7 +54,7 @@ const products = [
   },
   {
     id: 2,
-    imageSource: require("../assets/image/kid-3.jpg"),
+    imageSource: require("../../../assets/image/kid-3.jpg"),
     brandName: "H&M",
     rating: 4.8,
     numberRating: 200,
@@ -64,7 +64,7 @@ const products = [
   },
   {
     id: 3,
-    imageSource: require("../assets/image/kid-4.jpg"),
+    imageSource: require("../../../assets/image/kid-4.jpg"),
     brandName: "Adidas",
     rating: 4.8,
     numberRating: 200,
@@ -74,7 +74,7 @@ const products = [
   },
   {
     id: 4,
-    imageSource: require("../assets/image/kid-10.jpg"),
+    imageSource: require("../../../assets/image/kid-10.jpg"),
     brandName: "Adidas",
     rating: 4.8,
     numberRating: 200,
@@ -84,7 +84,7 @@ const products = [
   },
   {
     id: 5,
-    imageSource: require("../assets/image/kid-6.jpg"),
+    imageSource: require("../../../assets/image/kid-6.jpg"),
     brandName: "Adidas",
     rating: 4.8,
     numberRating: 200,
@@ -94,7 +94,7 @@ const products = [
   },
   {
     id: 6,
-    imageSource: require("../assets/image/kid-7.jpg"),
+    imageSource: require("../../../assets/image/kid-7.jpg"),
     brandName: "Adidas",
     rating: 4.8,
     numberRating: 200,
@@ -104,7 +104,7 @@ const products = [
   },
 ];
 
-const CategoryScreen = () => {
+const ExploreScreen = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -235,4 +235,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CategoryScreen;
+export default ExploreScreen;

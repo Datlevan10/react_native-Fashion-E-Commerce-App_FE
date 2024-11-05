@@ -8,13 +8,13 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import CustomTextInput from "../components/CustomTextInput";
-import PasswordTextInput from "../components/PasswordTextInput";
-import CustomHandleButton from "../components/CustomHandleButton";
-import SocialLoginButton from "../components/SocialLoginButton";
-import CustomLinkText from "../components/CustomLinkText";
+import CustomTextInput from "../../components/CustomTextInput";
+import PasswordTextInput from "../../components/PasswordTextInput";
+import CustomHandleButton from "../../components/CustomHandleButton";
+import SocialLoginButton from "../../components/SocialLoginButton";
+import CustomLinkText from "../../components/CustomLinkText";
 import Checkbox from "expo-checkbox";
-import Colors from "../themes/Color";
+import Colors from "../../styles/Color";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function LoginScreen({ navigation }) {

@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import Colors from "../themes/Color";
+import Colors from "../styles/Color";
 
 const FilterBox = ({ text, icon }) => {
   return (

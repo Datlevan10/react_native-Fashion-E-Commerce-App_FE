@@ -13,12 +13,12 @@ import {
 } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import Colors from "../themes/Color";
-import ProductInOrder from "../components/ProductInOrder";
-import TrackingInfo from "../components/TrackingForm";
-import CustomHandleButton from "../components/CustomHandleButton";
+import Colors from "../../styles/Color";
+import ProductInOrder from "../../components/ProductInOrder";
+import TrackingInfo from "../../components/TrackingForm";
+import CustomHandleButton from "../../components/CustomHandleButton";
 
-import imageTest from "../assets/image/nguyen_thanh_chuc.jpg";
+import imageTest from "../../../assets/image/nguyen_thanh_chuc.jpg";
 
 export default function TrackingDetailScreen({ navigation }) {
   return (

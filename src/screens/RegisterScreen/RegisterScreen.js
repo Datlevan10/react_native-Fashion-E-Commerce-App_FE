@@ -8,14 +8,14 @@ import {
   Alert,
   Platform,
 } from "react-native";
-import CustomTextInput from "../components/CustomTextInput";
-import PasswordTextInput from "../components/PasswordTextInput";
-import CustomHandleButton from "../components/CustomHandleButton";
-import CustomLinkText from "../components/CustomLinkText";
+import CustomTextInput from "../../components/CustomTextInput";
+import PasswordTextInput from "../../components/PasswordTextInput";
+import CustomHandleButton from "../../components/CustomHandleButton";
+import CustomLinkText from "../../components/CustomLinkText";
 import Checkbox from "expo-checkbox";
-import Colors from "../themes/Color";
+import Colors from "../../styles/Color";
 import { LinearGradient } from "expo-linear-gradient";
-import ApiService from "../services/api/ApiService";
+import ApiService from "../../api/ApiService";
 
 export default function RegisterScreen({ navigation }) {
   const [username, setUsername] = useState("");
