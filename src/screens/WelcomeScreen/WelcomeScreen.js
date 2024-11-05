@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 
-import storeLogo from '../assets/image/logo_store.jpeg'
+import storeLogo from '../../../assets/image/logo_store.jpeg'
 
 export default function WelcomeScreen({ navigation }) {
   useEffect(() => {

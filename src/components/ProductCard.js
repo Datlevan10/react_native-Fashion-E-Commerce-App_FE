@@ -2,7 +2,7 @@ import React from "react";
 import { View, Image, Text, StyleSheet, Dimensions } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import Colors from "../themes/Color";
+import Colors from "../styles/Color";
 
 const ProductCard = ({
   imageSource,

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Colors from '../themes/Color';
+import Colors from '../styles/Color';
 
 const PasswordTextInput = ({ value, onChangeText, placeholder }) => {
   const [isFocused, setIsFocused] = useState(false);

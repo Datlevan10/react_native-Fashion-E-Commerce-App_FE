@@ -7,9 +7,9 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import ProductCard from "../components/ProductCard";
+import ProductCard from "../../components/ProductCard";
 import imageBanner from "../assets/image/banner.jpg";
-import CategoryForm from "../components/CategoryForm";
+import CategoryForm from "../../components/CategoryForm";
 import category1Image from "../assets/image/women.jpg";
 import category2Image from "../assets/image/men.jpg";
 import category3Image from "../assets/image/teen.jpg";

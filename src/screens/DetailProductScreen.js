@@ -15,15 +15,15 @@ import CustomButton from "../components/CustomButton";
 import ColorSelector from "../components/ColorSelector";
 import SizeSelector from "../components/SizeSelector";
 import ProductInfoInDetail from "../components/ProductInfoInDetail";
-import Colors from "../themes/Color";
+import Colors from "../styles/Color";
 import ShowAlertWithTitleContentAndOneActions from "../components/ShowAlertWithTitleContentAndOneActions ";
 
 const { width, height } = Dimensions.get("window");
 
 const images = [
-  require("../assets/image/shirt-1.jpg"),
-  require("../assets/image/shirt-2.jpg"),
-  require("../assets/image/shirt-2.jpg"),
+  require("../../assets/image/shirt-1.jpg"),
+  require("../../assets/image/shirt-2.jpg"),
+  require("../../assets/image/shirt-2.jpg"),
   // require("../assets/image/shirt-3.jpg"),
 ];
 
