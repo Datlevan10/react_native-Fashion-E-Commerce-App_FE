@@ -226,4 +226,34 @@ class CustomerController extends Controller
             'message' => 'Customer deleted successfully',
         ], 200);
     }
+
+    // Method handle login customer with email, username, phone number, and password
+    public function login(Request $request)
+    {
+        $request->validate([
+            'identifier' => 'required',
+            'password' => 'required',
+        ]);
+
+        $customer = Customer::where('email', $request->identifier)
+                            ->orWhere('phone_number', $request->identifier)
+                            ->orWhere('user_name', $request->identifier)
+                            ->first();
+
+        if (!$customer || !Hash::check($request->password, $customer->password)) {
+            return response()->json(['message' => 'Incorrect login or password.'], 401);
+        }
+
+        $customer->last_login = now();
+        $customer->save();
+
+        // $token = $customer->createToken('customer-token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful',
+            'data' => new CustomerResource($customer),
+            // 'token' => $token,
+        ], 200);
+    }
+
 }
