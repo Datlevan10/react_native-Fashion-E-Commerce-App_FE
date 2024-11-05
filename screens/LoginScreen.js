@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 18,
   },
   loginText: {
     fontSize: 50,
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   dividerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    marginVertical: 30,
+    marginVertical: 20,
   },
   divider: {
     flex: 1,
