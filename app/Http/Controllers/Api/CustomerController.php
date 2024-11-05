@@ -41,7 +41,7 @@ class CustomerController extends Controller
                 'regex:/^[a-zA-Z0-9_]+$/',
             ],
             'full_name' => 'required|string|max:255',
-            'gender' => 'required|string|max:255',
+            'gender' => 'nullable|string|max:255',
             'date_of_birth' => 'nullable|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'email' => ['required', 'string', 'email', 'regex:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$/i', 'unique:customers,email'],
