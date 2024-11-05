@@ -4,8 +4,8 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   KeyboardAvoidingView,
+  Alert,
   Platform,
 } from "react-native";
 import CustomTextInput from "../components/CustomTextInput";
@@ -15,6 +15,7 @@ import CustomLinkText from "../components/CustomLinkText";
 import Checkbox from "expo-checkbox";
 import Colors from "../themes/Color";
 import { LinearGradient } from "expo-linear-gradient";
+import ApiService from "../services/api/ApiService";
 
 export default function RegisterScreen({ navigation }) {
   const [username, setUsername] = useState("");
@@ -25,11 +26,102 @@ export default function RegisterScreen({ navigation }) {
   const [address, setAddress] = useState("");
   const [isAccept, setIsAccept] = useState(false);
 
-  const handleRegister = () => {
-    Alert.alert(
-      "Register Pressed",
-      `Username: ${username}, Fullname: ${fullName}, Email: ${email}, Phone: ${phoneNumber}, Address: ${address}`
-    );
+  const [errorMessages, setErrorMessages] = useState({
+    username: "",
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    password: "",
+    address: "",
+    acceptPolicy: "",
+  });
+
+  const validateInputs = () => {
+    const errors = {};
+    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9]{10}$/;
+    let isValid = true;
+
+    if (!username || !usernameRegex.test(username)) {
+      errors.username = "Username is required.";
+      isValid = false;
+    }
+
+    if (!fullName) {
+      errors.fullName = "Full name is required.";
+      isValid = false;
+    }
+
+    if (!email || !emailRegex.test(email)) {
+      errors.email = "Invalid email.";
+      isValid = false;
+    }
+
+    if (!phoneNumber || !phoneRegex.test(phoneNumber)) {
+      errors.phoneNumber = "Invalid phone number.";
+      isValid = false;
+    }
+
+    if (!password || password.length < 8) {
+      errors.password = "Password must be at least 8 characters.";
+      isValid = false;
+    }
+
+    if (!address) {
+      errors.address = "Address is required.";
+      isValid = false;
+    }
+
+    if (!isAccept) {
+      errors.acceptPolicy = "You need to accept the privacy policy.";
+      isValid = false;
+    }
+
+    setErrorMessages(errors);
+    return isValid;
+  };
+
+  const handleRegister = async () => {
+    if (!validateInputs()) {
+      return;
+    }
+
+    const customerData = {
+      user_name: username,
+      full_name: fullName,
+      email,
+      phone_number: phoneNumber,
+      password,
+      address,
+    };
+
+    try {
+      // console.log("Sending request with data:", customerData);
+      const response = await ApiService.registerCustomer(customerData);
+
+      if (response.status === 201) {
+        Alert.alert("Registration successful!", "You can log in now.");
+        navigation.navigate("LoginScreen");
+      } else {
+        const errorMessages = response.errors
+          ? Object.values(response.errors).flat().join("\n")
+          : "An error occurred while registering.";
+
+        Alert.alert("Registration failed", errorMessages);
+      }
+    } catch (error) {
+      if (error.errors) {
+        const errorMessages = Object.values(error.errors).flat().join("\n");
+        Alert.alert("Registration failed", errorMessages);
+      } else {
+        Alert.alert(
+          "Registration failed",
+          error.message || "An unknown error occurred"
+        );
+      }
+      // console.log(error);
+    }
   };
 
   return (
@@ -44,50 +136,94 @@ export default function RegisterScreen({ navigation }) {
         end={{ x: 0.25, y: 0.25 }}
       >
         <View style={styles.container}>
-          <View>
-            <Text style={styles.registerText}>Create an Account</Text>
-          </View>
+          <Text style={styles.registerText}>Create an Account</Text>
+
           <CustomTextInput
-            value={userName}
-            onChangeText={setUsername}
+            value={username}
+            onChangeText={(value) => {
+              setUsername(value);
+              setErrorMessages({ ...errorMessages, username: "" });
+            }}
             placeholder="Enter your username"
             prefixIcon="person"
           />
+          {errorMessages.username ? (
+            <Text style={styles.errorText}>{errorMessages.username}</Text>
+          ) : null}
+
           <CustomTextInput
             value={fullName}
-            onChangeText={setFullName}
+            onChangeText={(value) => {
+              setFullName(value);
+              setErrorMessages({ ...errorMessages, fullName: "" });
+            }}
             placeholder="Enter your full name"
             prefixIcon="account-circle"
           />
+          {errorMessages.fullName ? (
+            <Text style={styles.errorText}>{errorMessages.fullName}</Text>
+          ) : null}
+
           <CustomTextInput
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(value) => {
+              setEmail(value);
+              setErrorMessages({ ...errorMessages, email: "" });
+            }}
             placeholder="Enter your email"
             prefixIcon="email"
             keyboardType="email-address"
           />
+          {errorMessages.email ? (
+            <Text style={styles.errorText}>{errorMessages.email}</Text>
+          ) : null}
+
           <CustomTextInput
             value={phoneNumber}
-            onChangeText={setPhoneNumber}
+            onChangeText={(value) => {
+              setPhoneNumber(value);
+              setErrorMessages({ ...errorMessages, phoneNumber: "" });
+            }}
             placeholder="Enter your phone number"
             prefixIcon="phone"
             keyboardType="phone-pad"
           />
+          {errorMessages.phoneNumber ? (
+            <Text style={styles.errorText}>{errorMessages.phoneNumber}</Text>
+          ) : null}
+
           <PasswordTextInput
             value={password}
-            onChangeText={setPassword}
+            onChangeText={(value) => {
+              setPassword(value);
+              setErrorMessages({ ...errorMessages, password: "" });
+            }}
             placeholder="Enter your password"
           />
+          {errorMessages.password ? (
+            <Text style={styles.errorText}>{errorMessages.password}</Text>
+          ) : null}
+
           <CustomTextInput
             value={address}
-            onChangeText={setAddress}
+            onChangeText={(value) => {
+              setAddress(value);
+              setErrorMessages({ ...errorMessages, address: "" });
+            }}
             placeholder="Enter your address"
             prefixIcon="location-on"
           />
+          {errorMessages.address ? (
+            <Text style={styles.errorText}>{errorMessages.address}</Text>
+          ) : null}
+
           <View style={styles.acceptContainer}>
             <Checkbox
               value={isAccept}
-              onValueChange={setIsAccept}
+              onValueChange={(value) => {
+                setIsAccept(value);
+                setErrorMessages({ ...errorMessages, acceptPolicy: "" });
+              }}
               color={isAccept ? "#0288d1" : undefined}
               style={styles.checkbox}
             />
@@ -96,6 +232,10 @@ export default function RegisterScreen({ navigation }) {
               <Text style={styles.privacyText}>Privacy Policy</Text>{" "}
             </Text>
           </View>
+          {errorMessages.acceptPolicy ? (
+            <Text style={styles.errorText}>{errorMessages.acceptPolicy}</Text>
+          ) : null}
+
           <CustomHandleButton
             buttonText="Register"
             buttonColor="#0288d1"
@@ -123,13 +263,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 18,
   },
   registerText: {
     fontSize: 50,
     fontWeight: "bold",
     marginBottom: 15,
     color: "#fff",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 16,
   },
   acceptContainer: {
     flexDirection: "row",
