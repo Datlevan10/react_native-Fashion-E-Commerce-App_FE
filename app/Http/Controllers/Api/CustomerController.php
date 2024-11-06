@@ -247,12 +247,12 @@ class CustomerController extends Controller
         $customer->last_login = now();
         $customer->save();
 
-        // $token = $customer->createToken('customer-token')->plainTextToken;
+        $token = $customer->createToken('customer-token')->plainTextToken;
 
         return response()->json([
             'message' => 'Login successful',
             'data' => new CustomerResource($customer),
-            // 'token' => $token,
+            'token' => $token,
         ], 200);
     }
 
