@@ -4,8 +4,8 @@ import { View, Image, StyleSheet } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import IconWithBadge from "./IconWithBadge";
-import logoFashion from "../assets/image/logo_store.jpeg";
-import Colors from "../themes/Color";
+import logoFashion from "../../assets/image/logo_store.jpeg";
+import Colors from "../styles/Color";
 
 const Tab = createBottomTabNavigator();
 

@@ -14,6 +14,8 @@ import ProfileScreen from './screens/ProfileScreen/ProfileScreen';
 import ManagerProfileScreen from './screens/ProfileScreen/ManagerProfileScreen';
 import DetailProfileScreen from './screens/ProfileScreen/DetailProfileScreen';
 
+import HomeScreen from './screens/HomeScreen/HomeScreen';
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -23,6 +25,11 @@ export default function App() {
         <Stack.Screen 
           name="WelcomeScreen" 
           component={WelcomeScreen} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="HomeScreen" 
+          component={HomeScreen} 
           options={{ headerShown: false }}
         />
         <Stack.Screen 

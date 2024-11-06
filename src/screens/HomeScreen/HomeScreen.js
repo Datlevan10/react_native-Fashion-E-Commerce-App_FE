@@ -3,16 +3,16 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ExploreScreen from "../ExploreScreen/ExploreScreen";
 import NotificationScreen from "../NotificationScreen/NotificationScreen";
-import ProfileScreen from "../ProfileScreen";
+import ProfileScreen from "../ProfileScreen/ProfileScreen";
 import HomeContentScreen from "./HomeContentScreen";
 import CustomTabLabel from "../../components/CustomTabLabel ";
 import CustomTabNavigator from "../../components/CustomTabNavigator";
 
 const Tab = createBottomTabNavigator();
 // import logoFashion from "../assets/image/wattpad.png"
-import logoFashion from "../assets/image/silhouette.png";
+// import logoFashion from "../assets/image/silhouette.png";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   return (
     <CustomTabNavigator>
       <Tab.Screen
