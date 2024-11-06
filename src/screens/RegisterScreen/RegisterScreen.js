@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
   Text,
@@ -36,6 +37,27 @@ export default function RegisterScreen({ navigation }) {
     acceptPolicy: "",
   });
 
+  useFocusEffect(
+    useCallback(() => {
+      setUsername("");
+      setFullName("");
+      setEmail("");
+      setPhoneNumber("");
+      setPassword("");
+      setAddress("");
+      setIsAccept(false);
+      setErrorMessages({
+        username: "",
+        fullName: "",
+        email: "",
+        phoneNumber: "",
+        password: "",
+        address: "",
+        acceptPolicy: "",
+      });
+    }, [])
+  );
+
   const validateInputs = () => {
     const errors = {};
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
@@ -43,38 +65,50 @@ export default function RegisterScreen({ navigation }) {
     const phoneRegex = /^[0-9]{10}$/;
     let isValid = true;
 
-    if (!username || !usernameRegex.test(username)) {
-      errors.username = "Username is required.";
+    if (!username) {
+      errors.username = "* Username is required.";
+      isValid = false;
+    } else if (!usernameRegex.test(username)) {
+      errors.username = "Invalid username.";
       isValid = false;
     }
 
     if (!fullName) {
-      errors.fullName = "Full name is required.";
+      errors.fullName = "* Full name is required.";
       isValid = false;
     }
 
-    if (!email || !emailRegex.test(email)) {
-      errors.email = "Invalid email.";
+    if (!email) {
+      errors.email = "* Email is required.";
+      isValid = false;
+    } else if (!emailRegex.test(email)) {
+      errors.email = "* Invalid email.";
       isValid = false;
     }
 
-    if (!phoneNumber || !phoneRegex.test(phoneNumber)) {
-      errors.phoneNumber = "Invalid phone number.";
+    if (!phoneNumber) {
+      errors.phoneNumber = "* Phone number is required.";
+      isValid = false;
+    } else if (!phoneRegex.test(phoneNumber)) {
+      errors.phoneNumber = "* Invalid phone number.";
       isValid = false;
     }
 
-    if (!password || password.length < 8) {
-      errors.password = "Password must be at least 8 characters.";
+    if (!password) {
+      errors.password = "* Password is required.";
+      isValid = false;
+    } else if (password.length < 8) {
+      errors.password = "* Password must be at least 8 characters.";
       isValid = false;
     }
 
     if (!address) {
-      errors.address = "Address is required.";
+      errors.address = "* Address is required.";
       isValid = false;
     }
 
     if (!isAccept) {
-      errors.acceptPolicy = "You need to accept the privacy policy.";
+      errors.acceptPolicy = "* You need to accept the privacy policy.";
       isValid = false;
     }
 

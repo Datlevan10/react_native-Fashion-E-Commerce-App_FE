@@ -8,13 +8,13 @@ import {
   Dimensions,
 } from "react-native";
 import ProductCard from "../../components/ProductCard";
-import imageBanner from "../assets/image/banner.jpg";
+import imageBanner from "../../../assets/image/banner.jpg";
 import CategoryForm from "../../components/CategoryForm";
-import category1Image from "../assets/image/women.jpg";
-import category2Image from "../assets/image/men.jpg";
-import category3Image from "../assets/image/teen.jpg";
-import category4Image from "../assets/image/kid.jpg";
-import Colors from "../themes/Color";
+import category1Image from "../../../assets/image/women.jpg";
+import category2Image from "../../../assets/image/men.jpg";
+import category3Image from "../../../assets/image/teen.jpg";
+import category4Image from "../../../assets/image/kid.jpg";
+import Colors from "../../styles/Color";
 
 const categories = [
   {
@@ -42,7 +42,7 @@ const categories = [
 const products = [
   {
     id: 1,
-    imageSource: require("../assets/image/shirt-1.jpg"),
+    imageSource: require("../../../assets/image/shirt-1.jpg"),
     brandName: "H&M",
     rating: 4.9,
     numberRating: 150,
@@ -52,7 +52,7 @@ const products = [
   },
   {
     id: 2,
-    imageSource: require("../assets/image/shirt-2.jpg"),
+    imageSource: require("../../../assets/image/shirt-2.jpg"),
     brandName: "H&M",
     rating: 4.8,
     numberRating: 200,
@@ -62,7 +62,7 @@ const products = [
   },
   {
     id: 3,
-    imageSource: require("../assets/image/kid-2.jpg"),
+    imageSource: require("../../../assets/image/kid-2.jpg"),
     brandName: "H&M",
     rating: 4.8,
     numberRating: 200,
