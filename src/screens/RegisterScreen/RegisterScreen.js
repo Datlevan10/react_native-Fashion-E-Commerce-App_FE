@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: "red",
-    fontSize: 16,
+    fontSize: 18,
   },
   acceptContainer: {
     flexDirection: "row",
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
   },
   acceptText: {
     marginLeft: 8,
-    fontSize: 16,
+    fontSize: 18,
     color: "#555",
   },
   privacyText: {

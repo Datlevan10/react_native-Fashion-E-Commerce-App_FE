@@ -9,21 +9,21 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
-import IconWithBadge from "../components/IconWithBadge";
-import AddToCartButton from "../components/AddToCartButton";
-import CustomButton from "../components/CustomButton";
-import ColorSelector from "../components/ColorSelector";
-import SizeSelector from "../components/SizeSelector";
-import ProductInfoInDetail from "../components/ProductInfoInDetail";
-import Colors from "../styles/Color";
-import ShowAlertWithTitleContentAndOneActions from "../components/ShowAlertWithTitleContentAndOneActions ";
+import IconWithBadge from "../../components/IconWithBadge";
+import AddToCartButton from "../../components/AddToCartButton";
+import CustomButton from "../../components/CustomButton";
+import ColorSelector from "../../components/ColorSelector";
+import SizeSelector from "../../components/SizeSelector";
+import ProductInfoInDetail from "../../components/ProductInfoInDetail";
+import Colors from "../../styles/Color";
+import ShowAlertWithTitleContentAndOneActions from "../../components/ShowAlertWithTitleContentAndOneActions ";
 
 const { width, height } = Dimensions.get("window");
 
 const images = [
-  require("../../assets/image/shirt-1.jpg"),
-  require("../../assets/image/shirt-2.jpg"),
-  require("../../assets/image/shirt-2.jpg"),
+  require("../../../assets/image/shirt-1.jpg"),
+  require("../../../assets/image/shirt-2.jpg"),
+  require("../../../assets/image/shirt-2.jpg"),
   // require("../assets/image/shirt-3.jpg"),
 ];
 
@@ -158,20 +158,16 @@ const styles = StyleSheet.create({
   },
   header: {
     position: "absolute",
-    top: 30,
+    top: 38,
     left: 0,
     right: 0,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
-  },
-  backButton: {
-    padding: 10,
-    borderRadius: 20,
+    paddingHorizontal: 18,
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 20,
     color: Colors.blackColor,
     fontWeight: "bold",
   },

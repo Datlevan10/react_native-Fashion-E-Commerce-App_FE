@@ -43,9 +43,9 @@ const products = [
   {
     id: 1,
     imageSource: require("../../../assets/image/shirt-1.jpg"),
-    brandName: "H&M",
-    rating: 4.9,
-    numberRating: 150,
+    categoryName: "H&M",
+    averageReview: 4.9,
+    totalReview: 150,
     productName: "Oversized Fit Printed Mesh T-Shirt",
     oldPrice: "550.00",
     newPrice: "295.00",
@@ -53,9 +53,9 @@ const products = [
   {
     id: 2,
     imageSource: require("../../../assets/image/shirt-2.jpg"),
-    brandName: "H&M",
-    rating: 4.8,
-    numberRating: 200,
+    categoryName: "H&M",
+    averageReview: 4.8,
+    totalReview: 200,
     productName: "Printed Sweatshirt",
     oldPrice: "414.00",
     newPrice: "314.00",
@@ -63,16 +63,16 @@ const products = [
   {
     id: 3,
     imageSource: require("../../../assets/image/kid-2.jpg"),
-    brandName: "H&M",
-    rating: 4.8,
-    numberRating: 200,
+    categoryName: "H&M",
+    averageReview: 4.8,
+    totalReview: 200,
     productName: "Textured Jersey Dress",
     oldPrice: "399.00",
     newPrice: "300.00",
   },
 ];
 
-export default function HomeContentScreen() {
+export default function HomeContentScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <Image source={imageBanner} style={styles.imageBanner} />
@@ -103,12 +103,13 @@ export default function HomeContentScreen() {
           <ProductCard
             key={product.id}
             imageSource={product.imageSource}
-            brandName={product.brandName}
-            rating={product.rating}
-            numberRating={product.numberRating}
+            categoryName={product.categoryName}
+            averageReview={product.averageReview}
+            totalReview={product.totalReview}
             productName={product.productName}
             oldPrice={product.oldPrice}
             newPrice={product.newPrice}
+            onPress={() => navigation.navigate('ProductDetailScreen')}
             cardWidth={Dimensions.get("window").width * 0.50}
             imageWidth={"150%"}
             imageHeight={"150%"}
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     color: Colors.blackColor,
   },
   moreText: {
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.textSecondary,
   },
   categoryList: {

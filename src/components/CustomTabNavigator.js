@@ -9,7 +9,10 @@ import Colors from "../styles/Color";
 
 const Tab = createBottomTabNavigator();
 
-const CustomTabNavigator = ({ children, colorBackGround = Colors.whiteColor }) => {
+const CustomTabNavigator = ({
+  children,
+  colorBackGround = Colors.whiteColor,
+}) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -32,26 +35,29 @@ const CustomTabNavigator = ({ children, colorBackGround = Colors.whiteColor }) =
         },
         tabBarActiveTintColor: Colors.blackColor,
         tabBarInactiveTintColor: Colors.darkGray,
+        headerShown: route.name === "Home",
         headerStyle: {
-            backgroundColor: colorBackGround,
-          },
+          backgroundColor: colorBackGround,
+        },
         headerTitle: route.name === "Home" ? "" : route.name,
-        headerLeft: () => (
-          <View style={styles.headerLeft}>
-            <Image source={logoFashion} style={styles.image} />
-          </View>
-        ),
-        headerRight: () => (
-          <View style={styles.headerRight}>
-            <IconWithBadge
-              name="shopping-bag"
-              badgeCount={3}
-              size={25}
-              color={Colors.blackColor}
-              style={styles.headerRightIcon}
-            />
-          </View>
-        ),
+        headerLeft: () =>
+          route.name === "Home" ? (
+            <View style={styles.headerLeft}>
+              <Image source={logoFashion} style={styles.image} />
+            </View>
+          ) : null,
+        headerRight: () =>
+          route.name === "Home" ? (
+            <View style={styles.headerRight}>
+              <IconWithBadge
+                name="shopping-bag"
+                badgeCount={3}
+                size={25}
+                color={Colors.blackColor}
+                style={styles.headerRightIcon}
+              />
+            </View>
+          ) : null,
       })}
     >
       {children}
@@ -76,7 +82,7 @@ const styles = StyleSheet.create({
   image: {
     height: 40,
     width: 60,
-    marginBottom: 10
+    marginBottom: 10,
   },
   textLogo: {
     fontFamily: "serif",

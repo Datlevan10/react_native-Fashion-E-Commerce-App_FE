@@ -1,23 +1,24 @@
 import React from "react";
-import { View, Image, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Image, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Colors from "../styles/Color";
 
 const ProductCard = ({
   imageSource,
-  brandName,
-  rating,
-  numberRating,
+  categoryName,
+  averageReview,
+  totalReview,
   productName,
   oldPrice,
   newPrice,
+  onPress,
   cardWidth = Dimensions.get("window").width * 0.5,
   imageWidth = "150%",
   imageHeight = "150%",
 }) => {
   return (
-    <View style={[styles.cardContainer, { width: cardWidth }]}>
+    <TouchableOpacity onPress={onPress} style={[styles.cardContainer, { width: cardWidth }]}>
       <View style={styles.imageContainer}>
         <Image
           source={imageSource}
@@ -30,11 +31,11 @@ const ProductCard = ({
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.row}>
-          <Text style={styles.brandText}>{brandName}</Text>
-          <View style={styles.ratingContainer}>
+          <Text style={styles.brandText}>{categoryName}</Text>
+          <View style={styles.averageReviewContainer}>
             <AntDesign name="star" size={16} color={Colors.yellowColor} />
-            <Text style={styles.ratingText}>{rating}</Text>
-            <Text style={styles.numberRating}>{`(${numberRating})`}</Text>
+            <Text style={styles.averageReviewText}>{averageReview}</Text>
+            <Text style={styles.totalReview}>{`(${totalReview})`}</Text>
           </View>
         </View>
         <Text style={styles.productName} numberOfLines={1} ellipsizeMode="tail">
@@ -45,7 +46,7 @@ const ProductCard = ({
           <Text style={styles.oldPrice}>${oldPrice}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -55,7 +56,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: "visible",
     marginVertical: 10,
-    // width: '100%',
     alignItems: "center",
   },
   imageContainer: {
@@ -84,14 +84,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     width: "100%",
-
     backgroundColor: Colors.whiteBgColor,
-    // borderRadius: 8,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.1,
-    // shadowRadius: 8,
-    // elevation: 2,
   },
   row: {
     flexDirection: "row",
@@ -103,17 +96,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.darkGray,
   },
-  ratingContainer: {
+  averageReviewContainer: {
     flexDirection: "row",
     alignItems: "center",
   },
-  ratingText: {
+  averageReviewText: {
     marginLeft: 5,
     fontSize: 16,
     fontWeight: "bold",
     color: Colors.blackColor,
   },
-  numberRating: {
+  totalReview: {
     color: Colors.darkGray,
   },
   productName: {
