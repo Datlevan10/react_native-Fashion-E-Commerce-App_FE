@@ -37,7 +37,7 @@ Route::prefix('')->group(function () {
     Route::apiResource('admins', AdminController::class);
     Route::apiResource('staffs', StaffController::class);
     Route::apiResource('customers', CustomerController::class);
-    Route::middleware('api')->post('customers/login', [CustomerController::class, 'login']);
+    Route::middleware('api')->post('customers/auth/login', [CustomerController::class, 'login']);
 
     // Product favorite Routes
     Route::apiResource('product_favorites', ProductFavoriteController::class);
