@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import CategoryScreen from './screens/ExploreScreen/ExploreScreen';
-import ProductDetailScreen from './screens/DetailProductScreen';
+import ProductDetailScreen from './screens/DetailProductScreen/DetailProductScreen';
 import CartScreen from './screens/CartScreen/CartScreen';
 import LoginScreen from './screens/LoginScreen/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen/RegisterScreen';
@@ -38,7 +38,7 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen 
-          name="ProductDetail" 
+          name="ProductDetailScreen" 
           component={ProductDetailScreen} 
           options={{ headerShown: false }}
         />

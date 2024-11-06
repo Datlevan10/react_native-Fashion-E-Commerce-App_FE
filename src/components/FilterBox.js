@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
   },
   iconContainer: {},
   text: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 17,
+    fontWeight: "500",
     color: Colors.blackColor,
   },
 });

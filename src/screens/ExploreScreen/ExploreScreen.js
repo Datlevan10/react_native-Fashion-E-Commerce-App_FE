@@ -45,9 +45,9 @@ const products = [
   {
     id: 1,
     imageSource: require("../../../assets/image/kid-2.jpg"),
-    brandName: "H&M",
-    rating: 4.5,
-    numberRating: 150,
+    categoryName: "H&M",
+    averageReview: 4.5,
+    totalReview: 150,
     productName: "Textured Jersey Dress",
     oldPrice: "488.00",
     newPrice: "399.00",
@@ -55,9 +55,9 @@ const products = [
   {
     id: 2,
     imageSource: require("../../../assets/image/kid-3.jpg"),
-    brandName: "H&M",
-    rating: 4.8,
-    numberRating: 200,
+    categoryName: "H&M",
+    averageReview: 4.8,
+    totalReview: 200,
     productName: "Button Front Dress",
     oldPrice: "550.00",
     newPrice: "499.00",
@@ -65,9 +65,9 @@ const products = [
   {
     id: 3,
     imageSource: require("../../../assets/image/kid-4.jpg"),
-    brandName: "Adidas",
-    rating: 4.8,
-    numberRating: 200,
+    categoryName: "Adidas",
+    averageReview: 4.8,
+    totalReview: 200,
     productName: "Short Sleeved Cotton Dress",
     oldPrice: "550.00",
     newPrice: "499.00",
@@ -75,9 +75,9 @@ const products = [
   {
     id: 4,
     imageSource: require("../../../assets/image/kid-10.jpg"),
-    brandName: "Adidas",
-    rating: 4.8,
-    numberRating: 200,
+    categoryName: "Adidas",
+    averageReview: 4.8,
+    totalReview: 200,
     productName: "Patterned Tulle Dress",
     oldPrice: "550.00",
     newPrice: "699.00",
@@ -85,9 +85,9 @@ const products = [
   {
     id: 5,
     imageSource: require("../../../assets/image/kid-6.jpg"),
-    brandName: "Adidas",
-    rating: 4.8,
-    numberRating: 200,
+    categoryName: "Adidas",
+    averageReview: 4.8,
+    totalReview: 200,
     productName: "Tulle Dress",
     oldPrice: "899.00",
     newPrice: "799.00",
@@ -95,21 +95,24 @@ const products = [
   {
     id: 6,
     imageSource: require("../../../assets/image/kid-7.jpg"),
-    brandName: "Adidas",
-    rating: 4.8,
-    numberRating: 200,
+    categoryName: "Adidas",
+    averageReview: 4.8,
+    totalReview: 200,
     productName: "Patterned Tulle Dress",
     oldPrice: "799.00",
     newPrice: "699.00",
   },
 ];
 
-const ExploreScreen = () => {
+const ExploreScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
             <Feather name="arrow-left" size={24} color={Colors.blackColor} />
           </TouchableOpacity>
           <View style={styles.searchContainer}>
@@ -121,7 +124,7 @@ const ExploreScreen = () => {
             />
             <TextInput
               style={styles.searchInput}
-              placeholder="Search products with name, rating, size,..."
+              placeholder="Search products with name, review, size,..."
               placeholderTextColor="#999"
             />
           </View>
@@ -158,9 +161,9 @@ const ExploreScreen = () => {
                 <ProductCard
                   key={index}
                   imageSource={product.imageSource}
-                  brandName={product.brandName}
-                  rating={product.rating}
-                  numberRating={product.numberRating}
+                  categoryName={product.categoryName}
+                  averageReview={product.averageReview}
+                  totalReview={product.totalReview}
                   productName={product.productName}
                   oldPrice={product.oldPrice}
                   newPrice={product.newPrice}

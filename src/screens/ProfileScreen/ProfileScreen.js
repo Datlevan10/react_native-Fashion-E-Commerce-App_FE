@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   otherInformationTitle: {
     fontSize: 18,
     fontWeight: "500",
-    paddingVertical: 10,
+    paddingVertical: 5,
     color: "#333",
   },
 });
