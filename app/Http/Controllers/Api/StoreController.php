@@ -30,15 +30,15 @@ class StoreController extends Controller
     public function store(Request $request) {
         $validator = Validator::make($request->all(), [
             'store_name' => 'required|string|unique:stores,store_name',
-            'description' => 'nullable|string',
-            'address' => 'nullable|string',
-            'city' => 'nullable|string',
+            'description' => 'required|string',
+            'address' => 'required|string',
+            'city' => 'required|string',
             'state' => 'nullable|string',
             'zip_code' => 'nullable|string|max:10',
-            'country' => 'nullable|string',
-            'phone_number' => ['nullable', 'string', 'regex:/^[0-9]{10}$/', 'unique:stores,phone_number'],
-            'email' => ['nullable', 'string', 'email', 'regex:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$/i', 'unique:stores,email'],
-            'logo_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'country' => 'required|string',
+            'phone_number' => ['required', 'string', 'regex:/^[0-9]{10}$/', 'unique:stores,phone_number'],
+            'email' => ['required', 'string', 'email', 'regex:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$/i', 'unique:stores,email'],
+            'logo_url' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'website_url' => 'nullable|url',
             'rating' => 'nullable|numeric|min:0|max:5',
         ]);
@@ -88,7 +88,7 @@ class StoreController extends Controller
     public function update(Request $request, Store $store) {
         $validator = Validator::make($request->all(), [
             'store_name' => 'sometimes|string|unique:stores,store_name,' . $store->store_id . ',store_id|max:255',
-            'description' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string',
             'address' => 'sometimes|string|max:255',
             'city' => 'sometimes|string|max:255',
             'state' => 'sometimes|string|max:255',
