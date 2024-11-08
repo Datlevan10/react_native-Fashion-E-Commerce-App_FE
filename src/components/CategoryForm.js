@@ -19,6 +19,7 @@ const CategoryForm = ({ categories = [], containerStyle }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    gap: 25,
     flexWrap: 'wrap',
     justifyContent: 'center',
   },
