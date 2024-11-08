@@ -1,3 +1,4 @@
+// Cần thay đổi và sử dụng IP cục bộ của máy tính trong mạng nội bộ cho API
 const API_BASE_URL = "http://192.168.1.5:8080/api";
 
 const getRequest = async (endpoint) => {
@@ -51,8 +52,11 @@ const loginCustomer = (loginData) => postRequest("/customers/auth/login", loginD
 
 const getCategories = () => getRequest("/categories");
 
+const getStores = () => getRequest("/stores");
+
 export default {
   registerCustomer,
   loginCustomer,
   getCategories,
+  getStores
 };
