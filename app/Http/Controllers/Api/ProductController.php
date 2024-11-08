@@ -47,6 +47,19 @@ class ProductController extends Controller
         }
     }
 
+    // method GET products with limited quantity by $limit parameter
+    public function getLimitedProducts($limit)
+    {
+        $products = Product::limit($limit)->get();
+
+        return response()->json([
+            'message' => "Get {$limit} limited products successfully",
+            'data' => ProductResource::collection($products)
+        ], 200);
+    }
+
+
+
 
     // method POST
     public function store(Request $request) {
