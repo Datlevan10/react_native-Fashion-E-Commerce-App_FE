@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,34 +10,8 @@ import {
 import ProductCard from "../../components/ProductCard";
 import imageBanner from "../../../assets/image/banner.jpg";
 import CategoryForm from "../../components/CategoryForm";
-import category1Image from "../../../assets/image/women.jpg";
-import category2Image from "../../../assets/image/men.jpg";
-import category3Image from "../../../assets/image/teen.jpg";
-import category4Image from "../../../assets/image/kid.jpg";
 import Colors from "../../styles/Color";
-
-const categories = [
-  {
-    id: 1,
-    name: "Women",
-    imageSource: category1Image,
-  },
-  {
-    id: 2,
-    name: "Men",
-    imageSource: category2Image,
-  },
-  {
-    id: 3,
-    name: "Teens",
-    imageSource: category3Image,
-  },
-  {
-    id: 4,
-    name: "Kids",
-    imageSource: category4Image,
-  },
-];
+import ApiService from "../../api/ApiService";
 
 const products = [
   {
@@ -73,6 +47,28 @@ const products = [
 ];
 
 export default function HomeContentScreen({ navigation }) {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const response = await ApiService.getCategories();
+        setCategories(
+          response.data.map((item) => ({
+            id: item.category_id,
+            name: item.category_name,
+            imageSource: {
+              uri: `http://192.168.1.5:8080${item.image_category}`,
+            },
+          }))
+        );
+      } catch (error) {
+        console.error("Failed to load categories:", error);
+      }
+    };
+    loadCategories();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Image source={imageBanner} style={styles.imageBanner} />
@@ -109,8 +105,8 @@ export default function HomeContentScreen({ navigation }) {
             productName={product.productName}
             oldPrice={product.oldPrice}
             newPrice={product.newPrice}
-            onPress={() => navigation.navigate('ProductDetailScreen')}
-            cardWidth={Dimensions.get("window").width * 0.50}
+            onPress={() => navigation.navigate("ProductDetailScreen")}
+            cardWidth={Dimensions.get("window").width * 0.5}
             imageWidth={"150%"}
             imageHeight={"150%"}
           />
@@ -148,7 +144,7 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
   },
   categoryList: {
-    paddingHorizontal: 9
+    paddingHorizontal: 18,
   },
   productList: {
     paddingHorizontal: 18,

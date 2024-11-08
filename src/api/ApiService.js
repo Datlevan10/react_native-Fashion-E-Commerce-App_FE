@@ -1,5 +1,27 @@
 const API_BASE_URL = "http://192.168.1.5:8080/api";
 
+const getRequest = async (endpoint) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      throw { status: response.status, errors: responseData.error };
+    }
+
+    return responseData;
+  } catch (error) {
+    console.error(`Error while making GET request to ${endpoint}:`, error);
+    throw error;
+  }
+};
+
 const postRequest = async (endpoint, data) => {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -27,7 +49,10 @@ const registerCustomer = (customerData) => postRequest("/customers", customerDat
 
 const loginCustomer = (loginData) => postRequest("/customers/auth/login", loginData);
 
+const getCategories = () => getRequest("/categories");
+
 export default {
   registerCustomer,
   loginCustomer,
+  getCategories,
 };
