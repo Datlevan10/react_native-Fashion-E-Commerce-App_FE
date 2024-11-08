@@ -1,12 +1,29 @@
-import React, { useEffect } from 'react';
-import { View, Image, StyleSheet } from 'react-native';
-
-import storeLogo from '../../../assets/image/logo_store.jpeg'
+import React, { useEffect, useState } from "react";
+import { View, Image, StyleSheet, ActivityIndicator } from "react-native";
+import ApiService from "../../api/ApiService";
+// import storeLogo from '../../../assets/image/logo_store.jpeg';
 
 export default function WelcomeScreen({ navigation }) {
+  const [logoSource, setLogoSource] = useState([]);
+
   useEffect(() => {
+    const loadStoreLogo = async () => {
+      try {
+        const response = await ApiService.getStores();
+        if (response && response.data && response.data[0]) {
+          setLogoSource({
+            uri: `http://192.168.1.5:8080${response.data[0].logo_url}`,
+          });
+        }
+      } catch (error) {
+        console.error("Error loading store logo:", error);
+      }
+    };
+
+    loadStoreLogo();
+
     const timer = setTimeout(() => {
-      navigation.replace('LoginScreen');
+      navigation.replace("LoginScreen");
     }, 5000);
 
     return () => clearTimeout(timer);
@@ -14,11 +31,7 @@ export default function WelcomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Image
-        source={storeLogo}
-        style={styles.logo}
-        resizeMode="contain"
-      />
+      <Image source={logoSource} style={styles.logo} resizeMode="contain" />
     </View>
   );
 }
@@ -26,9 +39,9 @@ export default function WelcomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
   },
   logo: {
     width: 150,
