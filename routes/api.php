@@ -31,7 +31,8 @@ Route::prefix('')->group(function () {
     // Category and Product Routes
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('products', ProductController::class);
-    Route::get('products/category/{category_id}', [ProductController::class, 'getProductByCategoryId']);
+    Route::get('products/category/{category_id}', [ProductController::class, 'getProductsByCategoryId']);
+    Route::get('products/category/{category_id}/limit/{limit}', [ProductController::class, 'getLimitedProductsByCategoryId']);
     Route::get('/products/limit/{limit}', [ProductController::class, 'getLimitedProducts']);
 
     // User Management Routes (Admin, Staff, Customer)
