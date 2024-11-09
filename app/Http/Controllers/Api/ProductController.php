@@ -28,7 +28,7 @@ class ProductController extends Controller
     }
 
     // method GET Product by category_id
-    public function getProductByCategoryId($category_id) {
+    public function getProductsByCategoryId($category_id) {
         $categoryExists = Category::where('category_id', $category_id)->exists();
 
         if (!$categoryExists) {
@@ -47,6 +47,27 @@ class ProductController extends Controller
         }
     }
 
+    // method GET Product by category_id with limited quantity by $limit parameter
+    public function getLimitedProductsByCategoryId($category_id, $limit)
+    {
+        $categoryExists = Category::where('category_id', $category_id)->exists();
+
+        if (!$categoryExists) {
+            return response()->json(['message' => 'Category not found'], 404);
+        }
+
+        $products = Product::where('category_id', $category_id)->limit($limit)->get();
+
+        if ($products->count() > 0) {
+            return response()->json([
+                'message' => "Get {$limit} products by category_id successfully",
+                'data' => ProductResource::collection($products)
+            ], 200);
+        } else {
+            return response()->json(['message' => 'No products found in this category'], 200);
+        }
+    }
+
     // method GET products with limited quantity by $limit parameter
     public function getLimitedProducts($limit)
     {
@@ -57,9 +78,6 @@ class ProductController extends Controller
             'data' => ProductResource::collection($products)
         ], 200);
     }
-
-
-
 
     // method POST
     public function store(Request $request) {
