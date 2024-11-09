@@ -1,18 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, ActivityIndicator } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import IconWithBadge from "./IconWithBadge";
-import logoFashion from "../../assets/image/logo_store.jpeg";
 import Colors from "../styles/Color";
+import ApiService from "../api/ApiService";
 
 const Tab = createBottomTabNavigator();
 
-const CustomTabNavigator = ({
-  children,
-  colorBackGround = Colors.whiteColor,
-}) => {
+const CustomTabNavigator = ({ children, colorBackGround = Colors.whiteColor }) => {
+  const [logoSource, setLogoSource] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadStoreLogo = async () => {
+      try {
+        const response = await ApiService.getStores();
+        if (response && response.data && response.data[0]) {
+          setLogoSource({
+            uri: `http://192.168.1.5:8080${response.data[0].logo_url}`,
+          });
+        }
+      } catch (error) {
+        console.error("Error loading store logo:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStoreLogo();
+  }, []);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -23,11 +42,7 @@ const CustomTabNavigator = ({
             return <Feather name="search" size={size} color={color} />;
           } else if (route.name === "Notification") {
             return (
-              <Ionicons
-                name="notifications-outline"
-                size={size}
-                color={color}
-              />
+              <Ionicons name="notifications-outline" size={size} color={color} />
             );
           } else if (route.name === "Profile") {
             return <Ionicons name="person-outline" size={size} color={color} />;
@@ -41,11 +56,13 @@ const CustomTabNavigator = ({
         },
         headerTitle: route.name === "Home" ? "" : route.name,
         headerLeft: () =>
-          route.name === "Home" ? (
+          route.name === "Home" && !loading ? (
             <View style={styles.headerLeft}>
-              <Image source={logoFashion} style={styles.image} />
+              <Image source={logoSource} style={styles.image} />
             </View>
-          ) : null,
+          ) : (
+            <ActivityIndicator size="small" color={Colors.blackColor} style={styles.loading} />
+          ),
         headerRight: () =>
           route.name === "Home" ? (
             <View style={styles.headerRight}>
@@ -80,14 +97,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
   },
   image: {
-    height: 40,
-    width: 60,
+    height: 35,
+    width: 55,
     marginBottom: 10,
   },
-  textLogo: {
-    fontFamily: "serif",
-    color: "#e91e63",
-    fontSize: 30,
+  loading: {
+    marginLeft: 18,
   },
 });
 
