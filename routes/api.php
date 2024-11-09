@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\{
     StoreController,
     StoreSettingController
 };
+use App\Models\Category;
 
 Route::prefix('')->group(function () {
     // Store Routes Store and Store Settings
@@ -30,6 +31,7 @@ Route::prefix('')->group(function () {
 
     // Category and Product Routes
     Route::apiResource('categories', CategoryController::class);
+    Route::get('/categories/limit/{limit}', [CategoryController::class, 'getLimitedCategories']);
     Route::apiResource('products', ProductController::class);
     Route::get('products/category/{category_id}', [ProductController::class, 'getProductsByCategoryId']);
     Route::get('products/category/{category_id}/limit/{limit}', [ProductController::class, 'getLimitedProductsByCategoryId']);

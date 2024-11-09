@@ -26,6 +26,17 @@ class CategoryController extends Controller
         }
     }
 
+    // method GET categories with limited quantity by $limit parameter
+    public function getLimitedCategories($limit)
+    {
+        $categories = Category::limit($limit)->get();
+
+        return response()->json([
+            'message' => "Get {$limit} limited categories successfully",
+            'data' => CategoryResource::collection($categories)
+        ], 200);
+    }
+
     // method POST
     public function store(Request $request) {
 
