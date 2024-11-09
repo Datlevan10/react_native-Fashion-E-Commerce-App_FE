@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from "react-native";
 import ProductCard from "../../components/ProductCard";
-import imageBanner from "../../../assets/image/banner.jpg";
+// import imageBanner from "../../../assets/image/banner.jpg";
 import CategoryForm from "../../components/CategoryForm";
 import Colors from "../../styles/Color";
 import ApiService from "../../api/ApiService";
@@ -48,6 +48,7 @@ const products = [
 
 export default function HomeContentScreen({ navigation }) {
   const [categories, setCategories] = useState([]);
+  const [imageEventSource, setImageEventSource] = useState(null);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -66,12 +67,37 @@ export default function HomeContentScreen({ navigation }) {
         console.error("Failed to load categories:", error);
       }
     };
+
+    const loadEventImage = async () => {
+      try {
+        const response = await ApiService.getEventImageActive();
+        if (
+          response &&
+          response.data &&
+          response.data[0] &&
+          response.data[0].event_image.length > 0
+        ) {
+          setImageEventSource({
+            uri: `http://192.168.1.5:8080${response.data[0].event_image[0]}`,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load event image:", error);
+      }
+    };
+
     loadCategories();
+    loadEventImage();
   }, []);
 
   return (
     <View style={styles.container}>
-      <Image source={imageBanner} style={styles.imageBanner} />
+      {/* <Image source={imageBanner} style={styles.imageBanner} /> */}
+      {imageEventSource ? (
+        <Image source={imageEventSource} style={styles.imageEvent} />
+      ) : (
+        <Text style={styles.loadingText}>Loading image Event...</Text>
+      )}
       <View style={styles.itemBar}>
         <Text style={styles.titleText}>Shop By Category</Text>
         <Text style={styles.moreText}>See All</Text>
@@ -121,7 +147,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.whiteBgColor,
   },
-  imageBanner: {
+  imageEvent: {
     height: 170,
     width: 400,
   },

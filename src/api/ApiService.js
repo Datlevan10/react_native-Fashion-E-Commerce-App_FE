@@ -46,17 +46,21 @@ const postRequest = async (endpoint, data) => {
   }
 };
 
+const getStores = () => getRequest("/stores");
+
 const registerCustomer = (customerData) => postRequest("/customers", customerData);
 
 const loginCustomer = (loginData) => postRequest("/customers/auth/login", loginData);
 
+const getEventImageActive = () => getRequest("/events/is_active/active");
+
 const getCategories = () => getRequest("/categories");
 
-const getStores = () => getRequest("/stores");
 
 export default {
   registerCustomer,
   loginCustomer,
   getCategories,
-  getStores
+  getStores,
+  getEventImageActive
 };
