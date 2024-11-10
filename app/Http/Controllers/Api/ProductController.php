@@ -107,6 +107,7 @@ class ProductController extends Controller
             'image.*.url' => 'string|max:255',
             'old_price' => 'nullable|numeric|min:0',
             'new_price' => 'required|numeric|min:0',
+            'note' => 'nullable|string|max:255',
         ]);
 
         if($validator->fails()){
@@ -142,6 +143,7 @@ class ProductController extends Controller
             'image' => array_map(fn($url) => ['url' => $url], $imagePaths),
             'old_price' => $request->old_price,
             'new_price' => $request->new_price ?? $request->old_price,
+            'note' => $request->note,
             'total_review' => 0,
             'average_review' => 0,
         ]);
@@ -193,6 +195,7 @@ class ProductController extends Controller
             'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'old_price' => 'sometimes|numeric|min:0',
             'new_price' => 'sometimes|numeric|min:0',
+            'note' => 'nullable|string|max:255',
         ]);
 
         if($validator->fails()){
@@ -226,6 +229,7 @@ class ProductController extends Controller
             'image' => !empty($imagePaths) ? $imagePaths : $product->image,
             'old_price' => $request->old_price ?? $product->old_price,
             'new_price' => $request->new_price ?? $product->new_price,
+            'note' => $request->note ?? $product->note,
         ]);
 
         return response()->json([
