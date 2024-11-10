@@ -36,6 +36,7 @@ class ProductResource extends JsonResource
         return [
             'product_id' => $this->product_id,
             'category_id' => $this->category_id,
+            'category_name' => $this->category->category_name ?? null,
             'product_name' => $this->product_name,
             'description' => $this->description,
             'color' => $this->color,
@@ -45,6 +46,7 @@ class ProductResource extends JsonResource
             'new_price' => $this->new_price,
             'total_review' => $this->total_review,
             'average_review' => $this->average_review,
+            'note' => $this->note,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
