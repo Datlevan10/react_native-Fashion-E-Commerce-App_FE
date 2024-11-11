@@ -30,6 +30,7 @@ class Product extends Model
         'image',
         'old_price',
         'new_price',
+        'note',
         'rating_count',
         'rating_average',
     ];
