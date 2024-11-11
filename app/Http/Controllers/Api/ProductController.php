@@ -81,30 +81,16 @@ class ProductController extends Controller
 
     // method POST
     public function store(Request $request) {
-        // $validator = Validator::make($request->all(), [
-        //     'category_id' => 'required|exists:categories,category_id',
-        //     'product_name' => 'required|string|max:255',
-        //     'description' => 'required|string',
-        //     'color' => 'required|array|min:1',
-        //     'color.*' => 'string|max:50',
-        //     'size' => 'required|array|min:1',
-        //     'size.*' => 'string|max:10',
-        //     'image' => 'required|array|min:1',
-        //     'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        //     'old_price' => 'nullable|numeric|min:0',
-        //     'new_price' => 'required|numeric|min:0',
-        // ]);
-
         $validator = Validator::make($request->all(), [
             'category_id' => 'required|exists:categories,category_id',
             'product_name' => 'required|string|max:255',
             'description' => 'required|string',
             'color' => 'required|array|min:1',
-            'color.*.color_code' => 'string|max:50',
+            'color.*' => 'string|max:50',
             'size' => 'required|array|min:1',
-            'size.*.size' => 'string|max:10',
+            'size.*' => 'string|max:10',
             'image' => 'required|array|min:1',
-            'image.*.url' => 'string|max:255',
+            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'old_price' => 'nullable|numeric|min:0',
             'new_price' => 'required|numeric|min:0',
             'note' => 'nullable|string|max:255',
@@ -135,11 +121,9 @@ class ProductController extends Controller
             'category_id' => $request->category_id,
             'product_name' => $request->product_name,
             'description' => $request->description,
-            // 'color' => $request->color,
-            // 'size' => $request->size,
-            // 'image' => $imagePaths,
             'color' => array_map(fn($color) => ['color_code' => $color], $request->color),
             'size' => array_map(fn($size) => ['size' => $size], $request->size),
+            // Unprocessed when uploaded image exceeds the 2MB size limit
             'image' => array_map(fn($url) => ['url' => $url], $imagePaths),
             'old_price' => $request->old_price,
             'new_price' => $request->new_price ?? $request->old_price,
