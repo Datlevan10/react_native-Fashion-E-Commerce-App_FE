@@ -14,7 +14,6 @@ use App\Http\Controllers\Api\{
     StoreController,
     StoreSettingController
 };
-use App\Models\Category;
 
 Route::prefix('')->group(function () {
     // Store Routes Store and Store Settings
