@@ -111,6 +111,8 @@ class CartController extends Controller
             $cartDetail->total_price = $cartDetail->quantity * $product->new_price;
             $cartDetail->save();
         } else {
+            $image_url = isset($product->image[0]['url']) ? $product->image[0]['url'] : null;
+
             CartDetail::create([
                 'cart_id' => $cart->cart_id,
                 'customer_id' => $customer_id,
@@ -119,7 +121,7 @@ class CartController extends Controller
                 'quantity' => $quantity,
                 'color' => $color,
                 'size' => $size,
-                'image' => is_array($product->image) ? implode(',', $product->image) : $product->image,
+                'image' => $image_url,
                 'unit_price' => $product->new_price,
                 'total_price' => $quantity * $product->new_price,
             ]);
