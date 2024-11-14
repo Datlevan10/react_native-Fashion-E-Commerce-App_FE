@@ -56,7 +56,7 @@ Route::prefix('')->group(function () {
     Route::get('cart_details/cart/{cart_id}', [CartDetailController::class, 'getCartDetailByCartId']);
     Route::get('cart_details/all-cart-details/customer/{customer_id}', [CartDetailController::class, 'getAllCartDetailByCustomerId']);
     Route::get('cart_details/not-ordered-cart_details/customer/{customer_id}', [CartDetailController::class, 'getNotOrderedCartDetailByCustomerId']);
-    Route::delete('cart_details/{cart_detail_id}', [CartDetailController::class, 'deleteItemInCart']);
+    Route::delete('cart_details/delete-item-in-cart/{cart_detail_id}', [CartDetailController::class, 'deleteItemInCart']);
 
     // Order and Order Detail Routes
     Route::apiResource('orders', OrderController::class);
