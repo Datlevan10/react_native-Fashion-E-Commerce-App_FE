@@ -7,11 +7,11 @@ import Colors from "../styles/Color";
 const ProductCard = ({
   imageSource,
   categoryName,
-  averageReview,
-  totalReview,
   productName,
   oldPrice,
   newPrice,
+  averageReview,
+  totalReview,
   onPress,
   cardWidth = Dimensions.get("window").width * 0.5,
   imageWidth = "150%",
