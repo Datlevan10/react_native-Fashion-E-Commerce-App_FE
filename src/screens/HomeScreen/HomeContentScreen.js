@@ -13,42 +13,43 @@ import CategoryForm from "../../components/CategoryForm";
 import Colors from "../../styles/Color";
 import ApiService from "../../api/ApiService";
 
-const products = [
-  {
-    id: 1,
-    imageSource: require("../../../assets/image/shirt-1.jpg"),
-    categoryName: "H&M",
-    averageReview: 4.9,
-    totalReview: 150,
-    productName: "Oversized Fit Printed Mesh T-Shirt",
-    oldPrice: "550.00",
-    newPrice: "295.00",
-  },
-  {
-    id: 2,
-    imageSource: require("../../../assets/image/shirt-2.jpg"),
-    categoryName: "H&M",
-    averageReview: 4.8,
-    totalReview: 200,
-    productName: "Printed Sweatshirt",
-    oldPrice: "414.00",
-    newPrice: "314.00",
-  },
-  {
-    id: 3,
-    imageSource: require("../../../assets/image/kid-2.jpg"),
-    categoryName: "H&M",
-    averageReview: 4.8,
-    totalReview: 200,
-    productName: "Textured Jersey Dress",
-    oldPrice: "399.00",
-    newPrice: "300.00",
-  },
-];
+// const products = [
+//   {
+//     id: 1,
+//     imageSource: require("../../../assets/image/shirt-1.jpg"),
+//     categoryName: "H&M",
+//     averageReview: 4.9,
+//     totalReview: 150,
+//     productName: "Oversized Fit Printed Mesh T-Shirt",
+//     oldPrice: "550.00",
+//     newPrice: "295.00",
+//   },
+//   {
+//     id: 2,
+//     imageSource: require("../../../assets/image/shirt-2.jpg"),
+//     categoryName: "H&M",
+//     averageReview: 4.8,
+//     totalReview: 200,
+//     productName: "Printed Sweatshirt",
+//     oldPrice: "414.00",
+//     newPrice: "314.00",
+//   },
+//   {
+//     id: 3,
+//     imageSource: require("../../../assets/image/kid-2.jpg"),
+//     categoryName: "H&M",
+//     averageReview: 4.8,
+//     totalReview: 200,
+//     productName: "Textured Jersey Dress",
+//     oldPrice: "399.00",
+//     newPrice: "300.00",
+//   },
+// ];
 
 export default function HomeContentScreen({ navigation }) {
   const [categories, setCategories] = useState([]);
   const [imageEventSource, setImageEventSource] = useState(null);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -86,8 +87,29 @@ export default function HomeContentScreen({ navigation }) {
       }
     };
 
+    const loadProducts = async () => {
+      try {
+        const response = await ApiService.getProductsByCategory("category5");
+        setProducts(
+          response.map((item) => ({
+            id: item.product_id,
+            imageSource: { uri: `http://192.168.1.5:8080${item.image[0].url}` },
+            categoryName: item.category_name,
+            averageReview: item.average_review,
+            totalReview: item.total_review,
+            productName: item.product_name,
+            oldPrice: item.old_price,
+            newPrice: item.new_price,
+          }))
+        );
+      } catch (error) {
+        console.error("Failed to load products:", error);
+      }
+    };
+
     loadCategories();
     loadEventImage();
+    loadProducts();
   }, []);
 
   return (

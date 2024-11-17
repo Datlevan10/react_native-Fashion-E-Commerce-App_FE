@@ -56,11 +56,14 @@ const getEventImageActive = () => getRequest("/events/is_active/active");
 
 const getCategories = () => getRequest("/categories");
 
+const getProductsByCategory = (category_id) => getRequest(`/products/category/${category_id}`);
+
 
 export default {
   registerCustomer,
   loginCustomer,
   getCategories,
   getStores,
-  getEventImageActive
+  getEventImageActive,
+  getProductsByCategory,
 };
