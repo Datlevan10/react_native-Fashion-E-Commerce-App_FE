@@ -8,43 +8,9 @@ import {
   Dimensions,
 } from "react-native";
 import ProductCard from "../../components/ProductCard";
-// import imageBanner from "../../../assets/image/banner.jpg";
 import CategoryForm from "../../components/CategoryForm";
 import Colors from "../../styles/Color";
 import ApiService from "../../api/ApiService";
-
-// const products = [
-//   {
-//     id: 1,
-//     imageSource: require("../../../assets/image/shirt-1.jpg"),
-//     categoryName: "H&M",
-//     averageReview: 4.9,
-//     totalReview: 150,
-//     productName: "Oversized Fit Printed Mesh T-Shirt",
-//     oldPrice: "550.00",
-//     newPrice: "295.00",
-//   },
-//   {
-//     id: 2,
-//     imageSource: require("../../../assets/image/shirt-2.jpg"),
-//     categoryName: "H&M",
-//     averageReview: 4.8,
-//     totalReview: 200,
-//     productName: "Printed Sweatshirt",
-//     oldPrice: "414.00",
-//     newPrice: "314.00",
-//   },
-//   {
-//     id: 3,
-//     imageSource: require("../../../assets/image/kid-2.jpg"),
-//     categoryName: "H&M",
-//     averageReview: 4.8,
-//     totalReview: 200,
-//     productName: "Textured Jersey Dress",
-//     oldPrice: "399.00",
-//     newPrice: "300.00",
-//   },
-// ];
 
 export default function HomeContentScreen({ navigation }) {
   const [categories, setCategories] = useState([]);
@@ -89,17 +55,25 @@ export default function HomeContentScreen({ navigation }) {
 
     const loadProducts = async () => {
       try {
-        const response = await ApiService.getProductsByCategory("category5");
+        // Reprocess this place, currently transmitting the id of the category 'Feature'
+        const response = await ApiService.getFeatureProducts("category5");
+        // console.log("API Response:", response);
+        const productsArray = response.data;
+
+        if (!Array.isArray(productsArray)) {
+          throw new Error("API response.data is not an array");
+        }
+
         setProducts(
-          response.map((item) => ({
+          productsArray.map((item) => ({
             id: item.product_id,
             imageSource: { uri: `http://192.168.1.5:8080${item.image[0].url}` },
             categoryName: item.category_name,
             averageReview: item.average_review,
             totalReview: item.total_review,
             productName: item.product_name,
-            oldPrice: item.old_price,
-            newPrice: item.new_price,
+            oldPrice: parseInt(item.old_price),
+            newPrice: parseInt(item.new_price),
           }))
         );
       } catch (error) {
@@ -107,6 +81,7 @@ export default function HomeContentScreen({ navigation }) {
       }
     };
 
+    // load data
     loadCategories();
     loadEventImage();
     loadProducts();
@@ -114,7 +89,6 @@ export default function HomeContentScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* <Image source={imageBanner} style={styles.imageBanner} /> */}
       {imageEventSource ? (
         <Image source={imageEventSource} style={styles.imageEvent} />
       ) : (
