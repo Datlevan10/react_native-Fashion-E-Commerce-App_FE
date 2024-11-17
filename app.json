@@ -12,6 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "sdkVersion": "52.0.0",
     "ios": {
       "supportsTablet": true
     },
@@ -19,7 +20,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.devdatv10.FashionECommerceApp_FE"
     },
     "web": {
       "favicon": "./assets/favicon.png"
