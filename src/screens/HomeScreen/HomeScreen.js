@@ -9,8 +9,6 @@ import CustomTabLabel from "../../components/CustomTabLabel ";
 import CustomTabNavigator from "../../components/CustomTabNavigator";
 
 const Tab = createBottomTabNavigator();
-// import logoFashion from "../assets/image/wattpad.png"
-// import logoFashion from "../assets/image/silhouette.png";
 
 export default function HomeScreen({ navigation }) {
   return (

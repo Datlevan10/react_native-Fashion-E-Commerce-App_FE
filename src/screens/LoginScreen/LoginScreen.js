@@ -18,6 +18,7 @@ import CustomLinkText from "../../components/CustomLinkText";
 import Checkbox from "expo-checkbox";
 import Colors from "../../styles/Color";
 import { LinearGradient } from "expo-linear-gradient";
+import ShowAlertWithTitleContentAndOneActions from "../../components/ShowAlertWithTitleContentAndOneActions ";
 import ApiService from "../../api/ApiService";
 
 export default function LoginScreen({ navigation }) {
@@ -58,8 +59,13 @@ export default function LoginScreen({ navigation }) {
         const response = await ApiService.loginCustomer(loginData);
 
         if (response.status === 200) {
-          Alert.alert("Login successful!", "Welcome back!");
+          ShowAlertWithTitleContentAndOneActions("Login successful", "Welcome back H&M store", )
           navigation.navigate("HomeScreen");
+        } else if (response.status === 401) {
+          const errorMessage =
+            response.message || "Incorrect login or password.";
+          Alert.alert("Login failed", errorMessage);
+          return;
         } else {
           const errorMessages = response.errors
             ? Object.values(response.errors).flat().join("\n")
@@ -67,9 +73,10 @@ export default function LoginScreen({ navigation }) {
           Alert.alert("Login failed", errorMessages);
         }
       } catch (error) {
-        if (error.errors) {
-          const errorMessages = Object.values(error.errors).flat().join("\n");
-          Alert.alert("Login failed", errorMessages);
+        if (error.response && error.response.status === 401) {
+          const errorMessage =
+            error.response.data.message || "Incorrect login or password.";
+          Alert.alert("Login failed", errorMessage);
         } else {
           Alert.alert(
             "Login failed",
