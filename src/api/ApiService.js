@@ -1,5 +1,5 @@
 // Cần thay đổi và sử dụng IP cục bộ của máy tính trong mạng nội bộ cho API
-const API_BASE_URL = "http://192.168.1.5:8080/api";
+const API_BASE_URL = "http://192.168.1.7:8080/api";
 
 const getRequest = async (endpoint) => {
   try {

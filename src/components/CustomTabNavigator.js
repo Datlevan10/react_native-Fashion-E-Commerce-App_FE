@@ -19,7 +19,7 @@ const CustomTabNavigator = ({ children, colorBackGround = Colors.whiteColor }) =
         const response = await ApiService.getStores();
         if (response && response.data && response.data[0]) {
           setLogoSource({
-            uri: `http://192.168.1.5:8080${response.data[0].logo_url}`,
+            uri: `http://192.168.1.7:8080${response.data[0].logo_url}`,
           });
         }
       } catch (error) {
