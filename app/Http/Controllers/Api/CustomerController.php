@@ -230,10 +230,20 @@ class CustomerController extends Controller
     // Method handle login customer with email, username, phone number, and password
     public function login(Request $request)
     {
-        $request->validate([
-            'identifier' => 'required',
-            'password' => 'required',
+        $validator = Validator::make($request->all(), [
+            'identifier' => 'required|string',
+            'password' => 'required|string',
+        ], [
+            'identifier.required' => 'The identifier field is required.',
+            'password.required' => 'The password field is required.',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
 
         $customer = Customer::where('email', $request->identifier)
                             ->orWhere('phone_number', $request->identifier)
@@ -241,7 +251,10 @@ class CustomerController extends Controller
                             ->first();
 
         if (!$customer || !Hash::check($request->password, $customer->password)) {
-            return response()->json(['message' => 'Incorrect login or password.'], 401);
+            return response()->json([
+                'message' => 'Incorrect username and password',
+                'error_code' => 'AUTH_FAILED',
+            ], 401);
         }
 
         $customer->last_login = now();
