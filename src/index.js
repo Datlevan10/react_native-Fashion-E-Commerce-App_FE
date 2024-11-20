@@ -1,20 +1,20 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import CategoryScreen from './screens/ExploreScreen/ExploreScreen';
-import ProductDetailScreen from './screens/DetailProductScreen/DetailProductScreen';
-import CartScreen from './screens/CartScreen/CartScreen';
-import LoginScreen from './screens/LoginScreen/LoginScreen';
-import RegisterScreen from './screens/RegisterScreen/RegisterScreen';
-import WelcomeScreen from './screens/WelcomeScreen/WelcomeScreen';
-import ForgotPasswordScreen from './screens/ForgotPasswordScreen/ForgotPasswordScreen';
-import CheckoutScreen from './screens/CheckoutScreen/CheckoutScreen';
-import TrackingDetailScreen from './screens/CheckoutScreen/TrackingDetailScreen';
-import ProfileScreen from './screens/ProfileScreen/ProfileScreen';
-import ManagerProfileScreen from './screens/ProfileScreen/ManagerProfileScreen';
-import DetailProfileScreen from './screens/ProfileScreen/DetailProfileScreen';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import CategoryScreen from "./screens/ExploreScreen/ExploreScreen";
+import ProductDetailScreen from "./screens/DetailProductScreen/DetailProductScreen";
+import CartScreen from "./screens/CartScreen/CartScreen";
+import LoginScreen from "./screens/LoginScreen/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen/RegisterScreen";
+import WelcomeScreen from "./screens/WelcomeScreen/WelcomeScreen";
+import ForgotPasswordScreen from "./screens/ForgotPasswordScreen/ForgotPasswordScreen";
+import CheckoutScreen from "./screens/CheckoutScreen/CheckoutScreen";
+import TrackingDetailScreen from "./screens/CheckoutScreen/TrackingDetailScreen";
+import ProfileScreen from "./screens/ProfileScreen/ProfileScreen";
+import ManagerProfileScreen from "./screens/ProfileScreen/ManagerProfileScreen";
+import DetailProfileScreen from "./screens/ProfileScreen/DetailProfileScreen";
 
-import HomeScreen from './screens/HomeScreen/HomeScreen';
+import HomeScreen from "./screens/HomeScreen/HomeScreen";
 
 const Stack = createStackNavigator();
 
@@ -22,69 +22,69 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="WelcomeScreen">
-        <Stack.Screen 
-          name="WelcomeScreen" 
-          component={WelcomeScreen} 
+        <Stack.Screen
+          name="WelcomeScreen"
+          component={WelcomeScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="HomeScreen" 
-          component={HomeScreen} 
+        <Stack.Screen
+          name="HomeScreen"
+          component={HomeScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="Category" 
-          component={CategoryScreen} 
+        <Stack.Screen
+          name="Category"
+          component={CategoryScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="ProductDetailScreen" 
-          component={ProductDetailScreen} 
+        <Stack.Screen
+          name="ProductDetailScreen"
+          component={ProductDetailScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="CartPage" 
-          component={CartScreen} 
+        <Stack.Screen
+          name="CartPage"
+          component={CartScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="LoginScreen" 
-          component={LoginScreen} 
+        <Stack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="RegisterScreen" 
-          component={RegisterScreen} 
+        <Stack.Screen
+          name="RegisterScreen"
+          component={RegisterScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="ForgotPasswordScreen" 
-          component={ForgotPasswordScreen} 
+        <Stack.Screen
+          name="ForgotPasswordScreen"
+          component={ForgotPasswordScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="CheckoutScreen" 
-          component={CheckoutScreen} 
+        <Stack.Screen
+          name="CheckoutScreen"
+          component={CheckoutScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="TrackingDetailScreen" 
-          component={TrackingDetailScreen} 
+        <Stack.Screen
+          name="TrackingDetailScreen"
+          component={TrackingDetailScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="ProfileScreen" 
-          component={ProfileScreen} 
+        <Stack.Screen
+          name="ProfileScreen"
+          component={ProfileScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="ManagerProfileScreen" 
-          component={ManagerProfileScreen} 
+        <Stack.Screen
+          name="ManagerProfileScreen"
+          component={ManagerProfileScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-          name="DetailProfileScreen" 
-          component={DetailProfileScreen} 
+        <Stack.Screen
+          name="DetailProfileScreen"
+          component={DetailProfileScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

@@ -26,7 +26,7 @@ export default function HomeContentScreen({ navigation }) {
             id: item.category_id,
             name: item.category_name,
             imageSource: {
-              uri: `http://192.168.1.7:8080${item.image_category}`,
+              uri: `http://192.168.1.9:8080${item.image_category}`,
             },
           }))
         );
@@ -45,7 +45,7 @@ export default function HomeContentScreen({ navigation }) {
           response.data[0].event_image.length > 0
         ) {
           setImageEventSource({
-            uri: `http://192.168.1.7:8080${response.data[0].event_image[0]}`,
+            uri: `http://192.168.1.9:8080${response.data[0].event_image[0]}`,
           });
         }
       } catch (error) {
@@ -55,7 +55,6 @@ export default function HomeContentScreen({ navigation }) {
 
     const loadProducts = async () => {
       try {
-        // Reprocess this place, currently transmitting the id of the category 'Feature'
         const response = await ApiService.getFeatureProducts("category5");
         // console.log("API Response:", response);
         const productsArray = response.data;
@@ -67,7 +66,7 @@ export default function HomeContentScreen({ navigation }) {
         setProducts(
           productsArray.map((item) => ({
             id: item.product_id,
-            imageSource: { uri: `http://192.168.1.7:8080${item.image[0].url}` },
+            imageSource: { uri: `http://192.168.1.9:8080${item.image[0].url}` },
             categoryName: item.category_name,
             averageReview: item.average_review,
             totalReview: item.total_review,
