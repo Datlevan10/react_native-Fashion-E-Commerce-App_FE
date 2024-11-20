@@ -59,13 +59,15 @@ export default function LoginScreen({ navigation }) {
         const response = await ApiService.loginCustomer(loginData);
 
         if (response.status === 200) {
-          ShowAlertWithTitleContentAndOneActions("Login successful", "Welcome back H&M store", )
+          ShowAlertWithTitleContentAndOneActions(
+            "Login successful",
+            "Welcome back H&M store"
+          );
           navigation.navigate("HomeScreen");
         } else if (response.status === 401) {
           const errorMessage =
-            response.message || "Incorrect login or password.";
+            response.data?.message || "Incorrect username and password";
           Alert.alert("Login failed", errorMessage);
-          return;
         } else {
           const errorMessages = response.errors
             ? Object.values(response.errors).flat().join("\n")
@@ -75,12 +77,12 @@ export default function LoginScreen({ navigation }) {
       } catch (error) {
         if (error.response && error.response.status === 401) {
           const errorMessage =
-            error.response.data.message || "Incorrect login or password.";
+            error.response.data?.message || "Incorrect username and password";
           Alert.alert("Login failed", errorMessage);
         } else {
           Alert.alert(
             "Login failed",
-            error.message || "An unknown error occurred"
+            error.message || "Incorrect username and password"
           );
         }
       }
