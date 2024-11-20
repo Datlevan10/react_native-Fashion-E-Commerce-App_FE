@@ -228,7 +228,7 @@ class CustomerController extends Controller
     }
 
     // Method handle login customer with email, username, phone number, and password
-    public function login(Request $request)
+    public function authenticateLoginCustomer(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'identifier' => 'required|string',
