@@ -16,7 +16,7 @@ import CustomLinkText from "../../components/CustomLinkText";
 import Checkbox from "expo-checkbox";
 import Colors from "../../styles/Color";
 import { LinearGradient } from "expo-linear-gradient";
-import ApiService from "../../api/ApiService";
+import apiService from "../../api/ApiService";
 
 export default function RegisterScreen({ navigation }) {
   const [username, setUsername] = useState("");
@@ -132,7 +132,7 @@ export default function RegisterScreen({ navigation }) {
 
     try {
       // console.log("Sending request with data:", customerData);
-      const response = await ApiService.registerCustomer(customerData);
+      const response = await apiService.registerCustomer(customerData);
 
       if (response.status === 201) {
         Alert.alert("Registration successful!", "You can log in now.");

@@ -19,7 +19,7 @@ import Checkbox from "expo-checkbox";
 import Colors from "../../styles/Color";
 import { LinearGradient } from "expo-linear-gradient";
 import ShowAlertWithTitleContentAndOneActions from "../../components/ShowAlertWithTitleContentAndOneActions ";
-import ApiService from "../../api/ApiService";
+import apiService from "../../api/ApiService";
 
 export default function LoginScreen({ navigation }) {
   const [identifier, setIdentifier] = useState("");
@@ -56,7 +56,7 @@ export default function LoginScreen({ navigation }) {
       };
 
       try {
-        const response = await ApiService.loginCustomer(loginData);
+        const response = await apiService.authenticateLoginCustomer(loginData);
 
         if (response.status === 200) {
           ShowAlertWithTitleContentAndOneActions(
