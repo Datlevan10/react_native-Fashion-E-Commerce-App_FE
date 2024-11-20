@@ -1,5 +1,5 @@
 // Cần thay đổi và sử dụng IP cục bộ của máy tính trong mạng nội bộ cho API
-const API_BASE_URL = "http://192.168.1.9:8080/api";
+const API_BASE_URL = "http://192.168.1.10:8080/api";
 
 const getRequest = async (endpoint) => {
   try {
@@ -50,7 +50,7 @@ const getStores = () => getRequest("/stores");
 
 const registerCustomer = (customerData) => postRequest("/customers", customerData);
 
-const loginCustomer = (loginData) => postRequest("/customers/auth/login", loginData);
+const authenticateLoginCustomer = (loginData) => postRequest("/customers/auth/login", loginData);
 
 const getEventImageActive = () => getRequest("/events/is_active/active");
 
@@ -61,7 +61,7 @@ const getFeatureProducts = (category_id) => getRequest(`/products/category/${cat
 
 export default {
   registerCustomer,
-  loginCustomer,
+  authenticateLoginCustomer,
   getCategories,
   getStores,
   getEventImageActive,

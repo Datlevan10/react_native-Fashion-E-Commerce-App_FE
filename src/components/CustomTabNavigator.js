@@ -5,7 +5,7 @@ import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import IconWithBadge from "./IconWithBadge";
 import Colors from "../styles/Color";
-import ApiService from "../api/ApiService";
+import apiService  from "../api/ApiService";
 
 const Tab = createBottomTabNavigator();
 
@@ -16,10 +16,10 @@ const CustomTabNavigator = ({ children, colorBackGround = Colors.whiteColor }) =
   useEffect(() => {
     const loadStoreLogo = async () => {
       try {
-        const response = await ApiService.getStores();
+        const response = await apiService .getStores();
         if (response && response.data && response.data[0]) {
           setLogoSource({
-            uri: `http://192.168.1.9:8080${response.data[0].logo_url}`,
+            uri: `http://192.168.1.10:8080${response.data[0].logo_url}`,
           });
         }
       } catch (error) {

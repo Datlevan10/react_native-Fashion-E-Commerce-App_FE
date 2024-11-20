@@ -10,7 +10,7 @@ import {
 import ProductCard from "../../components/ProductCard";
 import CategoryForm from "../../components/CategoryForm";
 import Colors from "../../styles/Color";
-import ApiService from "../../api/ApiService";
+import apiService from "../../api/ApiService";
 
 export default function HomeContentScreen({ navigation }) {
   const [categories, setCategories] = useState([]);
@@ -20,13 +20,13 @@ export default function HomeContentScreen({ navigation }) {
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const response = await ApiService.getCategories();
+        const response = await apiService.getCategories();
         setCategories(
           response.data.map((item) => ({
             id: item.category_id,
             name: item.category_name,
             imageSource: {
-              uri: `http://192.168.1.9:8080${item.image_category}`,
+              uri: `http://192.168.1.10:8080${item.image_category}`,
             },
           }))
         );
@@ -37,7 +37,7 @@ export default function HomeContentScreen({ navigation }) {
 
     const loadEventImage = async () => {
       try {
-        const response = await ApiService.getEventImageActive();
+        const response = await apiService.getEventImageActive();
         if (
           response &&
           response.data &&
@@ -45,7 +45,7 @@ export default function HomeContentScreen({ navigation }) {
           response.data[0].event_image.length > 0
         ) {
           setImageEventSource({
-            uri: `http://192.168.1.9:8080${response.data[0].event_image[0]}`,
+            uri: `http://192.168.1.10:8080${response.data[0].event_image[0]}`,
           });
         }
       } catch (error) {
@@ -55,7 +55,7 @@ export default function HomeContentScreen({ navigation }) {
 
     const loadProducts = async () => {
       try {
-        const response = await ApiService.getFeatureProducts("category5");
+        const response = await apiService.getFeatureProducts("category5");
         // console.log("API Response:", response);
         const productsArray = response.data;
 
@@ -66,7 +66,7 @@ export default function HomeContentScreen({ navigation }) {
         setProducts(
           productsArray.map((item) => ({
             id: item.product_id,
-            imageSource: { uri: `http://192.168.1.9:8080${item.image[0].url}` },
+            imageSource: { uri: `http://192.168.1.10:8080${item.image[0].url}` },
             categoryName: item.category_name,
             averageReview: item.average_review,
             totalReview: item.total_review,
