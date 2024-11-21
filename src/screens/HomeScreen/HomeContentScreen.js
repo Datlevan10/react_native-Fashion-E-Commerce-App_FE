@@ -65,14 +65,26 @@ export default function HomeContentScreen({ navigation }) {
 
         setProducts(
           productsArray.map((item) => ({
-            id: item.product_id,
-            imageSource: { uri: `http://192.168.1.10:8080${item.image[0].url}` },
+            productId: item.product_id,
+            imageSource: {
+              uri: `http://192.168.1.10:8080${item.image[0].url}`,
+            },
+            imageArr: item.image.map(
+              (img) => `http://192.168.1.10:8080${img.url}`
+            ),
             categoryName: item.category_name,
             averageReview: item.average_review,
             totalReview: item.total_review,
             productName: item.product_name,
-            oldPrice: parseInt(item.old_price),
-            newPrice: parseInt(item.new_price),
+            description: item.description,
+            oldPrice: item.old_price,
+            newPrice: item.new_price,
+            colorArr: item.color.map(
+              (color) => `${color.color_code}`
+            ),
+            sizeArr: item.size.map(
+              (size) => `${size.size}`
+            ),
           }))
         );
       } catch (error) {
@@ -118,15 +130,25 @@ export default function HomeContentScreen({ navigation }) {
       >
         {products.map((product) => (
           <ProductCard
-            key={product.id}
+            key={product.productId}
             imageSource={product.imageSource}
             categoryName={product.categoryName}
             averageReview={product.averageReview}
             totalReview={product.totalReview}
             productName={product.productName}
+            description={product.description}
             oldPrice={product.oldPrice}
             newPrice={product.newPrice}
-            onPress={() => navigation.navigate("ProductDetailScreen")}
+            color={product.colorArr}
+            size={product.sizeArr}
+            onPress={() =>
+              navigation.navigate("ProductDetailScreen", {
+                product,
+                images: product.imageArr,
+                colors: product.colorArr,
+                sizes: product.sizeArr,
+              })
+            }
             cardWidth={Dimensions.get("window").width * 0.5}
             imageWidth={"150%"}
             imageHeight={"150%"}

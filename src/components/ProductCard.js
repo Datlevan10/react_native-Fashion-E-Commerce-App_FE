@@ -8,6 +8,9 @@ const ProductCard = ({
   imageSource,
   categoryName,
   productName,
+  description,
+  color,
+  size,
   oldPrice,
   newPrice,
   averageReview,
@@ -33,7 +36,7 @@ const ProductCard = ({
         <View style={styles.row}>
           <Text style={styles.brandText}>{categoryName}</Text>
           <View style={styles.averageReviewContainer}>
-            <AntDesign name="star" size={16} color={Colors.yellowColor} />
+            <AntDesign name="star" size={15} color={Colors.yellowColor} />
             <Text style={styles.averageReviewText}>{averageReview}</Text>
             <Text style={styles.totalReview}>{`(${totalReview})`}</Text>
           </View>
@@ -101,12 +104,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   averageReviewText: {
-    marginLeft: 5,
+    marginLeft: 3,
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "600",
     color: Colors.blackColor,
   },
   totalReview: {
+    fontSize: 16,
     color: Colors.darkGray,
   },
   productName: {

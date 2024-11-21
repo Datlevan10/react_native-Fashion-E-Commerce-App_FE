@@ -43,7 +43,7 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="CartPage"
+          name="CartScreen"
           component={CartScreen}
           options={{ headerShown: false }}
         />

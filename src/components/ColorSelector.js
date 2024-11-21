@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
-import Feather from 'react-native-vector-icons/Feather';
-import Colors from '../styles/Color';
+import React, { useState } from "react";
+import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
+import Feather from "react-native-vector-icons/Feather";
+import Colors from "../styles/Color";
 
-export default function ColorSelector() {
+export default function ColorSelector({ colors }) {
   const [selectedColor, setSelectedColor] = useState(null);
 
-  const colors = [Colors.blackProduct, Colors.blueProduct, Colors.lightBlueProduct];
+  // const colors = [Colors.blackProduct, Colors.blueProduct, Colors.lightBlueProduct];
 
   return (
     <View style={styles.container}>
@@ -25,7 +25,7 @@ export default function ColorSelector() {
             onPress={() => setSelectedColor(color)}
           >
             {selectedColor === color && (
-              <Feather name="check" size={20} color={Colors.whiteColor}  />
+              <Feather name="check" size={20} color={Colors.whiteColor} />
             )}
           </TouchableOpacity>
         ))}
@@ -42,29 +42,29 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   labelText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: "400",
   },
   colorRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: 10
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 10,
   },
   colorButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: 'transparent',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor: "transparent",
+    justifyContent: "center",
+    alignItems: "center",
   },
   selectedColorButton: {
-    borderColor: Colors.whiteColor
+    borderColor: Colors.whiteColor,
     // opacity: 0.9,
   },
   checkIcon: {
-    position: 'absolute',
+    position: "absolute",
   },
 });
