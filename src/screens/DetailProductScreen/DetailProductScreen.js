@@ -20,14 +20,11 @@ import ShowAlertWithTitleContentAndOneActions from "../../components/ShowAlertWi
 
 const { width, height } = Dimensions.get("window");
 
-const images = [
-  require("../../../assets/image/shirt-1.jpg"),
-  require("../../../assets/image/shirt-2.jpg"),
-  require("../../../assets/image/shirt-2.jpg"),
-  // require("../assets/image/shirt-3.jpg"),
-];
+export default function ProductDetailScreen({ route, navigation }) {
+  const { product, images, colors, sizes } = route.params;
 
-export default function ProductDetailScreen({ navigation }) {
+  console.log("Colors:", colors);
+  console.log("sizes:", sizes);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const handleScroll = (event) => {
@@ -48,7 +45,7 @@ export default function ProductDetailScreen({ navigation }) {
           {images.map((image, index) => (
             <View key={index} style={styles.imageContainer}>
               <Image
-                source={image}
+                source={{ uri: image }}
                 style={styles.productImage}
                 resizeMode="contain"
               />
@@ -63,12 +60,14 @@ export default function ProductDetailScreen({ navigation }) {
             <Feather name="arrow-left" size={22} color={Colors.blackColor} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Detail Product</Text>
-          <IconWithBadge
-            name="shopping-bag"
-            badgeCount={3}
-            size={25}
-            color={Colors.blackColor}
-          />
+          <TouchableOpacity onPress={() => navigation.navigate("CartScreen")}>
+            <IconWithBadge
+              name="shopping-bag"
+              badgeCount={3}
+              size={25}
+              color={Colors.blackColor}
+            />
+          </TouchableOpacity>
         </View>
         <View style={styles.indicatorWrapper}>
           {images.map((_, index) => (
@@ -85,26 +84,23 @@ export default function ProductDetailScreen({ navigation }) {
       <View style={styles.itemTwo}>
         <View style={styles.infoIcon}>
           <ProductInfoInDetail
-            brandName="H&M"
-            rating="4.9"
-            numberRating="136"
-            productName="Oversized Fit Printed Mesh T-Shirt"
-            oldPrice="550.00"
-            newPrice="295.00"
+            categoryName={product.categoryName}
+            averageReview={product.averageReview.toString()}
+            totalReview={product.totalReview.toString()}
+            productName={product.productName}
+            oldPrice={product.oldPrice.toString()}
+            newPrice={product.newPrice.toString()}
           />
+
           <Feather name="heart" size={22} color={Colors.blackColor} />
         </View>
-        <Text style={styles.productDescription}>
-          Mô tả sản phẩm: Oversized t-shirt in printed mesh with a V-neck,
-          dropped shoulders and a straight-cut hem. Oversized t-shirt in printed
-          mesh with a V-neck, dropped shoulders and a straight-cut hem.
-        </Text>
+        <Text style={styles.productDescription}>{product.description}</Text>
         <View style={styles.selectionRow}>
           <View style={styles.column}>
-            <ColorSelector />
+            <ColorSelector colors={colors} />
           </View>
           <View style={styles.column}>
-            <SizeSelector />
+            <SizeSelector sizes={sizes} />
           </View>
         </View>
         <View style={styles.buttonContainer}>
@@ -167,9 +163,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 22,
     color: Colors.blackColor,
-    fontWeight: "bold",
+    fontWeight: "600",
   },
   indicatorWrapper: {
     position: "absolute",
@@ -206,8 +202,9 @@ const styles = StyleSheet.create({
   productDescription: {
     fontSize: 18,
     color: Colors.textDescription,
-    marginTop: 25,
+    marginTop: 20,
     marginBottom: 20,
+    lineHeight: 28,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -215,7 +212,7 @@ const styles = StyleSheet.create({
   },
   selectionRow: {
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     marginBottom: 20,
     gap: 30,
   },

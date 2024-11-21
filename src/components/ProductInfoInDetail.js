@@ -4,9 +4,9 @@ import Feather from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
 
 const ProductInfoInDetail = ({
-  brandName,
-  rating,
-  numberRating,
+  categoryName,
+  averageReview,
+  totalReview,
   productName,
   oldPrice,
   newPrice,
@@ -14,11 +14,11 @@ const ProductInfoInDetail = ({
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-        <Text style={styles.brandText}>{brandName}</Text>
+        <Text style={styles.brandText}>{categoryName}</Text>
         <View style={styles.ratingContainer}>
-          <AntDesign name="star" size={16} color="#ffc32b" />
-          <Text style={styles.ratingText}>{rating}</Text>
-          <Text style={styles.numberRating}>{`(${numberRating})`}</Text>
+          <AntDesign name="star" size={15} color="#ffc32b" />
+          <Text style={styles.averageReviewText}>{averageReview}</Text>
+          <Text style={styles.totalReviewText}>{`(${totalReview})`}</Text>
         </View>
       </View>
       <Text style={styles.productName}>{productName}</Text>
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
   },
-  brandName: {
+  categoryName: {
     color: "gray",
   },
   brandText: {
@@ -54,14 +54,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // gap: 5
   },
-  ratingText: {
+  averageReviewText: {
     marginLeft: 5,
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 18,
+    fontWeight: "600",
     color: "black",
   },
-  numberRating: {
+  totalReviewText: {
     color: "gray",
+    fontSize: 18,
   },
   productName: {
     // width: Dimensions.get("window").width * 0.5,

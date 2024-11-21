@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import Colors from '../styles/Color';
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import Colors from "../styles/Color";
 
-export default function SizeSelector() {
-  const [selectedSize, setSelectedSize] = useState('M');
+export default function SizeSelector({ sizes }) {
+  const [selectedSize, setSelectedSize] = useState(null);
 
-  const sizes = ['XS', 'M', 'L'];
+  // const sizes = ['XS', 'M', 'L'];
 
   return (
     <View style={styles.container}>
@@ -40,15 +40,15 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   label: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: "400",
     marginBottom: 5,
   },
   sizeRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: 10
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 10,
   },
   sizeButton: {
     width: 40,
@@ -58,11 +58,11 @@ const styles = StyleSheet.create({
     borderColor: Colors.borderColor,
     backgroundColor: Colors.whiteBgColor,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   selectedSizeButton: {
     backgroundColor: Colors.darkBlack,
-    borderColor: 'transparent',
+    borderColor: "transparent",
   },
   sizeText: {
     fontSize: 16,

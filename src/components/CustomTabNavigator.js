@@ -1,22 +1,33 @@
 import React, { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { View, Image, StyleSheet, ActivityIndicator } from "react-native";
+import {
+  View,
+  Image,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import IconWithBadge from "./IconWithBadge";
 import Colors from "../styles/Color";
-import apiService  from "../api/ApiService";
+import apiService from "../api/ApiService";
 
 const Tab = createBottomTabNavigator();
 
-const CustomTabNavigator = ({ children, colorBackGround = Colors.whiteColor }) => {
+const CustomTabNavigator = ({
+  children,
+  colorBackGround = Colors.whiteColor,
+}) => {
+  const navigation = useNavigation();
   const [logoSource, setLogoSource] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadStoreLogo = async () => {
       try {
-        const response = await apiService .getStores();
+        const response = await apiService.getStores();
         if (response && response.data && response.data[0]) {
           setLogoSource({
             uri: `http://192.168.1.10:8080${response.data[0].logo_url}`,
@@ -42,7 +53,11 @@ const CustomTabNavigator = ({ children, colorBackGround = Colors.whiteColor }) =
             return <Feather name="search" size={size} color={color} />;
           } else if (route.name === "Notification") {
             return (
-              <Ionicons name="notifications-outline" size={size} color={color} />
+              <Ionicons
+                name="notifications-outline"
+                size={size}
+                color={color}
+              />
             );
           } else if (route.name === "Profile") {
             return <Ionicons name="person-outline" size={size} color={color} />;
@@ -61,18 +76,26 @@ const CustomTabNavigator = ({ children, colorBackGround = Colors.whiteColor }) =
               <Image source={logoSource} style={styles.image} />
             </View>
           ) : (
-            <ActivityIndicator size="small" color={Colors.blackColor} style={styles.loading} />
+            <ActivityIndicator
+              size="small"
+              color={Colors.blackColor}
+              style={styles.loading}
+            />
           ),
         headerRight: () =>
           route.name === "Home" ? (
             <View style={styles.headerRight}>
-              <IconWithBadge
-                name="shopping-bag"
-                badgeCount={3}
-                size={25}
-                color={Colors.blackColor}
-                style={styles.headerRightIcon}
-              />
+              <TouchableOpacity
+                onPress={() => navigation.navigate("CartScreen")}
+              >
+                <IconWithBadge
+                  name="shopping-bag"
+                  badgeCount={3}
+                  size={25}
+                  color={Colors.blackColor}
+                  style={styles.headerRightIcon}
+                />
+              </TouchableOpacity>
             </View>
           ) : null,
       })}
