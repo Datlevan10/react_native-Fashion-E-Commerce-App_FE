@@ -6,7 +6,8 @@ import Colors from "../styles/Color";
 
 const ProductCard = ({
   imageSource,
-  categoryName,
+  storeName,
+  // categoryName,
   productName,
   description,
   color,
@@ -34,7 +35,8 @@ const ProductCard = ({
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.row}>
-          <Text style={styles.brandText}>{categoryName}</Text>
+          <Text style={styles.brandText}>{storeName}</Text>
+          {/* <Text style={styles.brandText}>{categoryName}</Text> */}
           <View style={styles.averageReviewContainer}>
             <AntDesign name="star" size={15} color={Colors.yellowColor} />
             <Text style={styles.averageReviewText}>{averageReview}</Text>

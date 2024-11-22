@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import CategoryScreen from "./screens/ExploreScreen/ExploreScreen";
-import ProductDetailScreen from "./screens/DetailProductScreen/DetailProductScreen";
+import ProductDetailScreen from "./screens/ProductDetailScreen/ProductDetailScreen";
 import CartScreen from "./screens/CartScreen/CartScreen";
 import LoginScreen from "./screens/LoginScreen/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen/RegisterScreen";

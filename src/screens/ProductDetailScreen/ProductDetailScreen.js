@@ -23,8 +23,8 @@ const { width, height } = Dimensions.get("window");
 export default function ProductDetailScreen({ route, navigation }) {
   const { product, images, colors, sizes } = route.params;
 
-  console.log("Colors:", colors);
-  console.log("sizes:", sizes);
+  // console.log("Colors:", colors);
+  // console.log("sizes:", sizes);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const handleScroll = (event) => {
