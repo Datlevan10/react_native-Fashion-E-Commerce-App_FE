@@ -17,15 +17,14 @@ import SizeSelector from "../../components/SizeSelector";
 import ProductInfoInDetail from "../../components/ProductInfoInDetail";
 import Colors from "../../styles/Color";
 import ShowAlertWithTitleContentAndOneActions from "../../components/ShowAlertWithTitleContentAndOneActions ";
+import ShowAlertWithTitleContentAndTwoActions from "../../components/ShowAlertWithTitleContentAndTwoActions ";
 
 const { width, height } = Dimensions.get("window");
 
 export default function ProductDetailScreen({ route, navigation }) {
   const { product, images, colors, sizes } = route.params;
-
-  // console.log("Colors:", colors);
-  // console.log("sizes:", sizes);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const handleScroll = (event) => {
     const newIndex = Math.round(event.nativeEvent.contentOffset.x / width);
@@ -92,9 +91,42 @@ export default function ProductDetailScreen({ route, navigation }) {
             newPrice={product.newPrice.toString()}
           />
 
-          <Feather name="heart" size={22} color={Colors.blackColor} />
+          <TouchableOpacity
+            onPress={() =>
+              ShowAlertWithTitleContentAndTwoActions(
+                "Notification",
+                "Add product to wishlist?"
+              )
+            }
+          >
+            <Feather name="heart" size={22} color={Colors.blackColor} />
+          </TouchableOpacity>
         </View>
-        <Text style={styles.productDescription}>{product.description}</Text>
+        {/* <Text style={styles.productDescription}>{product.description}</Text> */}
+        <View>
+          <Text
+            style={styles.productDescription}
+            numberOfLines={isExpanded ? undefined : 4}
+          >
+            {isExpanded
+              ? product.description
+              : product.description.slice(0, 180)}
+            {!isExpanded && product.description.length > 100 && (
+              <Text
+                style={styles.toggleText}
+                onPress={() => setIsExpanded(true)}
+              >
+                ...See more
+              </Text>
+            )}
+          </Text>
+          {isExpanded && (
+            <TouchableOpacity onPress={() => setIsExpanded(false)}>
+              <Text style={styles.toggleText}>Less</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
         <View style={styles.selectionRow}>
           <View style={styles.column}>
             <ColorSelector colors={colors} />
@@ -204,7 +236,15 @@ const styles = StyleSheet.create({
     color: Colors.textDescription,
     marginTop: 20,
     marginBottom: 20,
-    lineHeight: 28,
+    lineHeight: 25,
+    textAlign: "justify",
+  },
+  toggleText: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: Colors.textDescription,
+    textDecorationLine: "none",
+    alignSelf: "flex-start",
   },
   buttonContainer: {
     flexDirection: "row",

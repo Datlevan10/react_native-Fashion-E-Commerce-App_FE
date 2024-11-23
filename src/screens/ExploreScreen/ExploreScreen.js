@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TextInput,
@@ -12,99 +12,84 @@ import ProductCard from "../../components/ProductCard";
 import Feather from "react-native-vector-icons/Feather";
 import FilterBox from "../../components/FilterBox";
 import CategoryForm from "../../components/CategoryForm";
-import category1Image from "../../../assets/image/bag.jpg";
-import category2Image from "../../../assets/image/jean.jpg";
-import category3Image from "../../../assets/image/footwear.jpg";
-import category4Image from "../../../assets/image/clothes.jpg";
 import Colors from "../../styles/Color";
-
-const categories = [
-  {
-    id: 1,
-    name: "Bags",
-    imageSource: category1Image,
-  },
-  {
-    id: 2,
-    name: "Jeans",
-    imageSource: category2Image,
-  },
-  {
-    id: 3,
-    name: "Footwear",
-    imageSource: category3Image,
-  },
-  {
-    id: 4,
-    name: "Clothes",
-    imageSource: category4Image,
-  },
-];
-
-const products = [
-  {
-    id: 1,
-    imageSource: require("../../../assets/image/kid-2.jpg"),
-    categoryName: "H&M",
-    averageReview: 4.5,
-    totalReview: 150,
-    productName: "Textured Jersey Dress",
-    oldPrice: "488.00",
-    newPrice: "399.00",
-  },
-  {
-    id: 2,
-    imageSource: require("../../../assets/image/kid-3.jpg"),
-    categoryName: "H&M",
-    averageReview: 4.8,
-    totalReview: 200,
-    productName: "Button Front Dress",
-    oldPrice: "550.00",
-    newPrice: "499.00",
-  },
-  {
-    id: 3,
-    imageSource: require("../../../assets/image/kid-4.jpg"),
-    categoryName: "Adidas",
-    averageReview: 4.8,
-    totalReview: 200,
-    productName: "Short Sleeved Cotton Dress",
-    oldPrice: "550.00",
-    newPrice: "499.00",
-  },
-  {
-    id: 4,
-    imageSource: require("../../../assets/image/kid-10.jpg"),
-    categoryName: "Adidas",
-    averageReview: 4.8,
-    totalReview: 200,
-    productName: "Patterned Tulle Dress",
-    oldPrice: "550.00",
-    newPrice: "699.00",
-  },
-  {
-    id: 5,
-    imageSource: require("../../../assets/image/kid-6.jpg"),
-    categoryName: "Adidas",
-    averageReview: 4.8,
-    totalReview: 200,
-    productName: "Tulle Dress",
-    oldPrice: "899.00",
-    newPrice: "799.00",
-  },
-  {
-    id: 6,
-    imageSource: require("../../../assets/image/kid-7.jpg"),
-    categoryName: "Adidas",
-    averageReview: 4.8,
-    totalReview: 200,
-    productName: "Patterned Tulle Dress",
-    oldPrice: "799.00",
-    newPrice: "699.00",
-  },
-];
+import apiService from "../../api/ApiService";
 
 const ExploreScreen = ({ navigation }) => {
+  const [storeName, setStoreName] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+
+  const loadStoreName = async () => {
+    try {
+      const response = await apiService.getStores();
+      if (response && response.data && response.data[0]) {
+        setStoreName(response.data[0].store_name);
+      }
+    } catch (error) {
+      console.error("Failed to load store name:", error);
+    }
+  };
+
+  const loadCategories = async () => {
+    try {
+      const response = await apiService.getCategories();
+      setCategories(
+        response.data.map((item) => ({
+          categoryId: item.category_id,
+          categoryName: item.category_name,
+          imageCategory: {
+            uri: `http://192.168.1.4:8080${item.image_category}`,
+          },
+        }))
+      );
+    } catch (error) {
+      console.error("Failed to load categories:", error);
+    }
+  };
+
+  const loadListAllProducts = async () => {
+    try {
+      const response = await apiService.getListAllProducts();
+      // console.log("API Response:", response);
+      const productsArray = response.data;
+
+      if (!Array.isArray(productsArray)) {
+        throw new Error("API response.data is not an array");
+      }
+
+      setProducts(
+        productsArray.map((item) => ({
+          productId: item.product_id,
+          productImage: {
+            uri: `http://192.168.1.4:8080${item.image[0].url}`,
+          },
+          imageArr: item.image.map(
+            (img) => `http://192.168.1.4:8080${img.url}`
+          ),
+          categoryName: item.category_name,
+          averageReview: item.average_review,
+          totalReview: item.total_review,
+          productName: item.product_name,
+          description: item.description,
+          oldPrice: item.old_price,
+          newPrice: item.new_price,
+          colorArr: item.color.map((color) => `${color.color_code}`),
+          sizeArr: item.size.map((size) => `${size.size}`),
+        }))
+      );
+    } catch (error) {
+      console.error("Failed to load products:", error);
+    }
+  };
+
+  useEffect(() => {
+    // load data
+    loadStoreName();
+    loadCategories();
+    loadListAllProducts();
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -147,7 +132,6 @@ const ExploreScreen = ({ navigation }) => {
             contentContainerStyle={styles.productList}
           >
             <CategoryForm
-              key={categories.id}
               categories={categories}
               containerStyle={styles.customContainer}
             />
@@ -159,14 +143,26 @@ const ExploreScreen = ({ navigation }) => {
             <View style={styles.productContainer}>
               {products.map((product, index) => (
                 <ProductCard
-                  key={index}
-                  imageSource={product.imageSource}
-                  categoryName={product.categoryName}
+                  key={product.productId}
+                  imageSource={product.productImage}
+                  storeName={storeName}
+                  // categoryName={product.categoryName}
                   averageReview={product.averageReview}
                   totalReview={product.totalReview}
                   productName={product.productName}
+                  description={product.description}
                   oldPrice={product.oldPrice}
                   newPrice={product.newPrice}
+                  color={product.colorArr}
+                  size={product.sizeArr}
+                  onPress={() =>
+                    navigation.navigate("ProductDetailScreen", {
+                      product,
+                      images: product.imageArr,
+                      colors: product.colorArr,
+                      sizes: product.sizeArr,
+                    })
+                  }
                   cardWidth={Dimensions.get("window").width * 0.43}
                   imageWidth={"125%"}
                   imageHeight={"125%"}

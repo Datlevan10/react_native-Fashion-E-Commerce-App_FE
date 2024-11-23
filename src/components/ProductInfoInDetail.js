@@ -78,14 +78,14 @@ const styles = StyleSheet.create({
     gap: 5,
   },
   oldPrice: {
-    fontSize: 16,
+    fontSize: 18,
     textDecorationLine: "line-through",
     marginRight: 10,
     color: "gray",
   },
   newPrice: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: "500",
     color: "#ed1b41",
   },
 });
