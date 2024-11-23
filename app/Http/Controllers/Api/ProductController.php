@@ -261,4 +261,42 @@ class ProductController extends Controller
         ], 200);
     }
 
+    // method search Product
+    public function searchProducts(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        if (!$keyword) {
+            return response()->json([
+                'message' => 'Please enter search keyword.',
+                'data' => []
+            ], 400);
+        }
+
+        $products = Product::query()
+            ->leftJoin('categories', 'products.category_id', '=', 'categories.category_id')
+            ->where('products.product_name', 'ILIKE', '%' . $keyword . '%')
+            ->orWhere('products.description', 'ILIKE', '%' . $keyword . '%')
+            ->orWhere('categories.category_name', 'ILIKE', '%' . $keyword . '%')
+            ->orWhere('products.old_price', 'ILIKE', '%' . $keyword . '%')
+            ->orWhere('products.new_price', 'ILIKE', '%' . $keyword . '%')
+            ->select('products.*')
+            ->get();
+
+        $count = $products->count();
+
+        if ($count > 0) {
+            return response()->json([
+                'message' => "Found $count products matching keyword \"$keyword\".",
+                'data' => ProductResource::collection($products)
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => "No products were found matching the keyword \"$keyword\".",
+                'data' => []
+            ], 200);
+        }
+    }
+
+
 }
