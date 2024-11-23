@@ -7,9 +7,9 @@ const CategoryForm = ({ categories = [], containerStyle }) => {
     <View style={[styles.container, containerStyle]}>
       {categories.map((category) => (
         <CategoryItem
-          key={category.id}
-          imageSource={category.imageSource}
-          categoryName={category.name}
+          key={category.categoryId}
+          imageSource={category.imageCategory}
+          categoryName={category.categoryName}
         />
       ))}
     </View>

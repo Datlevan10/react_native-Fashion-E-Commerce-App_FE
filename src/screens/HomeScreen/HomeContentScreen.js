@@ -26,7 +26,7 @@ export default function HomeContentScreen({ navigation }) {
       await Promise.all([
         loadCategories(),
         loadEventImage(),
-        loadProducts(),
+        loadFeatureProducts(),
         loadStoreName(),
       ]);
     } catch (error) {
@@ -41,9 +41,9 @@ export default function HomeContentScreen({ navigation }) {
       const response = await apiService.getCategories();
       setCategories(
         response.data.map((item) => ({
-          id: item.category_id,
-          name: item.category_name,
-          imageSource: {
+          categoryId: item.category_id,
+          categoryName: item.category_name,
+          imageCategory: {
             uri: `http://192.168.1.4:8080${item.image_category}`,
           },
         }))
@@ -71,8 +71,9 @@ export default function HomeContentScreen({ navigation }) {
     }
   };
 
-  const loadProducts = async () => {
+  const loadFeatureProducts = async () => {
     try {
+      // Xu ly lai cho nay dang truyen truc tiep category5
       const response = await apiService.getFeatureProducts("category5");
       // console.log("API Response:", response);
       const productsArray = response.data;
@@ -84,7 +85,7 @@ export default function HomeContentScreen({ navigation }) {
       setProducts(
         productsArray.map((item) => ({
           productId: item.product_id,
-          imageSource: {
+          productImage: {
             uri: `http://192.168.1.4:8080${item.image[0].url}`,
           },
           imageArr: item.image.map(
@@ -121,7 +122,7 @@ export default function HomeContentScreen({ navigation }) {
     // load data
     loadCategories();
     loadEventImage();
-    loadProducts();
+    loadFeatureProducts();
     loadStoreName();
   }, []);
 
@@ -164,7 +165,7 @@ export default function HomeContentScreen({ navigation }) {
           {products.map((product) => (
             <ProductCard
               key={product.productId}
-              imageSource={product.imageSource}
+              imageSource={product.productImage}
               storeName={storeName}
               // categoryName={product.categoryName}
               averageReview={product.averageReview}

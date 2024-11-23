@@ -56,9 +56,12 @@ const getEventImageActive = () => getRequest("/events/is_active/active");
 
 const getCategories = () => getRequest("/categories");
 
+const getListAllProducts = () => getRequest("/products");
+
 const getFeatureProducts = (category_id) => getRequest(`/products/category/${category_id}`);
 
 const addProductToCart = (productData) => postRequest("/carts", productData);
+
 const addProductToFavorite = (productData) => postRequest("/product_favorites", productData);
 
 
@@ -67,6 +70,7 @@ export default {
   authenticateLoginCustomer,
   getCategories,
   getStores,
+  getListAllProducts,
   getEventImageActive,
   getFeatureProducts,
   addProductToCart,
