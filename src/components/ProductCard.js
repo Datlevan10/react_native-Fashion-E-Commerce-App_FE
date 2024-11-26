@@ -1,5 +1,12 @@
-import React from "react";
-import { View, Image, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Image,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Colors from "../styles/Color";
@@ -21,13 +28,20 @@ const ProductCard = ({
   imageWidth = "150%",
   imageHeight = "150%",
 }) => {
+  const [currentImageSource, setCurrentImageSource] = useState(imageSource);
+  const errorImage = require("../../assets/image/default_image.jpg");
+
   return (
-    <TouchableOpacity onPress={onPress} style={[styles.cardContainer, { width: cardWidth }]}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[styles.cardContainer, { width: cardWidth }]}
+    >
       <View style={styles.imageContainer}>
         <Image
-          source={imageSource}
+          source={currentImageSource}
           style={[styles.image, { width: imageWidth, height: imageHeight }]}
           resizeMode="contain"
+          onError={() => setCurrentImageSource(errorImage)}
         />
         <View style={styles.heartIconContainer}>
           <Feather name="heart" size={20} color={Colors.whiteColor} />
@@ -35,8 +49,8 @@ const ProductCard = ({
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.row}>
-          <Text style={styles.brandText}>{storeName}</Text>
           {/* <Text style={styles.brandText}>{categoryName}</Text> */}
+          <Text style={styles.brandText}>{storeName}</Text>
           <View style={styles.averageReviewContainer}>
             <AntDesign name="star" size={15} color={Colors.yellowColor} />
             <Text style={styles.averageReviewText}>{averageReview}</Text>
