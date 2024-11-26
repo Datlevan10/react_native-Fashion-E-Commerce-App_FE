@@ -160,7 +160,7 @@ export default function HomeContentScreen({ navigation }) {
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.productList}
+          contentContainerStyle={styles.featureProductList}
         >
           {products.map((product) => (
             <ProductCard
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   categoryList: {
     paddingHorizontal: 18,
   },
-  productList: {
+  featureProductList: {
     paddingHorizontal: 18,
     gap: 18,
   },
