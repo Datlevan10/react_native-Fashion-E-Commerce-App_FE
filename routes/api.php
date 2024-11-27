@@ -43,6 +43,7 @@ Route::prefix('')->group(function () {
     Route::apiResource('staffs', StaffController::class);
     Route::apiResource('customers', CustomerController::class);
     Route::middleware('api')->post('customers/auth/login', [CustomerController::class, 'authenticateLoginCustomer']);
+    Route::middleware('api')->post('customers/auth/refresh-token', [CustomerController::class, 'refreshAccessToken']);
 
     // Product favorite Routes
     Route::apiResource('product_favorites', ProductFavoriteController::class);

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Customer;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -227,7 +229,7 @@ class CustomerController extends Controller
         ], 200);
     }
 
-    // Method handle login customer with email, username, phone number, and password
+    // method handle login customer with email, username, phone number, and password
     public function authenticateLoginCustomer(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -260,12 +262,75 @@ class CustomerController extends Controller
         $customer->last_login = now();
         $customer->save();
 
-        $token = $customer->createToken('customer-token')->plainTextToken;
+        $accessToken = $customer->createToken('customer-access-token')->plainTextToken;
+
+        $refreshToken = Str::random(64);
+        $expiresAt = now()->addDays(30);
+
+        DB::table('refresh_tokens')->insert([
+            'customer_id' => $customer->customer_id,
+            'refresh_token' => $refreshToken,
+            'expires_at' => $expiresAt,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
         return response()->json([
             'message' => 'Login successful',
-            'data' => new CustomerResource($customer),
-            'token' => $token,
+            'data' => [
+                'id' => $customer->customer_id,
+                'access_token' => $accessToken,
+                'refresh_token' => $refreshToken,
+            ],
+        ], 200);
+    }
+
+    // method refreshAccessToken Customer
+    public function refreshAccessToken(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'refresh_token' => 'required|string|exists:refresh_tokens,refresh_token',
+        ], [
+            'refresh_token.required' => 'The refresh token field is required.',
+            'refresh_token.exists' => 'The provided refresh token is invalid.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $refreshToken = $request->refresh_token;
+        $tokenRecord = DB::table('refresh_tokens')->where('refresh_token', $refreshToken)->first();
+
+        if (!$tokenRecord) {
+            return response()->json([
+                'message' => 'Invalid refresh token.',
+            ], 401);
+        }
+
+        if (Carbon::now()->greaterThan(Carbon::parse($tokenRecord->expires_at))) {
+            DB::table('refresh_tokens')->where('refresh_token', $refreshToken)->delete();
+            return response()->json([
+                'message' => 'Refresh token has expired.',
+            ], 401);
+        }
+
+        $customer = Customer::where('customer_id', $tokenRecord->customer_id)->first();
+
+        if (!$customer) {
+            return response()->json([
+                'message' => 'Customer not found.',
+            ], 404);
+        }
+
+        $newAccessToken = $customer->createToken('customer-access-token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Access token refreshed successfully.',
+            'access_token' => $newAccessToken,
         ], 200);
     }
 
