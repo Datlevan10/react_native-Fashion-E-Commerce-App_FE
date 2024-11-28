@@ -281,6 +281,7 @@ class CustomerController extends Controller
                 'id' => $customer->customer_id,
                 'access_token' => $accessToken,
                 'refresh_token' => $refreshToken,
+                'expires_in' => 86400, //1 day = 86400 second
             ],
         ], 200);
     }
