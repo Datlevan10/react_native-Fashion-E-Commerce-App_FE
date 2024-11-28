@@ -13,7 +13,8 @@ import { MaterialIcons, Feather, Ionicons } from "@expo/vector-icons";
 import CustomHandleButton from "../../components/CustomHandleButton";
 
 export default function DetailProfileScreen({ route, navigation }) {
-  const {  image, username, fullName, email, phoneNumber, address } = route.params;
+  const { image, username, fullName, email, phoneNumber, address } =
+    route.params;
 
   const handleCopy = (text) => {};
 
@@ -32,7 +33,7 @@ export default function DetailProfileScreen({ route, navigation }) {
         </View>
 
         <View style={styles.detailsContainer}>
-          <Text style={styles.avatarTitle}>Profile image</Text>
+          {/* <Text style={styles.avatarTitle}>Profile image</Text> */}
           <View style={styles.avatarContainer}>
             <Image source={image} style={styles.avatar} />
           </View>
@@ -66,11 +67,13 @@ export default function DetailProfileScreen({ route, navigation }) {
             value={address}
             onCopy={() => handleCopy(address)}
           />
+          <View style={styles.buttonDone}>
           <CustomHandleButton
             buttonText="Done"
             buttonColor="#179e7a"
-            onPress={() => console.log("Done button pressed")}
+            onPress={() => navigation.goBack()}
           />
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -136,7 +139,7 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
   },
   detailsContainer: {
-    padding: 18,
+    paddingHorizontal: 18,
   },
   detailItem: {
     paddingVertical: 15,
@@ -163,4 +166,7 @@ const styles = StyleSheet.create({
   copyIcon: {
     marginLeft: 10,
   },
+  buttonDone: {
+    marginTop: 50
+  }
 });
