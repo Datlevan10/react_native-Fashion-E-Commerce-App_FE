@@ -35,7 +35,7 @@ const ExploreScreen = ({ navigation }) => {
     try {
       const response = await apiService.getCategories();
       setCategories(
-        response.data.map((item) => ({
+        response.data.data.map((item) => ({
           categoryId: item.category_id,
           categoryName: item.category_name,
           imageCategory: {
@@ -52,7 +52,7 @@ const ExploreScreen = ({ navigation }) => {
     try {
       const response = await apiService.getListAllProducts();
       // console.log("API Response:", response);
-      const productsArray = response.data;
+      const productsArray = response.data.data;
 
       if (!Array.isArray(productsArray)) {
         throw new Error("API response.data is not an array");
