@@ -20,13 +20,13 @@ import UserInactivity from "react-native-user-inactivity";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 import api from "./api/AxiosInstance";
+import { handleLogout } from "./utils/AuthUtils";
 
 const Stack = createStackNavigator();
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
-  const [isActive, setIsActive] = useState(true);
   const [appState, setAppState] = useState(AppState.currentState);
   const [showWelcome, setShowWelcome] = useState(true);
   const backgroundTime = useRef(null);
@@ -38,6 +38,9 @@ export default function App() {
         const expiryTime = await SecureStore.getItemAsync(
           "access_token_expiry"
         );
+        // console.log("Checking login status...");
+        // console.log("Access Token:", token);
+        // console.log("Expiry Time:", expiryTime);
 
         if (token && expiryTime && Date.now() < parseInt(expiryTime, 10)) {
           setIsLoggedIn(true);
@@ -88,7 +91,7 @@ export default function App() {
 
       if (timeInBackground > 60000) {
         console.log("Session expired, logging out...");
-        await handleLogout();
+        await handleLogout(setIsLoggedIn);
         alert("Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.");
       }
     } else if (nextAppState.match(/inactive|background/)) {
@@ -108,17 +111,6 @@ export default function App() {
     }
 
     setAppState(nextAppState);
-  };
-
-  const handleLogout = async () => {
-    console.log("Logging out user...");
-    try {
-      await AsyncStorage.removeItem("authToken");
-      await AsyncStorage.removeItem("lastExitTime");
-      setIsLoggedIn(false);
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
   };
 
   if (isChecking) {
