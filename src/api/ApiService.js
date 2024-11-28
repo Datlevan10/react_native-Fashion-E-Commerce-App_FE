@@ -1,69 +1,40 @@
-// Cần thay đổi và sử dụng IP cục bộ của máy tính trong mạng nội bộ cho API
-const API_BASE_URL = "http://192.168.1.4:8080/api";
+import api from "./AxiosInstance";
 
-const getRequest = async (endpoint) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const responseData = await response.json();
-
-    if (!response.ok) {
-      throw { status: response.status, errors: responseData.error };
-    }
-
-    return responseData;
-  } catch (error) {
-    console.error(`Error while making GET request to ${endpoint}:`, error);
-    throw error;
-  }
+const getStores = async () => {
+  return api.get("/stores");
 };
 
-const postRequest = async (endpoint, data) => {
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    const responseData = await response.json();
-
-    if (!response.ok) {
-      throw { status: response.status, errors: responseData.error };
-    }
-
-    return { status: response.status, ...responseData };
-  } catch (error) {
-    console.error(`Error while making POST request to ${endpoint}:`, error);
-    throw error;
-  }
+const registerCustomer = async (customerData) => {
+  return api.post("/customers", customerData);
 };
 
-const getStores = () => getRequest("/stores");
+const authenticateLoginCustomer = async (loginData) => {
+  return api.post("/customers/auth/login", loginData);
+};
 
-const registerCustomer = (customerData) => postRequest("/customers", customerData);
+const getEventImageActive = async () => {
+  return api.get("/events/is_active/active");
+};
 
-const authenticateLoginCustomer = (loginData) => postRequest("/customers/auth/login", loginData);
+const getCategories = async () => {
+  return api.get("/categories");
+};
 
-const getEventImageActive = () => getRequest("/events/is_active/active");
+const getListAllProducts = async () => {
+  return api.get("/products");
+};
 
-const getCategories = () => getRequest("/categories");
+const getFeatureProducts = async (category_id) => {
+  return api.get(`/products/category/${category_id}`);
+};
 
-const getListAllProducts = () => getRequest("/products");
+const addProductToCart = async (productData) => {
+  return api.post("/carts", productData);
+};
 
-const getFeatureProducts = (category_id) => getRequest(`/products/category/${category_id}`);
-
-const addProductToCart = (productData) => postRequest("/carts", productData);
-
-const addProductToFavorite = (productData) => postRequest("/product_favorites", productData);
-
+const addProductToFavorite = async (productData) => {
+  return api.post("/product_favorites", productData);
+};
 
 export default {
   registerCustomer,
@@ -74,5 +45,5 @@ export default {
   getEventImageActive,
   getFeatureProducts,
   addProductToCart,
-  addProductToFavorite
+  addProductToFavorite,
 };

@@ -9,9 +9,9 @@ export default function WelcomeScreen({ navigation }) {
     const loadStoreLogo = async () => {
       try {
         const response = await apiService.getStores();
-        if (response && response.data && response.data[0]) {
+        if (response && response.data.data && response.data.data[0]) {
           setLogoSource({
-            uri: `http://192.168.1.4:8080${response.data[0].logo_url}`,
+            uri: `http://192.168.1.4:8080${response.data.data[0].logo_url}`,
           });
         }
       } catch (error) {

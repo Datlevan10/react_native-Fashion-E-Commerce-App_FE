@@ -40,7 +40,7 @@ export default function HomeContentScreen({ navigation }) {
     try {
       const response = await apiService.getCategories();
       setCategories(
-        response.data.map((item) => ({
+        response.data.data.map((item) => ({
           categoryId: item.category_id,
           categoryName: item.category_name,
           imageCategory: {
@@ -58,12 +58,12 @@ export default function HomeContentScreen({ navigation }) {
       const response = await apiService.getEventImageActive();
       if (
         response &&
-        response.data &&
-        response.data[0] &&
-        response.data[0].event_image.length > 0
+        response.data.data &&
+        response.data.data[0] &&
+        response.data.data[0].event_image.length > 0
       ) {
         setImageEventSource({
-          uri: `http://192.168.1.4:8080${response.data[0].event_image[0]}`,
+          uri: `http://192.168.1.4:8080${response.data.data[0].event_image[0]}`,
         });
       }
     } catch (error) {
@@ -76,7 +76,7 @@ export default function HomeContentScreen({ navigation }) {
       // Xu ly lai cho nay dang truyen truc tiep category5
       const response = await apiService.getFeatureProducts("category5");
       // console.log("API Response:", response);
-      const productsArray = response.data;
+      const productsArray = response.data.data;
 
       if (!Array.isArray(productsArray)) {
         throw new Error("API response.data is not an array");
@@ -110,8 +110,8 @@ export default function HomeContentScreen({ navigation }) {
   const loadStoreName = async () => {
     try {
       const response = await apiService.getStores();
-      if (response && response.data && response.data[0]) {
-        setStoreName(response.data[0].store_name);
+      if (response && response.data.data && response.data.data[0]) {
+        setStoreName(response.data.data[0].store_name);
       }
     } catch (error) {
       console.error("Failed to load store name:", error);
