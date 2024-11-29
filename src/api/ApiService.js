@@ -40,6 +40,10 @@ const getInfoCustomerByCustomerId = async (customer_id) => {
   return api.get(`/customers/${customer_id}`);
 };
 
+const getFavoriteProductByCustomerId = async (customer_id) => {
+  return api.get(`/product_favorites/customer/${customer_id}`);
+};
+
 export default {
   registerCustomer,
   authenticateLoginCustomer,
@@ -51,4 +55,5 @@ export default {
   addProductToCart,
   addProductToFavorite,
   getInfoCustomerByCustomerId,
+  getFavoriteProductByCustomerId,
 };
