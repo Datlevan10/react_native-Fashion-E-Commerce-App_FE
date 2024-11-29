@@ -7,7 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import ApiService from "../../api/ApiService";
+import apiService from "../../api/ApiService";
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "../../styles/Color";
@@ -31,7 +31,7 @@ export default function ProfileScreen({ navigation }) {
         const customer_id = await SecureStore.getItemAsync("customer_id");
         // console.log("Customer ID:", customer_id);
         if (customer_id) {
-          const response = await ApiService.getInfoCustomerByCustomerId(
+          const response = await apiService.getInfoCustomerByCustomerId(
             customer_id
           );
           setCustomer(response.data.data);

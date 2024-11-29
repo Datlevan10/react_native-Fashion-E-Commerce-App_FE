@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,8 +7,12 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
+import * as SecureStore from "expo-secure-store";
+import apiService from "../../api/ApiService";
 import Feather from "react-native-vector-icons/Feather";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import IconWithBadge from "../../components/IconWithBadge";
 import AddToCartButton from "../../components/AddToCartButton";
 import CustomButton from "../../components/CustomButton";
@@ -25,6 +29,53 @@ export default function ProductDetailScreen({ route, navigation }) {
   const { product, images, colors, sizes } = route.params;
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    const checkIfFavorite = async () => {
+      const customer_id = await SecureStore.getItemAsync("customer_id");
+      if (!customer_id) return;
+
+      const response = await apiService.checkFavoriteProduct({
+        customer_id: customer_id,
+        product_id: product.productId,
+      });
+
+      if (response.status === 200) {
+        setIsFavorite(response.data.isFavorite);
+      }
+    };
+
+    checkIfFavorite();
+  }, []);
+
+  const handleAddToWishlist = async () => {
+    try {
+      const customer_id = await SecureStore.getItemAsync("customer_id");
+      if (!customer_id) {
+        console.warn("No customer ID found in SecureStore.");
+        return;
+      }
+
+      const productData = {
+        customer_id: customer_id,
+        product_id: product.productId,
+      };
+
+      const response = await apiService.addProductToFavorite(productData);
+      if (response.status === 201) {
+        // console.log("Product added to wishlist successfully");
+        setIsFavorite(true);
+        Alert.alert("Success", "Product added to wishlist.");
+      } else {
+        // console.error("Failed to add product to wishlist");
+        Alert.alert("Error", "Could not add product to wishlist. Try again.");
+      }
+    } catch (error) {
+      console.error("Error adding product to wishlist:", error);
+      Alert.alert("Error", "An error occurred. Please try again.");
+    }
+  };
 
   const handleScroll = (event) => {
     const newIndex = Math.round(event.nativeEvent.contentOffset.x / width);
@@ -90,16 +141,21 @@ export default function ProductDetailScreen({ route, navigation }) {
             oldPrice={product.oldPrice.toString()}
             newPrice={product.newPrice.toString()}
           />
-
           <TouchableOpacity
             onPress={() =>
               ShowAlertWithTitleContentAndTwoActions(
                 "Notification",
-                "Add product to wishlist?"
+                "Add product to wishlist?",
+                handleAddToWishlist,
+                () => console.log("User cancelled adding product to wishlist")
               )
             }
           >
-            <Feather name="heart" size={22} color={Colors.blackColor} />
+            <FontAwesome
+              name={isFavorite ? "heart" : "heart-o"}
+              size={22}
+              color={isFavorite ? "#ff0034" : Colors.blackColor}
+            />
           </TouchableOpacity>
         </View>
         {/* <Text style={styles.productDescription}>{product.description}</Text> */}
