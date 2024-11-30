@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 class Customer extends Model
 {
@@ -38,20 +39,13 @@ class Customer extends Model
         parent::boot();
 
         static::creating(function ($customer) {
-            $last_customer = Customer::orderBy('customer_id', 'desc')->first();
-            $nextId = 1;
-
-            if ($last_customer) {
-                $lastId = intval(str_replace('customer', '', $last_customer->customer_id));
-                $nextId = $lastId + 1;
-            }
-
-            $customer->customer_id = 'customer' . $nextId;
+            $customer->customer_id = Str::random(8);
         });
     }
+
     public function updateLastLogin()
     {
-        $this->lasLogin = now();
+        $this->last_login = now();
         $this->save();
     }
 }

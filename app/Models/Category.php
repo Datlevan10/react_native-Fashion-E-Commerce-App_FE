@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
@@ -26,15 +27,7 @@ class Category extends Model
         parent::boot();
 
         static::creating(function ($category) {
-            $last_category = Category::orderBy('category_id', 'desc')->first();
-            $nextId = 1;
-
-            if ($last_category) {
-                $lastId = intval(str_replace('category', '', $last_category->category_id));
-                $nextId = $lastId + 1;
-            }
-
-            $category->category_id = 'category' . $nextId;
+            $category->category_id = Str::random(8);
         });
     }
 }

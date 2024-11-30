@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Resources\OrderDetailResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,15 +34,7 @@ class OrderDetail extends Model
         parent::boot();
 
         static::creating(function ($order_detail) {
-            $last_order_detail = OrderDetail::orderBy('order_detail_id', 'desc')->first();
-            $nextId = 1;
-
-            if ($last_order_detail) {
-                $lastId = intval(str_replace('order_detail', '', $last_order_detail->order_detail_id));
-                $nextId = $lastId + 1;
-            }
-
-            $order_detail->order_detail_id = 'order_detail' . $nextId;
+            $order_detail->order_detail_id = Str::random(8);
         });
     }
 

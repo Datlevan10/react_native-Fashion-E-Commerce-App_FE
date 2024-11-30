@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Staff;
 use App\Models\Customer;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -34,15 +35,7 @@ class Order extends Model
         parent::boot();
 
         static::creating(function ($order) {
-            $last_order = Order::orderBy('order_id', 'desc')->first();
-            $nextId = 1;
-
-            if ($last_order) {
-                $lastId = intval(str_replace('order', '', $last_order->order_id));
-                $nextId = $lastId + 1;
-            }
-
-            $order->order_id = 'order' . $nextId;
+            $order->order_id = Str::random(8);
         });
     }
 

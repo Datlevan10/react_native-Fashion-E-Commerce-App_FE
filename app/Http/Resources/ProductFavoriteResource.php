@@ -28,6 +28,7 @@ class ProductFavoriteResource extends JsonResource
             'new_price' => $this->product->new_price ?? null,
             'total_review' => $this->product->total_review ?? null,
             'average_review' => $this->product->average_review ?? null,
+            'note' => $this->product->note ?? null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

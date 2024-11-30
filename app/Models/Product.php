@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -40,15 +41,7 @@ class Product extends Model
         parent::boot();
 
         static::creating(function ($product) {
-            $last_product = Product::orderBy('product_id', 'desc')->first();
-            $nextId = 1;
-
-            if ($last_product) {
-                $lastId = intval(str_replace('product', '', $last_product->product_id));
-                $nextId = $lastId + 1;
-            }
-
-            $product->product_id = 'product' . $nextId;
+            $product->product_id = Str::random(8);
         });
     }
 

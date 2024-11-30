@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Product;
 use App\Models\Customer;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -40,15 +41,7 @@ class Review extends Model
         parent::boot();
 
         static::creating(function ($review) {
-            $last_review = Review::orderBy('review_id', 'desc')->first();
-            $nextId = 1;
-
-            if ($last_review) {
-                $lastId = intval(str_replace('review', '', $last_review->review_id));
-                $nextId = $lastId + 1;
-            }
-
-            $review->review_id = 'review' . $nextId;
+            $review->review_id = Str::random(8);
         });
     }
 
