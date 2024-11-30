@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Event extends Model
 {
@@ -33,15 +34,7 @@ class Event extends Model
         parent::boot();
 
         static::creating(function ($event) {
-            $last_event = Event::orderBy('event_id', 'desc')->first();
-            $nextId = 1;
-
-            if ($last_event) {
-                $lastId = intval(str_replace('event', '', $last_event->event_id));
-                $nextId = $lastId + 1;
-            }
-
-            $event->event_id = 'event' . $nextId;
+            $event->event_id = Str::random(8);
         });
     }
 }

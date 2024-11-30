@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Store extends Model
 {
@@ -35,15 +36,7 @@ class Store extends Model
         parent::boot();
 
         static::creating(function ($store) {
-            $last_store = Store::orderBy('store_id', 'desc')->first();
-            $nextId = 1;
-
-            if ($last_store) {
-                $lastId = intval(str_replace('store', '', $last_store->store_id));
-                $nextId = $lastId + 1;
-            }
-
-            $store->store_id = 'store' . $nextId;
+            $store->store_id = Str::random(8);
         });
     }
 }

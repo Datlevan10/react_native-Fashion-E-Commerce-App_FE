@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Product;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -26,15 +27,7 @@ class ProductFavorite extends Model
         parent::boot();
 
         static::creating(function ($product_favorite) {
-            $last_product_favorite = ProductFavorite::orderBy('product_favorite_id', 'desc')->first();
-            $nextId = 1;
-
-            if ($last_product_favorite) {
-                $lastId = intval(str_replace('product_favorite', '', $last_product_favorite->product_favorite_id));
-                $nextId = $lastId + 1;
-            }
-
-            $product_favorite->product_favorite_id = 'product_favorite' . $nextId;
+            $product_favorite->product_favorite_id = Str::random(8);
         });
     }
 

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Staff extends Model
 {
@@ -38,15 +39,7 @@ class Staff extends Model
         parent::boot();
 
         static::creating(function ($staff) {
-            $last_staff = Staff::orderBy('staff_id', 'desc')->first();
-            $nextId = 1;
-
-            if ($last_staff) {
-                $lastId = intval(str_replace('staff', '', $last_staff->staff_id));
-                $nextId = $lastId + 1;
-            }
-
-            $staff->staff_id = 'staff' . $nextId;
+            $staff->staff_id = Str::random(8);
         });
     }
     public function updateLastLogin()

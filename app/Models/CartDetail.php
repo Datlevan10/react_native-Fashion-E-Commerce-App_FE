@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CartDetail extends Model
 {
@@ -34,15 +35,7 @@ class CartDetail extends Model
         parent::boot();
 
         static::creating(function ($cart_detail) {
-            $last_cart_detail = CartDetail::orderBy('cart_detail_id', 'desc')->first();
-            $nextId = 1;
-
-            if ($last_cart_detail) {
-                $lastId = intval(str_replace('cart_detail', '', $last_cart_detail->cart_detail_id));
-                $nextId = $lastId + 1;
-            }
-
-            $cart_detail->cart_detail_id = 'cart_detail' . $nextId;
+            $cart_detail->cart_detail_id = Str::random(8);
         });
     }
 }

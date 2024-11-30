@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class StoreSetting extends Model
 {
@@ -16,7 +17,7 @@ class StoreSetting extends Model
     protected $keyType = 'string';
 
     protected $casts = [
-        'shipping_policies' => 'array',
+        'shipping_policies' => 'array',-
         'payment_methods' => 'array',
     ];
 
@@ -36,15 +37,7 @@ class StoreSetting extends Model
         parent::boot();
 
         static::creating(function ($store_setting) {
-            $last_store_setting = StoreSetting::orderBy('setting_id', 'desc')->first();
-            $nextId = 1;
-
-            if ($last_store_setting) {
-                $lastId = intval(str_replace('store_setting', '', $last_store_setting->setting_id));
-                $nextId = $lastId + 1;
-            }
-
-            $store_setting->setting_id = 'store_setting' . $nextId;
+            $store_setting->setting_id = Str::random(8);
         });
     }
 }

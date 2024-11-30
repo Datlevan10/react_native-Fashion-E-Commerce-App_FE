@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -36,15 +37,7 @@ class Admin extends Model
         parent::boot();
 
         static::creating(function ($admin) {
-            $last_admin = Admin::orderBy('admin_id', 'desc')->first();
-            $nextId = 1;
-
-            if ($last_admin) {
-                $lastId = intval(str_replace('admin', '', $last_admin->admin_id));
-                $nextId = $lastId + 1;
-            }
-
-            $admin->admin_id = 'admin' . $nextId;
+            $admin->admin_id = Str::random(8);
         });
     }
     public function updateLastLogin()
