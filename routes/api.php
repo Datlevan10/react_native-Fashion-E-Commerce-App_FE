@@ -44,6 +44,9 @@ Route::prefix('')->group(function () {
     Route::apiResource('customers', CustomerController::class);
     Route::middleware('api')->post('customers/auth/login', [CustomerController::class, 'authenticateLoginCustomer']);
     Route::middleware('api')->post('customers/auth/refresh-token', [CustomerController::class, 'refreshAccessToken']);
+    Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {
+        return response()->json($request->user());
+    });
 
     // Product favorite Routes
     Route::apiResource('product_favorites', ProductFavoriteController::class);
