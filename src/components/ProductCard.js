@@ -24,6 +24,7 @@ const ProductCard = ({
   averageReview,
   totalReview,
   onPress,
+  onRemove,
   cardWidth = Dimensions.get("window").width * 0.5,
   imageWidth = "150%",
   imageHeight = "150%",
@@ -44,7 +45,13 @@ const ProductCard = ({
           onError={() => setCurrentImageSource(errorImage)}
         />
         <View style={styles.heartIconContainer}>
-          <FontAwesome name="heart-o" size={20} color={Colors.whiteColor} />
+          {onRemove ? (
+            <TouchableOpacity onPress={onRemove}>
+              <FontAwesome name="heart" size={20} color={Colors.redColor} />
+            </TouchableOpacity>
+          ) : (
+            <FontAwesome name="heart-o" size={20} color={Colors.whiteColor} />
+          )}
         </View>
       </View>
       <View style={styles.infoContainer}>

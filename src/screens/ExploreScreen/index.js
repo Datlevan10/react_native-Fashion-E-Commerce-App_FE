@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from "react-native";
 import ProductCard from "../../components/ProductCard";
-import Feather from "react-native-vector-icons/Feather";
+import { Feather, MaterialIcons } from "react-native-vector-icons";
 import FilterBox from "../../components/FilterBox";
 import CategoryForm from "../../components/CategoryForm";
 import Colors from "../../styles/Color";
@@ -23,8 +23,8 @@ const ExploreScreen = ({ navigation }) => {
   const loadStoreName = async () => {
     try {
       const response = await apiService.getStores();
-      if (response && response.data && response.data[0]) {
-        setStoreName(response.data[0].store_name);
+      if (response && response.data.data && response.data.data[0]) {
+        setStoreName(response.data.data[0].store_name);
       }
     } catch (error) {
       console.error("Failed to load store name:", error);
@@ -109,10 +109,20 @@ const ExploreScreen = ({ navigation }) => {
             />
             <TextInput
               style={styles.searchInput}
-              placeholder="Search products with name, review, size,..."
+              placeholder="Search H&M"
               placeholderTextColor="#999"
             />
           </View>
+          <TouchableOpacity>
+            <View style={styles.micContainer}>
+              <MaterialIcons
+                name="mic"
+                size={22}
+                color="#333"
+                // style={styles.micIcon}
+              />
+            </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.content}>
           <ScrollView
@@ -193,9 +203,6 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.grayBgColor,
     backgroundColor: Colors.whiteColor,
   },
-  backButton: {
-    marginRight: 15,
-  },
   searchContainer: {
     height: 40,
     flexDirection: "row",
@@ -204,6 +211,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grayBgColor,
     borderRadius: 8,
     paddingHorizontal: 10,
+    marginHorizontal: 10,
   },
   searchIcon: {
     marginRight: 8,
@@ -212,6 +220,14 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: Colors.blackColor,
+  },
+  micContainer: {
+    height: 35,
+    width: 35,
+    backgroundColor: Colors.grayBgColor,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
   },
   content: {
     flex: 1,

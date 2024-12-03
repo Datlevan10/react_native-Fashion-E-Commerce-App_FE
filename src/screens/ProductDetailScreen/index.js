@@ -26,6 +26,7 @@ import ShowAlertWithTitleContentAndTwoActions from "../../components/ShowAlertWi
 const { width, height } = Dimensions.get("window");
 
 export default function ProductDetailScreen({ route, navigation }) {
+  const [storeName, setStoreName] = useState("");
   const { product, images, colors, sizes } = route.params;
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -47,6 +48,7 @@ export default function ProductDetailScreen({ route, navigation }) {
     };
 
     checkIfFavorite();
+    loadStoreName();
   }, []);
 
   const handleAddToWishlist = async () => {
@@ -80,6 +82,17 @@ export default function ProductDetailScreen({ route, navigation }) {
   const handleScroll = (event) => {
     const newIndex = Math.round(event.nativeEvent.contentOffset.x / width);
     setSelectedImageIndex(newIndex);
+  };
+
+  const loadStoreName = async () => {
+    try {
+      const response = await apiService.getStores();
+      if (response && response.data.data && response.data.data[0]) {
+        setStoreName(response.data.data[0].store_name);
+      }
+    } catch (error) {
+      console.error("Failed to load store name:", error);
+    }
   };
 
   return (
@@ -134,7 +147,7 @@ export default function ProductDetailScreen({ route, navigation }) {
       <View style={styles.itemTwo}>
         <View style={styles.infoIcon}>
           <ProductInfoInDetail
-            categoryName={product.categoryName}
+            categoryName={storeName}
             averageReview={product.averageReview.toString()}
             totalReview={product.totalReview.toString()}
             productName={product.productName}

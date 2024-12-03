@@ -44,6 +44,10 @@ const getFavoriteProductByCustomerId = async (customer_id) => {
   return api.get(`/product_favorites/customer/${customer_id}`);
 };
 
+const removeProductFromFavorite = async (product_favorite_id) => {
+  return api.delete(`/product_favorites/${product_favorite_id}`);
+};
+
 export default {
   registerCustomer,
   authenticateLoginCustomer,
@@ -56,4 +60,5 @@ export default {
   addProductToFavorite,
   getInfoCustomerByCustomerId,
   getFavoriteProductByCustomerId,
+  removeProductFromFavorite,
 };
