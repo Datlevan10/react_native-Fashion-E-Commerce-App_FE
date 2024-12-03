@@ -134,6 +134,8 @@ export default function RegisterScreen({ navigation }) {
       // console.log("Sending request with data:", customerData);
       const response = await apiService.registerCustomer(customerData);
 
+      console.log(response.status);
+
       if (response.status === 201) {
         Alert.alert("Registration successful!", "You can log in now.");
         navigation.navigate("LoginScreen");
@@ -164,7 +166,7 @@ export default function RegisterScreen({ navigation }) {
       style={styles.body}
     >
       <LinearGradient
-        colors={["#029a67", "#e0e0e0"]}
+        colors={["#325eba", "#e0e0e0"]}
         style={styles.gradientBackground}
         start={{ x: 0.25, y: 0 }}
         end={{ x: 0.25, y: 0.25 }}

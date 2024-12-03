@@ -51,6 +51,8 @@ const CustomTabNavigator = ({
             return <Feather name="home" size={size} color={color} />;
           } else if (route.name === "Explore") {
             return <Feather name="search" size={size} color={color} />;
+          } else if (route.name === "Wishlist") {
+            return <Feather name="heart" size={size} color={color} />;
           } else if (route.name === "Notification") {
             return (
               <Ionicons

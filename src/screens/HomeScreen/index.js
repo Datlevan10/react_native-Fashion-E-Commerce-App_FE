@@ -1,12 +1,13 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import ExploreScreen from "../ExploreScreen/ExploreScreen";
-import NotificationScreen from "../NotificationScreen/NotificationScreen";
-import ProfileScreen from "../ProfileScreen/ProfileScreen";
+import ExploreScreen from "../ExploreScreen";
+import NotificationScreen from "../NotificationScreen";
+import ProfileScreen from "../ProfileScreen";
 import HomeContentScreen from "./HomeContentScreen";
 import CustomTabLabel from "../../components/CustomTabLabel ";
 import CustomTabNavigator from "../../components/CustomTabNavigator";
+import WishlistScreen from "../WishlistScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,6 +26,13 @@ export default function HomeScreen({ navigation }) {
         component={ExploreScreen}
         options={{
           tabBarLabel: ({ focused }) => <CustomTabLabel label="Explore" />,
+        }}
+      />
+      <Tab.Screen
+        name="Wishlist"
+        component={WishlistScreen}
+        options={{
+          tabBarLabel: ({ focused }) => <CustomTabLabel label="Wishlist" />,
         }}
       />
       <Tab.Screen

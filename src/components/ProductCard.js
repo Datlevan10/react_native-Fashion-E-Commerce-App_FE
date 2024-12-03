@@ -7,7 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import Feather from "react-native-vector-icons/Feather";
+import { Feather, FontAwesome } from "react-native-vector-icons";
 import AntDesign from "react-native-vector-icons/AntDesign";
 import Colors from "../styles/Color";
 
@@ -44,7 +44,7 @@ const ProductCard = ({
           onError={() => setCurrentImageSource(errorImage)}
         />
         <View style={styles.heartIconContainer}>
-          <Feather name="heart" size={20} color={Colors.whiteColor} />
+          <FontAwesome name="heart-o" size={20} color={Colors.whiteColor} />
         </View>
       </View>
       <View style={styles.infoContainer}>
