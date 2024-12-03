@@ -7,8 +7,9 @@ const CustomTabLabel = ({ label }) => {
 
 const styles = StyleSheet.create({
   label: {
-    fontSize: 15,
+    fontSize: 12,
     color: "black",
+    fontWeight: "500"
   },
 });
 

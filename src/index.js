@@ -2,19 +2,20 @@ import React, { useEffect, useState, useRef } from "react";
 import { AppState } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import CategoryScreen from "./screens/ExploreScreen/ExploreScreen";
-import ProductDetailScreen from "./screens/ProductDetailScreen/ProductDetailScreen";
-import CartScreen from "./screens/CartScreen/CartScreen";
-import LoginScreen from "./screens/LoginScreen/LoginScreen";
-import RegisterScreen from "./screens/RegisterScreen/RegisterScreen";
-import WelcomeScreen from "./screens/WelcomeScreen/WelcomeScreen";
+import CategoryScreen from "./screens/ExploreScreen";
+import ProductDetailScreen from "./screens/ProductDetailScreen";
+import CartScreen from "./screens/CartScreen";
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
+import WelcomeScreen from "./screens/WelcomeScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen/ForgotPasswordScreen";
-import CheckoutScreen from "./screens/CheckoutScreen/CheckoutScreen";
+import CheckoutScreen from "./screens/CheckoutScreen";
 import TrackingDetailScreen from "./screens/CheckoutScreen/TrackingDetailScreen";
-import ProfileScreen from "./screens/ProfileScreen/ProfileScreen";
+import ProfileScreen from "./screens/ProfileScreen";
 import ManagerProfileScreen from "./screens/ProfileScreen/ManagerProfileScreen";
 import DetailProfileScreen from "./screens/ProfileScreen/DetailProfileScreen";
-import HomeScreen from "./screens/HomeScreen/HomeScreen";
+import HomeScreen from "./screens/HomeScreen";
+import WishlistScreen from "./screens/WishlistScreen";
 
 import UserInactivity from "react-native-user-inactivity";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -211,6 +212,11 @@ export default function App() {
             <Stack.Screen
               name="TrackingDetailScreen"
               component={TrackingDetailScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="WishlistScreen"
+              component={WishlistScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen

@@ -24,7 +24,7 @@ const Colors = {
   textPlaceholder: "#9e9e9e",
 
   // Border color
-  borderColor: "#ccc",
+  borderColor: "#b5b5b5",
   borderDark: "#ddd",
 
 
