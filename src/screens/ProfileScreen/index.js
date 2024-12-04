@@ -75,7 +75,7 @@ export default function ProfileScreen({ navigation }) {
       async () => {
         try {
           await handleLogout();
-          navigation.navigate("LoginScreen");
+          navigation.replace("LoginScreen");
         } catch (error) {
           console.error("Error logging out:", error);
         }
