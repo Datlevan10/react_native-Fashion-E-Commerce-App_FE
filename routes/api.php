@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\{
     AdminController, CartController, CartDetailController,
     ProductController, CategoryController, CustomerController,
     EventController,
+    NotificationController,
     OrderController,
     OrderDetailController,
     ProductFavoriteController,
@@ -68,6 +69,9 @@ Route::prefix('')->group(function () {
     Route::apiResource('orders', OrderController::class);
 
     Route::apiResource('order_details', OrderDetailController::class);
+
+    // Notification Routes
+    Route::apiResource('notifications', NotificationController::class);
 
     // Review Routes
     Route::apiResource('reviews', ReviewController::class);

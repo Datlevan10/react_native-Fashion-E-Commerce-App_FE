@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Staff;
 use App\Models\Customer;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -36,6 +37,21 @@ class Order extends Model
 
         static::creating(function ($order) {
             $order->order_id = Str::random(8);
+        });
+
+        static::updated(function ($order) {
+            if ($order->wasChanged('order_status')) {
+                DB::table('notifications')->insert([
+                    'notification_id' => Str::random(8),
+                    'type' => 'orders',
+                    'related_id' => $order->order_id,
+                    'customer_id' => $order->customer_id,
+                    'message' => "Your order status #{$order->order_id} has been updated to {$order->order_status}.",
+                    'is_read' => false,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         });
     }
 
