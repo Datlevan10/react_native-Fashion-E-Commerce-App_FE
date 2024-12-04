@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -42,6 +43,18 @@ class Product extends Model
 
         static::creating(function ($product) {
             $product->product_id = Str::random(8);
+        });
+
+        static::created(function ($product) {
+            DB::table('notifications')->insert([
+                'notification_id' => Str::random(8),
+                'type' => 'products',
+                'related_id' => $product->product_id,
+                'message' => "H&M just added a new product. You can see the product '{$product->product_name}' .And shop now",
+                'is_read' => false,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         });
     }
 
