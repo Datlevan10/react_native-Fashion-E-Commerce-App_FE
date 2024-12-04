@@ -48,6 +48,10 @@ const removeProductFromFavorite = async (product_favorite_id) => {
   return api.delete(`/product_favorites/${product_favorite_id}`);
 };
 
+const getNotification = async () => {
+  return api.get("/notifications");
+}
+
 export default {
   registerCustomer,
   authenticateLoginCustomer,
@@ -61,4 +65,5 @@ export default {
   getInfoCustomerByCustomerId,
   getFavoriteProductByCustomerId,
   removeProductFromFavorite,
+  getNotification,
 };

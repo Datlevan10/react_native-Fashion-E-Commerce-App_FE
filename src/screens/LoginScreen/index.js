@@ -99,7 +99,7 @@ export default function LoginScreen({ navigation }) {
             "Login successful",
             "Welcome back H&M store"
           );
-          navigation.navigate("HomeScreen");
+          navigation.replace("HomeScreen");
         } else if (response.status === 401) {
           const errorMessage =
             response.data?.message || "Incorrect username and password";

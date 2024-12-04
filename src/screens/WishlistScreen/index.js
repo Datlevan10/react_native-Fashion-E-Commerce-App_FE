@@ -159,7 +159,10 @@ export default function WishlistScreen({ navigation }) {
         </View>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.productList}
+          contentContainerStyle={[
+            styles.productList,
+            wishlist.length === 0 && { flex: 1 },
+          ]}
           refreshControl={
             <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
           }
@@ -203,7 +206,7 @@ export default function WishlistScreen({ navigation }) {
           ) : (
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyText}>
-                Your wish list is empty, shop now.
+                Your wish list is empty, add product to wishlist now.
               </Text>
             </View>
           )}
