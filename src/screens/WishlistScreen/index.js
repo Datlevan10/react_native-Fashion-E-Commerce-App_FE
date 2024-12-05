@@ -17,6 +17,7 @@ import IconWithBadge from "../../components/IconWithBadge";
 import apiService from "../../api/ApiService";
 import ProductCard from "../../components/ProductCard";
 import Colors from "../../styles/Color";
+import API_BASE_URL from "../../config/config";
 import ShowAlertWithTitleContentAndTwoActions from "../../components/ShowAlertWithTitleContentAndTwoActions ";
 
 export default function WishlistScreen({ navigation }) {
@@ -54,10 +55,10 @@ export default function WishlistScreen({ navigation }) {
           productFavoriteId: item.product_favorite_id,
           productId: item.product_id,
           productImage: {
-            uri: `http://192.168.1.4:8080${item.image[0].url}`,
+            uri: `${API_BASE_URL}${item.image[0].url}`,
           },
           imageArr: item.image.map(
-            (img) => `http://192.168.1.4:8080${img.url}`
+            (img) => `${API_BASE_URL}${img.url}`
           ),
           categoryName: item.category_name,
           averageReview: item.average_review,

@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { AntDesign } from "react-native-vector-icons";
 import Colors from "../styles/Color";
 
-const NotificationCard = ({ message, relatedData, timeAgo, onDelete }) => {
+const NotificationCard = ({
+  message,
+  relatedData,
+  timeAgo,
+  onPress,
+  onDelete,
+}) => {
+  const [isSwiping, setIsSwiping] = useState(false);
+
   const renderRightActions = () => (
     <View style={styles.deleteContainer}>
       <AntDesign
@@ -17,15 +25,34 @@ const NotificationCard = ({ message, relatedData, timeAgo, onDelete }) => {
   );
 
   return (
-    <Swipeable renderRightActions={renderRightActions}>
-      <View style={styles.card}>
-        <Image source={{ uri: relatedData.images[0] }} style={styles.image} />
-        <View style={styles.textContainer}>
-          <Text style={styles.message}>
-            {message} <Text style={styles.timeAgo}>• {timeAgo}</Text>
-          </Text>
+    <Swipeable
+      renderRightActions={renderRightActions}
+      onSwipeableOpen={() => setIsSwiping(true)}
+      onSwipeableClose={() => setIsSwiping(false)}
+    >
+      <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
+        <View
+          style={[
+            styles.card,
+            isSwiping && styles.cardWithoutMargin,
+            isSwiping && styles.cardWithoutRightBorder,
+          ]}
+        >
+          <View>
+            <View style={styles.imageContainer}>
+              <Image
+                source={{ uri: relatedData.images[0] }}
+                style={styles.image}
+              />
+            </View>
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.message}>
+              {message} <Text style={styles.timeAgo}>• {timeAgo}</Text>
+            </Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
     </Swipeable>
   );
 };
@@ -36,10 +63,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 12,
     backgroundColor: Colors.grayBgColor,
-    borderRadius: 10,
+    // borderRadius: 10,
     elevation: 3,
     marginVertical: 5,
-    marginHorizontal: 18,
+    // marginHorizontal: 18,
+  },
+  cardWithoutMargin: {
+    marginHorizontal: 0,
+  },
+  cardWithoutRightBorder: {
+    borderTopRightRadius: 0,
+    borderBottomRightRadius: 0,
   },
   textContainer: {
     flexDirection: "column",
@@ -50,23 +84,33 @@ const styles = StyleSheet.create({
     color: Colors.blackColor,
   },
   timeAgo: {
-    fontSize: 14,
-    color: Colors.grayTextColor,
+    fontSize: 15,
+    color: "gray",
+  },
+  imageContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: "#029a67",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 10,
+    backgroundColor: "#fff",
   },
   image: {
     width: 50,
     height: 50,
     borderRadius: 25,
-    marginRight: 10,
-    backgroundColor: "#fff",
   },
   deleteContainer: {
     marginVertical: 5,
-    borderRadius: 10,
-    backgroundColor: Colors.redColor,
     justifyContent: "center",
     alignItems: "center",
-    padding: 10,
+    backgroundColor: Colors.redColor,
+    width: 70,
+    // borderTopRightRadius: 10,
+    // borderBottomRightRadius: 10,
   },
 });
 
