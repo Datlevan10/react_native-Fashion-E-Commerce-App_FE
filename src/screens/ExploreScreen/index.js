@@ -14,6 +14,7 @@ import FilterBox from "../../components/FilterBox";
 import CategoryForm from "../../components/CategoryForm";
 import Colors from "../../styles/Color";
 import apiService from "../../api/ApiService";
+import API_BASE_URL from "../../config/config";
 
 const ExploreScreen = ({ navigation }) => {
   const [storeName, setStoreName] = useState("");
@@ -39,7 +40,7 @@ const ExploreScreen = ({ navigation }) => {
           categoryId: item.category_id,
           categoryName: item.category_name,
           imageCategory: {
-            uri: `http://192.168.1.4:8080${item.image_category}`,
+            uri: `${API_BASE_URL}${item.image_category}`,
           },
         }))
       );
@@ -62,10 +63,10 @@ const ExploreScreen = ({ navigation }) => {
         productsArray.map((item) => ({
           productId: item.product_id,
           productImage: {
-            uri: `http://192.168.1.4:8080${item.image[0].url}`,
+            uri: `${API_BASE_URL}${item.image[0].url}`,
           },
           imageArr: item.image.map(
-            (img) => `http://192.168.1.4:8080${img.url}`
+            (img) => `${API_BASE_URL}${img.url}`
           ),
           categoryName: item.category_name,
           averageReview: item.average_review,

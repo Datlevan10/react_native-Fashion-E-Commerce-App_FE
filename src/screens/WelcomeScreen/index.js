@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Image, StyleSheet, ActivityIndicator } from "react-native";
 import apiService from "../../api/ApiService";
+import API_BASE_URL from "../../config/config";
 
 export default function WelcomeScreen({ navigation }) {
   const [logoSource, setLogoSource] = useState([]);
@@ -11,7 +12,7 @@ export default function WelcomeScreen({ navigation }) {
         const response = await apiService.getStores();
         if (response && response.data.data && response.data.data[0]) {
           setLogoSource({
-            uri: `http://192.168.1.4:8080${response.data.data[0].logo_url}`,
+            uri: `${API_BASE_URL}${response.data.data[0].logo_url}`,
           });
         }
       } catch (error) {

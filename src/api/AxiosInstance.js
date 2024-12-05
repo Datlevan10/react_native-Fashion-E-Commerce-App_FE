@@ -1,11 +1,11 @@
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import API_BASE_URL from "../config/config";
 
-// Cần thay đổi và sử dụng IP cục bộ của máy tính trong mạng nội bộ cho address API
-const API_BASE_URL = "http://192.168.1.4:8080/api";
+const API_URL = `${API_BASE_URL}/api`;
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -30,7 +30,7 @@ api.interceptors.response.use(
         }
 
         const { data } = await axios.post(
-          `${API_BASE_URL}/customers/auth/refresh-token`,
+          `${API_URL}/customers/auth/refresh-token`,
           {
             refresh_token: refreshToken,
           }

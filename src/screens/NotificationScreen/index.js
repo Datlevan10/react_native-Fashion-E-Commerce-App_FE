@@ -6,6 +6,7 @@ import Colors from "../../styles/Color";
 import NotificationCard from "../../components/NotificationCard";
 import { Feather } from "react-native-vector-icons";
 import { formatDistanceToNow } from "date-fns";
+import API_BASE_URL from "../../config/config";
 
 export default function NotificationScreen({ navigation }) {
   const [notifications, setNotifications] = useState([]);
@@ -30,7 +31,7 @@ export default function NotificationScreen({ navigation }) {
             timeAgo: formatDistanceToNow(new Date(item.created_at), { addSuffix: true }),
             relatedData: {
               productName: item.related_data.product_name,
-              images: item.related_data.image.map((img) => `http://192.168.1.4:8080${img.url}`),
+              images: item.related_data.image.map((img) => `${API_BASE_URL}${img.url}`),
               price: item.related_data.price,
             },
           };

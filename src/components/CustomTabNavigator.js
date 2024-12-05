@@ -13,6 +13,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import IconWithBadge from "./IconWithBadge";
 import Colors from "../styles/Color";
 import apiService from "../api/ApiService";
+import API_BASE_URL from "../config/config";
 
 const Tab = createBottomTabNavigator();
 
@@ -30,7 +31,7 @@ const CustomTabNavigator = ({
         const response = await apiService.getStores();
         if (response && response.data.data && response.data.data[0]) {
           setLogoSource({
-            uri: `http://192.168.1.4:8080${response.data.data[0].logo_url}`,
+            uri: `${API_BASE_URL}${response.data.data[0].logo_url}`,
           });
         }
       } catch (error) {

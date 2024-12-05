@@ -12,6 +12,7 @@ import ProductCard from "../../components/ProductCard";
 import CategoryForm from "../../components/CategoryForm";
 import Colors from "../../styles/Color";
 import apiService from "../../api/ApiService";
+import API_BASE_URL from "../../config/config";
 
 export default function HomeContentScreen({ navigation }) {
   const [categories, setCategories] = useState([]);
@@ -44,7 +45,7 @@ export default function HomeContentScreen({ navigation }) {
           categoryId: item.category_id,
           categoryName: item.category_name,
           imageCategory: {
-            uri: `http://192.168.1.4:8080${item.image_category}`,
+            uri: `${API_BASE_URL}${item.image_category}`,
           },
         }))
       );
@@ -63,7 +64,7 @@ export default function HomeContentScreen({ navigation }) {
         response.data.data[0].event_image.length > 0
       ) {
         setImageEventSource({
-          uri: `http://192.168.1.4:8080${response.data.data[0].event_image[0]}`,
+          uri: `${API_BASE_URL}${response.data.data[0].event_image[0]}`,
         });
       }
     } catch (error) {
@@ -86,10 +87,10 @@ export default function HomeContentScreen({ navigation }) {
         productsArray.map((item) => ({
           productId: item.product_id,
           productImage: {
-            uri: `http://192.168.1.4:8080${item.image[0].url}`,
+            uri: `${API_BASE_URL}${item.image[0].url}`,
           },
           imageArr: item.image.map(
-            (img) => `http://192.168.1.4:8080${img.url}`
+            (img) => `${API_BASE_URL}${img.url}`
           ),
           categoryName: item.category_name,
           averageReview: item.average_review,
