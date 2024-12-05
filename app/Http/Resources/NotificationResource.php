@@ -38,6 +38,8 @@ class NotificationResource extends JsonResource
             'message' => $this->message,
             'is_read' => $this->is_read,
             'related_data' => $relatedData,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ];
     }
 }

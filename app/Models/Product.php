@@ -50,7 +50,7 @@ class Product extends Model
                 'notification_id' => Str::random(8),
                 'type' => 'products',
                 'related_id' => $product->product_id,
-                'message' => "H&M just added a new product. You can see the product '{$product->product_name}' .And shop now",
+                'message' => "H&M just added a new product. You can see the product '{$product->product_name}'. And shop now.",
                 'is_read' => false,
                 'created_at' => now(),
                 'updated_at' => now(),
