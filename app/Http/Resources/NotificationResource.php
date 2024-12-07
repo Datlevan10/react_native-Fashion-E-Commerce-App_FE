@@ -19,9 +19,20 @@ class NotificationResource extends JsonResource
 
         if ($this->type === 'products') {
             $relatedData = $this->product ? [
+                'product_id' => $this->product->product_id,
                 'product_name' => $this->product->product_name,
+                'category_id' => $this->product->category_id,
+                // 'category_name' => $this->category->category_name,
+                'product_name' => $this->product->product_name,
+                'description' => $this->product->description,
+                'color' => $this->product->color,
+                'size' => $this->product->size,
                 'image' => $this->product->image,
-                'price' => $this->product->new_price,
+                'old_price' => $this->product->old_price,
+                'new_price' => $this->product->new_price,
+                'total_review' => $this->product->total_review,
+                'average_review' => $this->product->average_review,
+                'note' => $this->product->note,
             ] : null;
         } elseif ($this->type === 'orders') {
             $relatedData = $this->order ? [
