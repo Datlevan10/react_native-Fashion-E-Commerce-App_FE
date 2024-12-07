@@ -46,11 +46,14 @@ class Product extends Model
         });
 
         static::created(function ($product) {
+            $storeName = DB::table('stores')->value('store_name') ?? 'Default Store';
+            $categoryName = $product->category->category_name ?? null;
+
             DB::table('notifications')->insert([
                 'notification_id' => Str::random(8),
                 'type' => 'products',
                 'related_id' => $product->product_id,
-                'message' => "H&M just added a new product. You can see the product '{$product->product_name}'. And shop now.",
+                'message' => "{$storeName} just added a new product with category {$categoryName}. You can see the product '{$product->product_name}'. And shop now.",
                 'is_read' => false,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -62,4 +65,10 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class, 'category_id', 'category_id');
     }
+
+    public function store()
+    {
+        return $this->belongsTo(Store::class, 'store_id', 'store_id');
+    }
+
 }
