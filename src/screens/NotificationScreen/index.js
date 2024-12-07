@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, StyleSheet, SafeAreaView, Alert, TouchableOpacity, RefreshControl } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  SafeAreaView,
+  Alert,
+  TouchableOpacity,
+  RefreshControl,
+} from "react-native";
 import * as SecureStore from "expo-secure-store";
 import apiService from "../../api/ApiService";
 import Colors from "../../styles/Color";
 import NotificationCard from "../../components/NotificationCard";
-import { Feather } from "react-native-vector-icons";
+import { Feather, MaterialIcons } from "react-native-vector-icons";
 import { formatDistanceToNow } from "date-fns";
 import API_BASE_URL from "../../config/config";
 
@@ -28,10 +37,15 @@ export default function NotificationScreen({ navigation }) {
             id: item.notification_id,
             message: item.message,
             isRead: item.is_read,
-            timeAgo: formatDistanceToNow(new Date(item.created_at), { addSuffix: true }),
+            createdAt: item.created_at,
+            timeAgo: formatDistanceToNow(new Date(item.created_at), {
+              addSuffix: true,
+            }),
             relatedData: {
               productName: item.related_data.product_name,
-              images: item.related_data.image.map((img) => `${API_BASE_URL}${img.url}`),
+              images: item.related_data.image.map(
+                (img) => `${API_BASE_URL}${img.url}`
+              ),
               price: item.related_data.price,
             },
           };
@@ -52,25 +66,55 @@ export default function NotificationScreen({ navigation }) {
 
   const groupNotifications = () => {
     const today = [];
-    const thisWeek = [];
+    const yesterday = [];
+    const last7Days = [];
+    const last30Days = [];
     const earlier = [];
 
+    const now = new Date();
+    const startOfToday = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+    const startOfYesterday = new Date(startOfToday);
+    startOfYesterday.setDate(startOfYesterday.getDate() - 1);
+    const startOfLast7Days = new Date(startOfToday);
+    startOfLast7Days.setDate(startOfToday.getDate() - 7);
+    const startOfLast30Days = new Date(startOfToday);
+    startOfLast30Days.setDate(startOfToday.getDate() - 30);
+
     notifications.forEach((notification) => {
-      const createdAt = new Date(notification.timeAgo);
-      const now = new Date();
+      const createdAt = new Date(notification.createdAt);
 
-      const diffInDays = Math.floor((now - createdAt) / (1000 * 60 * 60 * 24));
-
-      if (diffInDays === 0) {
+      if (createdAt >= startOfToday) {
         today.push(notification);
-      } else if (diffInDays <= 7) {
-        thisWeek.push(notification);
+      } else if (createdAt >= startOfYesterday && createdAt < startOfToday) {
+        yesterday.push(notification);
+      } else if (
+        createdAt >= startOfLast7Days &&
+        createdAt < startOfYesterday
+      ) {
+        last7Days.push(notification);
+      } else if (
+        createdAt >= startOfLast30Days &&
+        createdAt < startOfLast7Days
+      ) {
+        last30Days.push(notification);
       } else {
         earlier.push(notification);
       }
     });
 
-    return { today, thisWeek, earlier };
+    const sortByDate = (a, b) => new Date(b.createdAt) - new Date(a.createdAt);
+
+    return {
+      today: today.sort(sortByDate),
+      yesterday: yesterday.sort(sortByDate),
+      last7Days: last7Days.sort(sortByDate),
+      last30Days: last30Days.sort(sortByDate),
+      earlier: earlier.sort(sortByDate),
+    };
   };
 
   const onRefresh = () => {
@@ -90,13 +134,17 @@ export default function NotificationScreen({ navigation }) {
     );
   }
 
-  const { today, thisWeek, earlier } = groupNotifications();
+  const { today, yesterday, last7Days, last30Days, earlier } =
+    groupNotifications();
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
             <Feather name="arrow-left" size={24} color={Colors.blackColor} />
           </TouchableOpacity>
           <View style={styles.titleContainer}>
@@ -105,7 +153,9 @@ export default function NotificationScreen({ navigation }) {
         </View>
         <ScrollView
           contentContainerStyle={styles.notificationList}
-          refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
+          refreshControl={
+            <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+          }
         >
           {today.length > 0 && (
             <View>
@@ -120,10 +170,37 @@ export default function NotificationScreen({ navigation }) {
               ))}
             </View>
           )}
-          {thisWeek.length > 0 && (
+          {yesterday.length > 0 && (
             <View>
-              <Text style={styles.groupTitle}>This week</Text>
-              {thisWeek.map((notification) => (
+              <Text style={styles.groupTitle}>Yesterday</Text>
+              {yesterday.map((notification) => (
+                <NotificationCard
+                  key={notification.id}
+                  message={notification.message}
+                  relatedData={notification.relatedData}
+                  timeAgo={notification.timeAgo}
+                />
+              ))}
+            </View>
+          )}
+
+          {last7Days.length > 0 && (
+            <View>
+              <Text style={styles.groupTitle}>Last 7 days</Text>
+              {last7Days.map((notification) => (
+                <NotificationCard
+                  key={notification.id}
+                  message={notification.message}
+                  relatedData={notification.relatedData}
+                  timeAgo={notification.timeAgo}
+                />
+              ))}
+            </View>
+          )}
+          {last30Days.length > 0 && (
+            <View>
+              <Text style={styles.groupTitle}>Last 30 days</Text>
+              {last30Days.map((notification) => (
                 <NotificationCard
                   key={notification.id}
                   message={notification.message}
@@ -155,11 +232,11 @@ export default function NotificationScreen({ navigation }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.whiteBgColor,
+    backgroundColor: Colors.grayBgColor,
   },
   container: {
     flex: 1,
-    backgroundColor: Colors.whiteColor,
+    backgroundColor: Colors.grayBgColor,
   },
   header: {
     flexDirection: "row",
@@ -167,7 +244,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderBottomColor: Colors.grayBgColor,
-    backgroundColor: Colors.whiteColor,
+    backgroundColor: Colors.grayBgColor,
   },
   titleContainer: {
     marginLeft: 8,
