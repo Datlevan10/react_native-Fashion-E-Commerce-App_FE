@@ -64,8 +64,8 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: Colors.grayBgColor,
     // borderRadius: 10,
-    elevation: 3,
-    marginVertical: 5,
+    // elevation: 3,
+    // marginVertical: 5,
     // marginHorizontal: 18,
   },
   cardWithoutMargin: {
