@@ -56,8 +56,8 @@ const getNotification = async (customerId) => {
   return api.get(`/notifications?customer_id=${customerId}`);
 }
 
-const hideNotification = async (notificationId) => {
-  return api.post(`/notifications/hide/${notificationId}`);
+const hideNotification = async (notificationId, data) => {
+  return api.post(`/notifications/hide/${notificationId}`, data);
 };
 
 
