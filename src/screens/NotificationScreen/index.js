@@ -159,7 +159,7 @@ export default function NotificationScreen({ navigation }) {
         >
           {today.length > 0 && (
             <View>
-              <Text style={styles.groupTitle}>Today</Text>
+              <Text style={styles.groupTitle}>New</Text>
               {today.map((notification) => (
                 <NotificationCard
                   key={notification.id}

@@ -232,11 +232,11 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 5,
     paddingHorizontal: 18,
   },
   filterList: {
-    height: 50,
+    height: 40,
     gap: 5,
     marginBottom: 30,
   },
