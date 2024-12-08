@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -31,6 +32,24 @@ class Notification extends Model
         static::creating(function ($notification) {
             $notification->notification_id = Str::random(8);
         });
+
+        static::created(function ($notification) {
+            $customers = DB::table('customers')->pluck('customer_id');
+
+            $customerNotifications = [];
+            foreach ($customers as $customerId) {
+                $customerNotifications[] = [
+                    'customer_notification_id' => Str::random(8),
+                    'notification_id' => $notification->notification_id,
+                    'customer_id' => $customerId,
+                    'is_hidden' => false,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            DB::table('customer_notifications')->insert($customerNotifications);
+        });
     }
 
     public function product()
@@ -42,4 +61,15 @@ class Notification extends Model
     {
         return $this->belongsTo(Order::class, 'related_id', 'order_id');
     }
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class, 'related_id', 'event_id');
+    }
+
+    public function customerNotifications()
+    {
+        return $this->hasMany(CustomerNotification::class, 'notification_id', 'notification_id');
+    }
+
 }

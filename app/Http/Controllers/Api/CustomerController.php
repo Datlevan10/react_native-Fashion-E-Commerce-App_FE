@@ -22,7 +22,7 @@ class CustomerController extends Controller
         $customers = Customer::get();
         if ($customers->count() > 0) {
             return response()->json([
-                // 'message' => 'Get customer success',
+                'message' => 'Get customer success',
                 'data' => CustomerResource::collection($customers)
             ], 200);
         } else {
