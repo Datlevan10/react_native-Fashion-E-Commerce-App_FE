@@ -24,33 +24,42 @@ const getListAllProducts = async () => {
   return api.get("/products");
 };
 
-const getFeatureProducts = async (category_id) => {
-  return api.get(`/products/category/${category_id}`);
+const getFeatureProducts = async (categoryId) => {
+  return api.get(`/products/category/${categoryId}`);
 };
 
 const addProductToCart = async (productData) => {
   return api.post("/carts", productData);
 };
 
+const removeProductFromCart = async (productData) => {
+  return api.post(`/cart_details`, productData);
+};
+
 const addProductToFavorite = async (productData) => {
   return api.post("/product_favorites", productData);
 };
 
-const getInfoCustomerByCustomerId = async (customer_id) => {
-  return api.get(`/customers/${customer_id}`);
+const getInfoCustomerByCustomerId = async (customerId) => {
+  return api.get(`/customers/${customerId}`);
 };
 
-const getFavoriteProductByCustomerId = async (customer_id) => {
-  return api.get(`/product_favorites/customer/${customer_id}`);
+const getFavoriteProductByCustomerId = async (customerId) => {
+  return api.get(`/product_favorites/customer/${customerId}`);
 };
 
-const removeProductFromFavorite = async (product_favorite_id) => {
-  return api.delete(`/product_favorites/${product_favorite_id}`);
+const removeProductFromFavorite = async (productFavoriteId) => {
+  return api.delete(`/product_favorites/${productFavoriteId}`);
 };
 
-const getNotification = async () => {
-  return api.get("/notifications");
+const getNotification = async (customerId) => {
+  return api.get(`/notifications?customer_id=${customerId}`);
 }
+
+const hideNotification = async (notificationId) => {
+  return api.post(`/notifications/hide/${notificationId}`);
+};
+
 
 export default {
   registerCustomer,
@@ -61,9 +70,11 @@ export default {
   getEventImageActive,
   getFeatureProducts,
   addProductToCart,
+  removeProductFromCart,
   addProductToFavorite,
   getInfoCustomerByCustomerId,
   getFavoriteProductByCustomerId,
   removeProductFromFavorite,
   getNotification,
+  hideNotification,
 };
