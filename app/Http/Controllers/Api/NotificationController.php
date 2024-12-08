@@ -48,10 +48,14 @@ class NotificationController extends Controller
         ], 404);
     }
 
-    // method hide notification
+    // Method hide notification
     public function hideNotification(Request $request, $notificationId)
     {
         $customerId = $request->input('customer_id');
+
+        if (!$customerId) {
+            return response()->json(['error' => 'Customer ID is required'], 400);
+        }
 
         $customerNotification = DB::table('customer_notifications')
             ->where('notification_id', $notificationId)
