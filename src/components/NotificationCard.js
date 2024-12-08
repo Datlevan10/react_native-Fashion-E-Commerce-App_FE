@@ -8,6 +8,7 @@ const NotificationCard = ({
   message,
   relatedData,
   timeAgo,
+  notificationId,
   onPress,
   onDelete,
 }) => {
@@ -15,12 +16,9 @@ const NotificationCard = ({
 
   const renderRightActions = () => (
     <View style={styles.deleteContainer}>
-      <AntDesign
-        name="delete"
-        size={24}
-        color={Colors.whiteColor}
-        onPress={onDelete}
-      />
+      <TouchableOpacity onPress={() => onDelete(notificationId)}>
+        <AntDesign name="delete" size={24} color={Colors.whiteColor} />
+      </TouchableOpacity>
     </View>
   );
 

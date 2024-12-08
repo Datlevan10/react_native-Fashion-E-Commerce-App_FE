@@ -34,7 +34,7 @@ export default function NotificationScreen({ navigation }) {
       if (response.status === 200) {
         const notificationsData = response.data.data.map((item) => {
           const mappedItem = {
-            id: item.notification_id,
+            notificationId: item.notification_id,
             message: item.message,
             isRead: item.is_read,
             createdAt: item.created_at,
@@ -61,6 +61,36 @@ export default function NotificationScreen({ navigation }) {
     } finally {
       setLoading(false);
       setIsRefreshing(false);
+    }
+  };
+
+  const handleDeleteNotification = async (notificationId) => {
+    try {
+      const customerId = await SecureStore.getItemAsync("customer_id");
+
+      if (!customerId) {
+        Alert.alert("Error", "No customer ID found.");
+        return;
+      }
+
+      await apiService.hideNotification(notificationId, {
+        customer_id: customerId,
+      });
+
+      setNotifications((prevNotifications) =>
+        prevNotifications.filter((n) => n.notificationId !== notificationId)
+      );
+      // Xử lý lại chỗ này same handle instagram có thể "Undo" để rollback lại notification
+      Alert.alert("Success", "Notification hidden successfully.");
+    } catch (error) {
+      console.error(
+        "Error hiding notification:",
+        error.response?.data || error.message
+      );
+      Alert.alert(
+        "Error",
+        error.response?.data?.error || "Failed to hide notification."
+      );
     }
   };
 
@@ -162,10 +192,12 @@ export default function NotificationScreen({ navigation }) {
               <Text style={styles.groupTitle}>New</Text>
               {today.map((notification) => (
                 <NotificationCard
-                  key={notification.id}
+                  key={notification.notificationId}
                   message={notification.message}
                   relatedData={notification.relatedData}
                   timeAgo={notification.timeAgo}
+                  notificationId={notification.notificationId}
+                  onDelete={handleDeleteNotification}
                 />
               ))}
             </View>
@@ -175,10 +207,12 @@ export default function NotificationScreen({ navigation }) {
               <Text style={styles.groupTitle}>Yesterday</Text>
               {yesterday.map((notification) => (
                 <NotificationCard
-                  key={notification.id}
+                  key={notification.notificationId}
                   message={notification.message}
                   relatedData={notification.relatedData}
                   timeAgo={notification.timeAgo}
+                  notificationId={notification.notificationId}
+                  onDelete={handleDeleteNotification}
                 />
               ))}
             </View>
@@ -189,10 +223,12 @@ export default function NotificationScreen({ navigation }) {
               <Text style={styles.groupTitle}>Last 7 days</Text>
               {last7Days.map((notification) => (
                 <NotificationCard
-                  key={notification.id}
+                  key={notification.notificationId}
                   message={notification.message}
                   relatedData={notification.relatedData}
                   timeAgo={notification.timeAgo}
+                  notificationId={notification.notificationId}
+                  onDelete={handleDeleteNotification}
                 />
               ))}
             </View>
@@ -202,10 +238,12 @@ export default function NotificationScreen({ navigation }) {
               <Text style={styles.groupTitle}>Last 30 days</Text>
               {last30Days.map((notification) => (
                 <NotificationCard
-                  key={notification.id}
+                  key={notification.notificationId}
                   message={notification.message}
                   relatedData={notification.relatedData}
                   timeAgo={notification.timeAgo}
+                  notificationId={notification.notificationId}
+                  onDelete={handleDeleteNotification}
                 />
               ))}
             </View>
@@ -215,10 +253,12 @@ export default function NotificationScreen({ navigation }) {
               <Text style={styles.groupTitle}>Earlier</Text>
               {earlier.map((notification) => (
                 <NotificationCard
-                  key={notification.id}
+                  key={notification.notificationId}
                   message={notification.message}
                   relatedData={notification.relatedData}
                   timeAgo={notification.timeAgo}
+                  notificationId={notification.notificationId}
+                  onDelete={handleDeleteNotification}
                 />
               ))}
             </View>
