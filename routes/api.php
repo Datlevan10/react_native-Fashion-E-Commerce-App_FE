@@ -72,7 +72,7 @@ Route::prefix('')->group(function () {
 
     // Notification Routes
     Route::apiResource('notifications', NotificationController::class);
-
+    Route::post('/notifications/{notification_id}/hide', [NotificationController::class, 'hideNotification']);
     // Review Routes
     Route::apiResource('reviews', ReviewController::class);
     Route::get('/reviews/product/{product_id}', [ReviewController::class, 'getReviewsByProductId']);
