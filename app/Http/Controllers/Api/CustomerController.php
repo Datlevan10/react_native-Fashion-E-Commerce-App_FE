@@ -162,19 +162,24 @@ class CustomerController extends Controller
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'email' => ['sometimes', 'string', 'email', 'regex:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$/i', 'unique:customers,email'],
             'phone_number' => ['sometimes', 'string', 'regex:/^[0-9]{10}$/', 'unique:customers,phone_number'],
-            'password' => 'sometimes|string|min:8',
+            'password' => [
+                'sometimes',
+                'string',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+            ],
+            // 'password' => 'sometimes|string|min:8',
             'address' => 'sometimes|string|max:255',
         ]);
 
+        $date_of_birth = null;
         if ($request->date_of_birth) {
-            if (Carbon::hasFormat($request->date_of_birth, 'd/m/Y')) {
-                $date_of_birth = Carbon::createFromFormat('d/m/Y', $request->date_of_birth)->format('Y-m-d');
-            } elseif (Carbon::hasFormat($request->date_of_birth, 'd-m-Y')) {
-                $date_of_birth = Carbon::createFromFormat('d-m-Y', $request->date_of_birth)->format('Y-m-d');
-            } elseif (Carbon::hasFormat($request->date_of_birth, 'Y/m/d')) {
-                $date_of_birth = Carbon::createFromFormat('Y/m/d', $request->date_of_birth)->format('Y-m-d');
-            } elseif (Carbon::hasFormat($request->date_of_birth, 'Y-m-d')) {
-                $date_of_birth = Carbon::createFromFormat('Y-m-d', $request->date_of_birth)->format('Y-m-d');
+            $formats = ['d/m/Y', 'd-m-Y', 'Y/m/d', 'Y-m-d'];
+            foreach ($formats as $format) {
+                if (Carbon::hasFormat($request->date_of_birth, $format)) {
+                    $date_of_birth = Carbon::createFromFormat($format, $request->date_of_birth)->format('Y-m-d');
+                    break;
+                }
             }
         }
 
@@ -194,6 +199,9 @@ class CustomerController extends Controller
 
         // Handle image with Storage
         if ($request->hasFile('image')) {
+            if ($customer->image) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $customer->image));
+            }
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
             $imagePath = $image->storeAs('customers', $imageName, 'public');
@@ -292,7 +300,18 @@ class CustomerController extends Controller
         ], 200);
     }
 
-    // method refreshAccessToken Customer
+    // Method to handle user logout
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+
+        return response()->json([
+            'message' => 'Logged out successfully.',
+        ], 200);
+    }
+
+
+    // Method to refresh the access token using the refresh token
     public function refreshAccessToken(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -335,9 +354,23 @@ class CustomerController extends Controller
 
         $newAccessToken = $customer->createToken('customer-access-token')->plainTextToken;
 
+        DB::table('refresh_tokens')->where('refresh_token', $refreshToken)->delete();
+
+        $newRefreshToken = Str::random(64);
+        $newExpiresAt = now()->addDays(30);
+
+        DB::table('refresh_tokens')->insert([
+            'customer_id' => $customer->customer_id,
+            'refresh_token' => Hash::make($newRefreshToken),
+            'expires_at' => $newExpiresAt,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         return response()->json([
             'message' => 'Access token refreshed successfully.',
             'access_token' => $newAccessToken,
+            'refresh_token' => $newRefreshToken,
         ], 200);
     }
 
