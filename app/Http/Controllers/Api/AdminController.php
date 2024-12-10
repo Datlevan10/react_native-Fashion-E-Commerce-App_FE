@@ -160,19 +160,24 @@ class AdminController extends Controller
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'email' => ['sometimes', 'string', 'email', 'regex:/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\\.,;:\s@\"]+\.)+[^<>()[\]\\.,;:\s@\"]{2,})$/i', 'unique:admins,email'],
             'phone_number' => ['sometimes', 'string', 'regex:/^[0-9]{10}$/', 'unique:admins,phone_number'],
-            'password' => 'sometimes|string|min:8',
+            'password' => [
+                'sometimes',
+                'string',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+            ],
+            // 'password' => 'sometimes|string|min:8',
             'address' => 'sometimes|string|max:255',
         ]);
 
+        $date_of_birth = null;
         if ($request->date_of_birth) {
-            if (Carbon::hasFormat($request->date_of_birth, 'd/m/Y')) {
-                $date_of_birth = Carbon::createFromFormat('d/m/Y', $request->date_of_birth)->format('Y-m-d');
-            } elseif (Carbon::hasFormat($request->date_of_birth, 'd-m-Y')) {
-                $date_of_birth = Carbon::createFromFormat('d-m-Y', $request->date_of_birth)->format('Y-m-d');
-            } elseif (Carbon::hasFormat($request->date_of_birth, 'Y/m/d')) {
-                $date_of_birth = Carbon::createFromFormat('Y/m/d', $request->date_of_birth)->format('Y-m-d');
-            } elseif (Carbon::hasFormat($request->date_of_birth, 'Y-m-d')) {
-                $date_of_birth = Carbon::createFromFormat('Y-m-d', $request->date_of_birth)->format('Y-m-d');
+            $formats = ['d/m/Y', 'd-m-Y', 'Y/m/d', 'Y-m-d'];
+            foreach ($formats as $format) {
+                if (Carbon::hasFormat($request->date_of_birth, $format)) {
+                    $date_of_birth = Carbon::createFromFormat($format, $request->date_of_birth)->format('Y-m-d');
+                    break;
+                }
             }
         }
 
@@ -192,6 +197,9 @@ class AdminController extends Controller
 
         // Handle image with Storage
         if ($request->hasFile('image')) {
+            if ($admin->image) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $admin->image));
+            }
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
             $imagePath = $image->storeAs('admins', $imageName, 'public');
