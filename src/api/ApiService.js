@@ -12,6 +12,10 @@ const authenticateLoginCustomer = async (loginData) => {
   return api.post("/customers/auth/login", loginData);
 };
 
+const logout = async () => {
+  return api.post("customers/logout")
+}
+
 const getEventImageActive = async () => {
   return api.get("/events/is_active/active");
 };
@@ -64,6 +68,7 @@ const hideNotification = async (notificationId, data) => {
 export default {
   registerCustomer,
   authenticateLoginCustomer,
+  logout,
   getCategories,
   getStores,
   getListAllProducts,
