@@ -1,9 +1,12 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
+import ApiService from "../api/ApiService";
 
 export const handleLogout = async (setIsLoggedIn) => {
   console.log("Logging out user...");
   try {
+    await ApiService.logout();
+    
     await AsyncStorage.removeItem("authToken");
     await AsyncStorage.removeItem("lastExitTime");
 
