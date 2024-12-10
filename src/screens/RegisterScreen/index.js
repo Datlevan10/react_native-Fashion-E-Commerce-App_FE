@@ -63,6 +63,8 @@ export default function RegisterScreen({ navigation }) {
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^[0-9]{10}$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     let isValid = true;
 
     if (!username) {
@@ -100,6 +102,10 @@ export default function RegisterScreen({ navigation }) {
     } else if (password.length < 8) {
       errors.password = "* Password must be at least 8 characters.";
       isValid = false;
+    } else if (!passwordRegex.test(password)) {
+      errors.password =
+        "* Password must be at least 8 characters long and include uppercase, lowercase, number, and special character";
+      isValid = false;
     }
 
     if (!address) {
@@ -131,32 +137,68 @@ export default function RegisterScreen({ navigation }) {
     };
 
     try {
-      // console.log("Sending request with data:", customerData);
       const response = await apiService.registerCustomer(customerData);
-
-      console.log(response.status);
 
       if (response.status === 201) {
         Alert.alert("Registration successful!", "You can log in now.");
         navigation.navigate("LoginScreen");
-      } else {
-        const errorMessages = response.errors
-          ? Object.values(response.errors).flat().join("\n")
-          : "An error occurred while registering.";
+      } else if (response.status === 422 && response.data?.error) {
+        const errors = response.data.error;
+        const errorMessages = [];
 
-        Alert.alert("Registration failed", errorMessages);
+        if (errors.email) {
+          errorMessages.push(`Email: ${errors.email.join(", ")}`);
+        }
+        if (errors.user_name) {
+          errorMessages.push(`Username: ${errors.user_name.join(", ")}`);
+        }
+        if (errors.phone_number) {
+          errorMessages.push(`Phone number: ${errors.phone_number.join(", ")}`);
+        }
+
+        if (errorMessages.length > 0) {
+          Alert.alert("Registration failed", errorMessages.join("\n"));
+        } else {
+          Alert.alert(
+            "Registration failed",
+            "An error occurred while registering."
+          );
+        }
+      } else {
+        Alert.alert(
+          "Registration failed",
+          "An unknown error occurred while registering."
+        );
       }
     } catch (error) {
-      if (error.errors) {
-        const errorMessages = Object.values(error.errors).flat().join("\n");
-        Alert.alert("Registration failed", errorMessages);
+      if (error.response?.status === 422 && error.response.data?.error) {
+        const errors = error.response.data.error;
+        const errorMessages = [];
+
+        if (errors.email) {
+          errorMessages.push(`Email: ${errors.email.join(", ")}`);
+        }
+        if (errors.user_name) {
+          errorMessages.push(`Username: ${errors.user_name.join(", ")}`);
+        }
+        if (errors.phone_number) {
+          errorMessages.push(`Phone number: ${errors.phone_number.join(", ")}`);
+        }
+
+        if (errorMessages.length > 0) {
+          Alert.alert("Registration failed", errorMessages.join("\n"));
+        } else {
+          Alert.alert(
+            "Registration failed",
+            "An error occurred while registering."
+          );
+        }
       } else {
         Alert.alert(
           "Registration failed",
           error.message || "An unknown error occurred"
         );
       }
-      // console.log(error);
     }
   };
 
