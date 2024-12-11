@@ -6,7 +6,7 @@ export const handleLogout = async (setIsLoggedIn) => {
   console.log("Logging out user...");
   try {
     await ApiService.logout();
-    
+
     await AsyncStorage.removeItem("authToken");
     await AsyncStorage.removeItem("lastExitTime");
 

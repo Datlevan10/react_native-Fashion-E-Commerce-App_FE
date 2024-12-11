@@ -22,6 +22,7 @@ import ProductInfoInDetail from "../../components/ProductInfoInDetail";
 import Colors from "../../styles/Color";
 import ShowAlertWithTitleContentAndOneActions from "../../components/ShowAlertWithTitleContentAndOneActions ";
 import ShowAlertWithTitleContentAndTwoActions from "../../components/ShowAlertWithTitleContentAndTwoActions ";
+import ReviewBox from "../../components/ReviewBox";
 
 const { width, height } = Dimensions.get("window");
 
@@ -144,87 +145,98 @@ export default function ProductDetailScreen({ route, navigation }) {
           ))}
         </View>
       </View>
-      <View style={styles.itemTwo}>
-        <View style={styles.infoIcon}>
-          <ProductInfoInDetail
-            categoryName={storeName}
-            averageReview={product.averageReview.toString()}
-            totalReview={product.totalReview.toString()}
-            productName={product.productName}
-            oldPrice={product.oldPrice.toString()}
-            newPrice={product.newPrice.toString()}
-          />
-          <TouchableOpacity
-            onPress={() =>
-              ShowAlertWithTitleContentAndTwoActions(
-                "Notification",
-                "Add product to wishlist?",
-                handleAddToWishlist,
-                () => console.log("User cancelled adding product to wishlist")
-              )
-            }
-          >
-            <FontAwesome
-              name={isFavorite ? "heart" : "heart-o"}
-              size={22}
-              color={isFavorite ? "#ff0034" : Colors.blackColor}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.itemTwo}>
+          <View style={styles.infoIcon}>
+            <ProductInfoInDetail
+              categoryName={storeName}
+              averageReview={product.averageReview.toString()}
+              totalReview={product.totalReview.toString()}
+              productName={product.productName}
+              oldPrice={product.oldPrice.toString()}
+              newPrice={product.newPrice.toString()}
             />
-          </TouchableOpacity>
-        </View>
-        {/* <Text style={styles.productDescription}>{product.description}</Text> */}
-        <View>
-          <Text
-            style={styles.productDescription}
-            numberOfLines={isExpanded ? undefined : 4}
-          >
-            {isExpanded
-              ? product.description
-              : product.description.slice(0, 180)}
-            {!isExpanded && product.description.length > 100 && (
-              <Text
-                style={styles.toggleText}
-                onPress={() => setIsExpanded(true)}
-              >
-                ...See more
-              </Text>
-            )}
-          </Text>
-          {isExpanded && (
-            <TouchableOpacity onPress={() => setIsExpanded(false)}>
-              <Text style={styles.toggleText}>Less</Text>
+            <TouchableOpacity
+              onPress={() =>
+                ShowAlertWithTitleContentAndTwoActions(
+                  "Notification",
+                  "Add product to wishlist?",
+                  handleAddToWishlist,
+                  () => console.log("User cancelled adding product to wishlist")
+                )
+              }
+            >
+              <FontAwesome
+                name={isFavorite ? "heart" : "heart-o"}
+                size={22}
+                color={isFavorite ? "#ff0034" : Colors.blackColor}
+              />
             </TouchableOpacity>
-          )}
-        </View>
+          </View>
+          {/* <Text style={styles.productDescription}>{product.description}</Text> */}
+          <View>
+            <Text
+              style={styles.productDescription}
+              numberOfLines={isExpanded ? undefined : 4}
+            >
+              {isExpanded
+                ? product.description
+                : product.description.slice(0, 180)}
+              {!isExpanded && product.description.length > 100 && (
+                <Text
+                  style={styles.toggleText}
+                  onPress={() => setIsExpanded(true)}
+                >
+                  ...See more
+                </Text>
+              )}
+            </Text>
+            {isExpanded && (
+              <TouchableOpacity onPress={() => setIsExpanded(false)}>
+                <Text style={styles.toggleText}>Less</Text>
+              </TouchableOpacity>
+            )}
+          </View>
 
-        <View style={styles.selectionRow}>
-          <View style={styles.column}>
-            <ColorSelector colors={colors} />
+          <View style={styles.selectionRow}>
+            <View style={styles.column}>
+              <ColorSelector colors={colors} />
+            </View>
+            <View style={styles.column}>
+              <SizeSelector sizes={sizes} />
+            </View>
           </View>
-          <View style={styles.column}>
-            <SizeSelector sizes={sizes} />
+          <View style={styles.buttonContainer}>
+            <AddToCartButton
+              iconName="shopping-bag"
+              title="ADD TO CART"
+              backgroundColor={Colors.whiteColor}
+              color={Colors.blackColor}
+              borderColor={Colors.blackColor}
+              onPress={() =>
+                ShowAlertWithTitleContentAndOneActions(
+                  "Notification",
+                  "Product added to cart successfully"
+                )
+              }
+            />
+            <CustomButton
+              title="BUY NOW"
+              backgroundColor={Colors.blackColor}
+              onPress={() => console.log("BUY NOW Clicked")}
+            />
+          </View>
+          <View style={styles.reviewContainer}>
+            <Text style={styles.reviewContainerTitle}>CUSTOMER REVIEW</Text>
+            <ReviewBox
+              title="Customer Reviews"
+              subtitle="No review yet. Any feedback? Let us know"
+              buttonText="Write Review"
+              onWriteReview={() => console.log("Navigate to review form")}
+            />
           </View>
         </View>
-        <View style={styles.buttonContainer}>
-          <AddToCartButton
-            iconName="shopping-bag"
-            title="ADD TO CART"
-            backgroundColor={Colors.whiteColor}
-            color={Colors.blackColor}
-            borderColor={Colors.blackColor}
-            onPress={() =>
-              ShowAlertWithTitleContentAndOneActions(
-                "Notification",
-                "Product added to cart successfully"
-              )
-            }
-          />
-          <CustomButton
-            title="BUY NOW"
-            backgroundColor={Colors.blackColor}
-            onPress={() => console.log("BUY NOW Clicked")}
-          />
-        </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -287,7 +299,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.indicatorActiveColor,
   },
   itemTwo: {
-    height: height / 2,
+    // height: height / 2,
     backgroundColor: Colors.whiteBgColor,
     padding: 18,
   },
@@ -322,7 +334,14 @@ const styles = StyleSheet.create({
   selectionRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 20,
+    marginBottom: 25,
     gap: 30,
   },
+  reviewContainer: {
+    marginTop: 35,
+  },
+  reviewContainerTitle: {
+    fontSize: 18,
+
+  }
 });
