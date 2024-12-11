@@ -45,7 +45,7 @@ Route::prefix('')->group(function () {
     Route::apiResource('customers', CustomerController::class);
     Route::middleware('api')->post('customers/auth/login', [CustomerController::class, 'authenticateLoginCustomer']);
     Route::middleware('auth:sanctum')->post('customers/logout', [CustomerController::class, 'logout']);
-    Route::middleware('api')->post('customers/auth/refresh-token', [CustomerController::class, 'refreshAccessToken']);
+    Route::middleware('auth:sanctum')->post('customers/auth/refresh-token', [CustomerController::class, 'refreshAccessToken']);
     Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {
         return response()->json($request->user());
     });
