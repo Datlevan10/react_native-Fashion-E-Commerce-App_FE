@@ -276,7 +276,7 @@ class CustomerController extends Controller
         $customer->last_login = now();
         $customer->save();
 
-        $accessToken = $customer->createToken('customer-access-token')->plainTextToken;
+        $accessToken = $customer->createToken('customer-access-token', ['*'], now()->addMinutes(15))->plainTextToken;
 
         $refreshToken = Str::random(64);
         $expiresAt = now()->addDays(30);
@@ -284,6 +284,7 @@ class CustomerController extends Controller
         DB::table('refresh_tokens')->insert([
             'customer_id' => $customer->customer_id,
             'refresh_token' => $refreshToken,
+            // 'refresh_token' => Hash::make($refreshToken),
             'expires_at' => $expiresAt,
             'created_at' => now(),
             'updated_at' => now(),
@@ -295,12 +296,12 @@ class CustomerController extends Controller
                 'id' => $customer->customer_id,
                 'access_token' => $accessToken,
                 'refresh_token' => $refreshToken,
-                'expires_in' => 86400, //1 day = 86400 second
+                'expires_in' => 900, //15 minutes = 900 second
             ],
         ], 200);
     }
 
-    // Method to handle user logout
+    // Method to handle customer logout
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
@@ -315,10 +316,9 @@ class CustomerController extends Controller
     public function refreshAccessToken(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'refresh_token' => 'required|string|exists:refresh_tokens,refresh_token',
+            'refresh_token' => 'required|string',
         ], [
             'refresh_token.required' => 'The refresh token field is required.',
-            'refresh_token.exists' => 'The provided refresh token is invalid.',
         ]);
 
         if ($validator->fails()) {
@@ -329,7 +329,9 @@ class CustomerController extends Controller
         }
 
         $refreshToken = $request->refresh_token;
-        $tokenRecord = DB::table('refresh_tokens')->where('refresh_token', $refreshToken)->first();
+        $tokenRecord = DB::table('refresh_tokens')
+            ->where('refresh_token', $refreshToken)
+            ->first();
 
         if (!$tokenRecord) {
             return response()->json([
@@ -337,14 +339,15 @@ class CustomerController extends Controller
             ], 401);
         }
 
+
         if (Carbon::now()->greaterThan(Carbon::parse($tokenRecord->expires_at))) {
-            DB::table('refresh_tokens')->where('refresh_token', $refreshToken)->delete();
+            DB::table('refresh_tokens')->where('id', $tokenRecord->id)->delete();
             return response()->json([
                 'message' => 'Refresh token has expired.',
             ], 401);
         }
 
-        $customer = Customer::where('customer_id', $tokenRecord->customer_id)->first();
+        $customer = Customer::find($tokenRecord->customer_id);
 
         if (!$customer) {
             return response()->json([
@@ -352,16 +355,17 @@ class CustomerController extends Controller
             ], 404);
         }
 
-        $newAccessToken = $customer->createToken('customer-access-token')->plainTextToken;
+        $newAccessToken = $customer->createToken('customer-access-token', ['*'], now()->addMinutes(15))->plainTextToken;
 
-        DB::table('refresh_tokens')->where('refresh_token', $refreshToken)->delete();
+        DB::table('refresh_tokens')->where('id', $tokenRecord->id)->delete();
 
         $newRefreshToken = Str::random(64);
         $newExpiresAt = now()->addDays(30);
 
         DB::table('refresh_tokens')->insert([
             'customer_id' => $customer->customer_id,
-            'refresh_token' => Hash::make($newRefreshToken),
+            'refresh_token' => $newRefreshToken,
+            // 'refresh_token' => Hash::make($newRefreshToken),
             'expires_at' => $newExpiresAt,
             'created_at' => now(),
             'updated_at' => now(),
@@ -371,6 +375,7 @@ class CustomerController extends Controller
             'message' => 'Access token refreshed successfully.',
             'access_token' => $newAccessToken,
             'refresh_token' => $newRefreshToken,
+            'expires_in' => 900,
         ], 200);
     }
 
