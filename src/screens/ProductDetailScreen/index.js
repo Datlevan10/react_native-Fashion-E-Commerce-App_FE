@@ -23,6 +23,7 @@ import Colors from "../../styles/Color";
 import ShowAlertWithTitleContentAndOneActions from "../../components/ShowAlertWithTitleContentAndOneActions ";
 import ShowAlertWithTitleContentAndTwoActions from "../../components/ShowAlertWithTitleContentAndTwoActions ";
 import ReviewBox from "../../components/ReviewBox";
+import WriteReviewModal from "../../components/WriteReviewModal";
 
 const { width, height } = Dimensions.get("window");
 
@@ -32,6 +33,7 @@ export default function ProductDetailScreen({ route, navigation }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isReviewModalVisible, setIsReviewModalVisible] = useState(false);
 
   useEffect(() => {
     const checkIfFavorite = async () => {
@@ -232,7 +234,16 @@ export default function ProductDetailScreen({ route, navigation }) {
               title="Customer Reviews"
               subtitle="No review yet. Any feedback? Let us know"
               buttonText="Write Review"
-              onWriteReview={() => console.log("Navigate to review form")}
+              onWriteReview={() => setIsReviewModalVisible(true)}
+            />
+            <WriteReviewModal
+              visible={isReviewModalVisible}
+              onClose={() => setIsReviewModalVisible(false)}
+              product={product}
+              onSubmit={(reviewData) => {
+                console.log("Submitted review:", reviewData);
+                setIsReviewModalVisible(false);
+              }}
             />
           </View>
         </View>
@@ -342,6 +353,5 @@ const styles = StyleSheet.create({
   },
   reviewContainerTitle: {
     fontSize: 18,
-
-  }
+  },
 });

@@ -2,7 +2,8 @@ const Colors = {
   // Color background
   whiteBgColor: "#ffffff",
   grayBgColor: "#f4f4f4",
-  
+  yellowColor: "#FFB400",
+  defaultStarColor: "#cccccc",
   // Custom color
   blackColor: "#333",
   darkBlack: "#000",
@@ -25,6 +26,7 @@ const Colors = {
 
   // Border color
   borderColor: "#b5b5b5",
+  HMborderColor: "#CED6E2",
   borderDark: "#ddd",
 
 
