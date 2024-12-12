@@ -14,6 +14,7 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    console.log("Error details:", error.response?.data);
     const originalRequest = error.config;
 
     if (
@@ -50,6 +51,7 @@ api.interceptors.response.use(
 
         return api(originalRequest);
       } catch (refreshError) {
+        console.log("Refresh token error:", refreshError.response?.data);
         await SecureStore.deleteItemAsync("access_token");
         await SecureStore.deleteItemAsync("refresh_token");
       }
