@@ -239,7 +239,8 @@ export default function ProductDetailScreen({ route, navigation }) {
             <WriteReviewModal
               visible={isReviewModalVisible}
               onClose={() => setIsReviewModalVisible(false)}
-              product={product}
+              productName={product.productName}
+              productImage={images[selectedImageIndex]}
               onSubmit={(reviewData) => {
                 console.log("Submitted review:", reviewData);
                 setIsReviewModalVisible(false);
