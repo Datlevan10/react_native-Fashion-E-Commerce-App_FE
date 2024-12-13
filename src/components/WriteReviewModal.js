@@ -3,15 +3,22 @@ import {
   View,
   Text,
   StyleSheet,
-  Modal,
   TouchableOpacity,
   TextInput,
   Image,
+  Alert,
 } from "react-native";
+import Modal from "react-native-modal";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
 import Colors from "../styles/Color";
 
-const WriteReviewModal = ({ visible, onClose, onSubmit }) => {
+const WriteReviewModal = ({
+  visible,
+  onClose,
+  onSubmit,
+  productName,
+  productImage,
+}) => {
   const [rating, setRating] = useState(0);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -19,9 +26,25 @@ const WriteReviewModal = ({ visible, onClose, onSubmit }) => {
   const [contentLength, setContentLength] = useState(2000);
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
+  const [errors, setErrors] = useState({});
 
   const handleRating = (value) => {
     setRating(value);
+  };
+
+  const validateInputs = () => {
+    const newErrors = {};
+    if (!rating) newErrors.rating = "*Please fill out this field.";
+    if (!title.trim()) newErrors.title = "*Please fill out this field.";
+    if (!content.trim()) newErrors.content = "*Please fill out this field.";
+    if (!userName.trim()) newErrors.userName = "*Please fill out this field.";
+    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = email.trim()
+        ? "*Invalid email format."
+        : "*Please fill out this field.";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleTextChange = (setter, maxLength, value) => {
@@ -29,8 +52,22 @@ const WriteReviewModal = ({ visible, onClose, onSubmit }) => {
     return maxLength - value.length;
   };
 
+  const handleSubmit = () => {
+    if (validateInputs()) {
+      onSubmit({ rating, title, content, userName, email });
+      setErrors({});
+    }
+  };
+
   return (
-    <Modal visible={visible} transparent animationType="slide">
+    <Modal
+      isVisible={visible}
+      animationIn="zoomIn"
+      animationOut="zoomOut"
+      useNativeDriver={true}
+      onBackdropPress={onClose}
+      onBackButtonPress={onClose}
+    >
       <View style={styles.overlay}>
         <View style={styles.container}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
@@ -38,18 +75,15 @@ const WriteReviewModal = ({ visible, onClose, onSubmit }) => {
           </TouchableOpacity>
           <Text style={styles.title}>Rating & Review</Text>
           <View style={styles.productInfo}>
-            <Image
-              source={{ uri: "https://via.placeholder.com/100" }}
-              style={styles.productImage}
-            />
+            <Image source={{ uri: productImage }} style={styles.productImage} />
             <View style={styles.productDetails}>
-              <Text style={styles.productName}>Product Name</Text>
+              <Text style={styles.productName}>{productName}</Text>
               <View style={styles.stars}>
                 {[1, 2, 3, 4, 5].map((star) => (
                   <FontAwesome
                     key={star}
                     name={star <= rating ? "star" : "star"}
-                    size={26}
+                    size={30}
                     color={
                       star <= rating
                         ? Colors.yellowColor
@@ -59,6 +93,9 @@ const WriteReviewModal = ({ visible, onClose, onSubmit }) => {
                   />
                 ))}
               </View>
+              {errors.rating && (
+                <Text style={styles.errorText}>{errors.rating}</Text>
+              )}
             </View>
           </View>
           <View style={styles.inputContainer}>
@@ -66,7 +103,6 @@ const WriteReviewModal = ({ visible, onClose, onSubmit }) => {
               <Text style={styles.label}>Review Title </Text>
               <Text style={styles.charCount}>{titleLength}/100</Text>
             </View>
-
             <TextInput
               style={styles.input}
               placeholder="Example: Easy to use"
@@ -77,6 +113,9 @@ const WriteReviewModal = ({ visible, onClose, onSubmit }) => {
                 setTitleLength(handleTextChange(setTitle, 100, text))
               }
             />
+            {errors.title && (
+              <Text style={styles.errorText}>{errors.title}</Text>
+            )}
           </View>
           <View style={styles.inputContainer}>
             <View style={styles.labelRow}>
@@ -88,12 +127,15 @@ const WriteReviewModal = ({ visible, onClose, onSubmit }) => {
               placeholder="Example: I have experienced this product. Product is made of good material and is very comfortable to wear."
               placeholderTextColor="#a7abc3"
               multiline
-              maxLength={300}
+              maxLength={2000}
               value={content}
               onChangeText={(text) =>
-                setContentLength(handleTextChange(setContent, 300, text))
+                setContentLength(handleTextChange(setContent, 2000, text))
               }
             />
+            {errors.content && (
+              <Text style={styles.errorText}>{errors.content}</Text>
+            )}
           </View>
           <View style={styles.mediaRow}>
             <TouchableOpacity style={styles.mediaButton}>
@@ -126,6 +168,9 @@ const WriteReviewModal = ({ visible, onClose, onSubmit }) => {
               value={userName}
               onChangeText={setUserName}
             />
+            {errors.userName && (
+              <Text style={styles.errorText}>{errors.userName}</Text>
+            )}
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Customer Email</Text>
@@ -136,13 +181,11 @@ const WriteReviewModal = ({ visible, onClose, onSubmit }) => {
               value={email}
               onChangeText={setEmail}
             />
+            {errors.email && (
+              <Text style={styles.errorText}>{errors.email}</Text>
+            )}
           </View>
-          <TouchableOpacity
-            style={styles.submitButton}
-            onPress={() =>
-              onSubmit({ rating, title, content, userName, email })
-            }
-          >
+          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
             <Text style={styles.submitText}>Submit Review</Text>
           </TouchableOpacity>
         </View>
@@ -158,10 +201,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   container: {
-    width: "90%",
+    width: "100%",
     backgroundColor: Colors.whiteBgColor,
     borderRadius: 10,
     padding: 20,
@@ -182,15 +224,16 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   productImage: {
-    width: 80,
-    height: 80,
-    marginRight: 15,
+    width: 78,
+    height: 78,
+    marginRight: 16,
+    borderRadius: 5,
   },
   productDetails: {
     flex: 1,
   },
   productName: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
   },
   stars: {
@@ -267,10 +310,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   submitText: {
+    fontSize: 16,
     color: Colors.whiteBgColor,
     fontWeight: "500",
   },
   closeText: {
     color: Colors.gray,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 16,
+    marginTop: 5,
   },
 });

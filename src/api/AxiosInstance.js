@@ -30,15 +30,23 @@ api.interceptors.response.use(
           throw new Error("No refresh token available.");
         }
 
+        // console.log("Attempting to refresh token...");
+        // console.log("Original request URL:", originalRequest.url);
+        // console.log("Refresh token sent:", refreshToken);
+
         const { data } = await axios.post(
           `${API_URL}/customers/auth/refresh-token`,
           {
             refresh_token: refreshToken,
-          }
+          },
+          { headers: { "Content-Type": "application/json" } }
         );
 
         const { access_token, expires_in } = data;
         const newExpiryTime = Date.now() + expires_in * 1000;
+
+        // console.log("New access token received:", access_token);
+        // console.log("New expiry time:", new Date(newExpiryTime).toLocaleString());
 
         await SecureStore.setItemAsync("access_token", access_token);
         await SecureStore.setItemAsync(
