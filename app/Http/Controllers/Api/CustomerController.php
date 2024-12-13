@@ -281,6 +281,11 @@ class CustomerController extends Controller
         $refreshToken = Str::random(64);
         $expiresAt = now()->addDays(30);
 
+        DB::table('refresh_tokens')
+        ->where('customer_id', $customer->customer_id)
+        ->delete();
+
+
         DB::table('refresh_tokens')->insert([
             'customer_id' => $customer->customer_id,
             'refresh_token' => $refreshToken,
@@ -317,8 +322,6 @@ class CustomerController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'refresh_token' => 'required|string',
-        ], [
-            'refresh_token.required' => 'The refresh token field is required.',
         ]);
 
         if ($validator->fails()) {
@@ -329,6 +332,7 @@ class CustomerController extends Controller
         }
 
         $refreshToken = $request->refresh_token;
+
         $tokenRecord = DB::table('refresh_tokens')
             ->where('refresh_token', $refreshToken)
             ->first();
@@ -339,7 +343,6 @@ class CustomerController extends Controller
             ], 401);
         }
 
-
         if (Carbon::now()->greaterThan(Carbon::parse($tokenRecord->expires_at))) {
             DB::table('refresh_tokens')->where('id', $tokenRecord->id)->delete();
             return response()->json([
@@ -348,25 +351,21 @@ class CustomerController extends Controller
         }
 
         $customer = Customer::find($tokenRecord->customer_id);
-
         if (!$customer) {
             return response()->json([
                 'message' => 'Customer not found.',
             ], 404);
         }
 
-        $newAccessToken = $customer->createToken('customer-access-token', ['*'], now()->addMinutes(15))->plainTextToken;
-
         DB::table('refresh_tokens')->where('id', $tokenRecord->id)->delete();
 
+        $newAccessToken = $customer->createToken('customer-access-token', ['*'], now()->addMinutes(15))->plainTextToken;
         $newRefreshToken = Str::random(64);
-        $newExpiresAt = now()->addDays(30);
 
         DB::table('refresh_tokens')->insert([
             'customer_id' => $customer->customer_id,
             'refresh_token' => $newRefreshToken,
-            // 'refresh_token' => Hash::make($newRefreshToken),
-            'expires_at' => $newExpiresAt,
+            'expires_at' => now()->addDays(30),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
