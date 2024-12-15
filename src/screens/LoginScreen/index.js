@@ -64,36 +64,36 @@ export default function LoginScreen({ navigation }) {
           const expiryTime = Date.now() + expires_in * 1000;
 
           // check Save Token
-          const checkStoredData = async () => {
-            try {
-              const accessToken = await SecureStore.getItemAsync("access_token");
-              const refreshToken = await SecureStore.getItemAsync("refresh_token");
-              const customerId = await SecureStore.getItemAsync("customer_id");
+          // const checkStoredData = async () => {
+          //   try {
+          //     const accessToken = await SecureStore.getItemAsync("access_token");
+          //     const refreshToken = await SecureStore.getItemAsync("refresh_token");
+          //     const customerId = await SecureStore.getItemAsync("customer_id");
           
-              console.log("Access Token:", accessToken);
-              console.log("Refresh Token:", refreshToken);
-              console.log("Customer ID:", customerId);
+          //     console.log("Access Token:", accessToken);
+          //     console.log("Refresh Token:", refreshToken);
+          //     console.log("Customer ID:", customerId);
           
-              if (accessToken && refreshToken && customerId) {
-                Alert.alert("Success", "Tokens and customer ID are stored correctly.");
-              } else {
-                Alert.alert(
-                  "Incomplete",
-                  "Some data might be missing in SecureStore."
-                );
-              }
-            } catch (error) {
-              console.error("Error fetching data from SecureStore:", error);
-              Alert.alert("Error", "Failed to fetch data from SecureStore.");
-            }
-          };
+          //     if (accessToken && refreshToken && customerId) {
+          //       Alert.alert("Success", "Tokens and customer ID are stored correctly.");
+          //     } else {
+          //       Alert.alert(
+          //         "Incomplete",
+          //         "Some data might be missing in SecureStore."
+          //       );
+          //     }
+          //   } catch (error) {
+          //     console.error("Error fetching data from SecureStore:", error);
+          //     Alert.alert("Error", "Failed to fetch data from SecureStore.");
+          //   }
+          // };
 
           // Lưu token và customer_id vào SecureStore
           await SecureStore.setItemAsync("access_token", access_token);
           await SecureStore.setItemAsync("refresh_token", refresh_token);
           await SecureStore.setItemAsync("customer_id", id);
           await SecureStore.setItemAsync("access_token_expiry", expiryTime.toString());
-          await checkStoredData();
+          // await checkStoredData();
 
           ShowAlertWithTitleContentAndOneActions(
             "Login successful",
