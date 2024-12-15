@@ -22,6 +22,7 @@ import ProductInfoInDetail from "../../components/ProductInfoInDetail";
 import Colors from "../../styles/Color";
 import ShowAlertWithTitleContentAndOneActions from "../../components/ShowAlertWithTitleContentAndOneActions ";
 import ShowAlertWithTitleContentAndTwoActions from "../../components/ShowAlertWithTitleContentAndTwoActions ";
+import NoReviewBox from "../../components/NoReviewBox";
 import ReviewBox from "../../components/ReviewBox";
 import WriteReviewModal from "../../components/WriteReviewModal";
 
@@ -34,14 +35,15 @@ export default function ProductDetailScreen({ route, navigation }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isReviewModalVisible, setIsReviewModalVisible] = useState(false);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     const checkIfFavorite = async () => {
-      const customer_id = await SecureStore.getItemAsync("customer_id");
-      if (!customer_id) return;
+      const customerId = await SecureStore.getItemAsync("customer_id");
+      if (!customerId) return;
 
       const response = await apiService.checkFavoriteProduct({
-        customer_id: customer_id,
+        customer_id: customerId,
         product_id: product.productId,
       });
 
@@ -50,20 +52,44 @@ export default function ProductDetailScreen({ route, navigation }) {
       }
     };
 
+    const getReviewsByProductId = async () => {
+      try {
+        const response = await apiService.getReviewByProductId(
+          product.productId
+        );
+
+        if (response.status === 200) {
+          const fetchedReviews = response?.data?.data || [];
+
+          if (fetchedReviews.length > 0) {
+            setReviews(fetchedReviews);
+          } else {
+            setReviews(null); // Không có review nào
+          }
+        } else {
+          setReviews(null); // Không có dữ liệu trả về
+        }
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+        setReviews(null); // Xử lý lỗi
+      }
+    };
+
     checkIfFavorite();
     loadStoreName();
+    getReviewsByProductId();
   }, []);
 
   const handleAddToWishlist = async () => {
     try {
-      const customer_id = await SecureStore.getItemAsync("customer_id");
-      if (!customer_id) {
+      const customerId = await SecureStore.getItemAsync("customer_id");
+      if (!customerId) {
         console.warn("No customer ID found in SecureStore.");
         return;
       }
 
       const productData = {
-        customer_id: customer_id,
+        customer_id: customerId,
         product_id: product.productId,
       };
 
@@ -230,12 +256,19 @@ export default function ProductDetailScreen({ route, navigation }) {
           </View>
           <View style={styles.reviewContainer}>
             <Text style={styles.reviewContainerTitle}>CUSTOMER REVIEW</Text>
-            <ReviewBox
-              title="Customer Reviews"
-              subtitle="No review yet. Any feedback? Let us know"
-              buttonText="Write Review"
-              onWriteReview={() => setIsReviewModalVisible(true)}
-            />
+            {reviews === null ? (
+              <NoReviewBox
+                title="Customer Reviews"
+                subtitle="No review yet. Any feedback? Let us know"
+                buttonText="Write Review"
+                onWriteReview={() => setIsReviewModalVisible(true)}
+              />
+            ) : (
+              <ReviewBox
+                reviews={reviews}
+                onWriteReview={() => setIsReviewModalVisible(true)}
+              />
+            )}
             <WriteReviewModal
               visible={isReviewModalVisible}
               onClose={() => setIsReviewModalVisible(false)}
