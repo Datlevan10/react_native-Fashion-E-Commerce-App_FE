@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Review;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ReviewResource;
@@ -224,19 +225,70 @@ class ReviewController extends Controller
     }
 
     // method DELETE
-    public function destroy(Review $review)
+    public function destroyMany(Request $request)
     {
-        if ($review->image) {
-            $imagePaths = json_decode($review->image);
-            foreach ($imagePaths as $imagePath) {
-                Storage::disk('public')->delete(str_replace('/storage/', '', $imagePath));
-            }
+        $reviewIds = $request->input('review_ids');
+        if (empty($reviewIds) || !is_array($reviewIds)) {
+            return response()->json([
+                'message' => 'No reviews specified for deletion',
+            ], 422);
         }
 
-        $review->delete();
+        DB::beginTransaction();
 
-        return response()->json([
-            'message' => 'Review deleted successfully',
-        ], 200);
+        try {
+            $reviews = Review::whereIn('review_id', $reviewIds)->get();
+
+            if ($reviews->isEmpty()) {
+                return response()->json([
+                    'message' => 'No reviews found for the provided IDs',
+                ], 404);
+            }
+
+            $productIds = $reviews->pluck('product_id')->unique();
+
+            foreach ($reviews as $review) {
+                if ($review->media) {
+                    $mediaPaths = json_decode($review->media);
+                    foreach ($mediaPaths as $mediaPath) {
+                        Storage::disk('public')->delete(str_replace('/storage/', '', $mediaPath));
+                    }
+                }
+            }
+
+            Review::whereIn('review_id', $reviewIds)->delete();
+
+            foreach ($productIds as $productId) {
+                $product = Product::find($productId);
+                if ($product) {
+                    $remainingReviews = Review::where('product_id', $productId)->get();
+                    $total_review = $remainingReviews->count();
+                    $average_review = $total_review > 0
+                        ? $remainingReviews->avg('stars_review')
+                        : 0;
+
+                    $product->total_review = $total_review;
+                    $product->average_review = $average_review;
+                    $product->save();
+                }
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Reviews deleted successfully',
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Failed to delete reviews', [
+                'error' => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to delete reviews',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
+
 }
