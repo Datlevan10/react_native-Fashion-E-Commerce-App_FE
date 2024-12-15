@@ -77,6 +77,7 @@ Route::prefix('')->group(function () {
     Route::post('/notifications/hide/{notification_id}', [NotificationController::class, 'hideNotification']);
     // Review Routes
     Route::apiResource('reviews', ReviewController::class);
+    Route::post('/reviews/delete-review', [ReviewController::class, 'destroyMany']);
     Route::get('/reviews/product/{product_id}', [ReviewController::class, 'getReviewsByProductId']);
     Route::get('/reviews/status/pending', [ReviewController::class, 'getPendingReviews']);
     Route::get('/reviews/status/approved', [ReviewController::class, 'getApprovedReviews']);
