@@ -7,15 +7,22 @@ import {
   TextInput,
   Image,
   Alert,
+  ScrollView,
 } from "react-native";
 import Modal from "react-native-modal";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import { Video } from "expo-av";
 import Colors from "../styles/Color";
+import ApiService from "../api/ApiService";
+import ReviewSubmittedSuccessModal from "./ReviewSubmittedSuccessModal";
 
 const WriteReviewModal = ({
   visible,
   onClose,
   onSubmit,
+  customerId,
+  productId,
   productName,
   productImage,
 }) => {
@@ -24,9 +31,57 @@ const WriteReviewModal = ({
   const [content, setContent] = useState("");
   const [titleLength, setTitleLength] = useState(100);
   const [contentLength, setContentLength] = useState(2000);
-  const [userName, setUserName] = useState("");
+  const [media, setMedia] = useState([]);
+  const [customerName, setCustomerName] = useState("");
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({});
+  
+  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+  const [reviewData, setReviewData] = useState({});
+
+  const handleMediaUpload = async (type) => {
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      Alert.alert(
+        "Permission required",
+        "Permission to access media library is required."
+      );
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes:
+        type === "photo"
+          ? ImagePicker.MediaTypeOptions.Images
+          : ImagePicker.MediaTypeOptions.Videos,
+      allowsMultipleSelection: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      const selectedMedia = result.assets.map((item) => ({
+        uri: item.uri,
+        type: item.type === "image" ? "image/jpeg" : "video/mp4",
+        name:
+          item.uri.split("/").pop() ||
+          `media.${item.type === "image" ? "jpg" : "mp4"}`,
+      }));
+
+      console.log("Selected media:", selectedMedia);
+
+      if (media.length + selectedMedia.length > 5) {
+        Alert.alert("Error", "You can only upload up to 5 files.");
+      } else {
+        setMedia([...media, ...selectedMedia]);
+      }
+    }
+  };
+
+  const handleRemoveMedia = (index) => {
+    setMedia((prevMedia) => prevMedia.filter((_, i) => i !== index));
+  };
 
   const handleRating = (value) => {
     setRating(value);
@@ -37,7 +92,8 @@ const WriteReviewModal = ({
     if (!rating) newErrors.rating = "*Please fill out this field.";
     if (!title.trim()) newErrors.title = "*Please fill out this field.";
     if (!content.trim()) newErrors.content = "*Please fill out this field.";
-    if (!userName.trim()) newErrors.userName = "*Please fill out this field.";
+    if (!customerName.trim())
+      newErrors.customerName = "*Please fill out this field.";
     if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
       newErrors.email = email.trim()
         ? "*Invalid email format."
@@ -52,10 +108,52 @@ const WriteReviewModal = ({
     return maxLength - value.length;
   };
 
-  const handleSubmit = () => {
-    if (validateInputs()) {
-      onSubmit({ rating, title, content, userName, email });
-      setErrors({});
+  const handleSubmitReview = async () => {
+    if (!validateInputs()) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("customer_id", customerId);
+    formData.append("product_id", productId);
+    formData.append("review_title", title);
+    formData.append("review_product", content);
+    formData.append("stars_review", rating);
+    formData.append("customer_name", customerName);
+    formData.append("customer_email", email);
+
+    media.forEach((file, index) => {
+      console.log(`File ${index}:`, file);
+      formData.append(`media[${index}]`, {
+        uri: file.uri,
+        type: file.type,
+        name: file.name,
+      });
+    });
+
+    try {
+      const response = await ApiService.writeReviewProduct(formData);
+      // console.log(response.status);
+      if (response.status === 201) {
+        // alert("Review submitted successfully!");
+        setReviewData({
+          productName,
+          productImage,
+          stars: rating,
+          title,
+          content,
+          customerName,
+          customerEmail: email,
+        });
+        setIsSuccessModalVisible(true);
+        // onClose();
+      } else {
+        alert("Failed to submit review. Please try again.");
+      }
+    } catch (error) {
+      alert(
+        "An error occurred while submitting the review. Please check your connection and try again."
+      );
     }
   };
 
@@ -137,39 +235,77 @@ const WriteReviewModal = ({
               <Text style={styles.errorText}>{errors.content}</Text>
             )}
           </View>
-          <View style={styles.mediaRow}>
-            <TouchableOpacity style={styles.mediaButton}>
-              <View style={styles.iconBox}>
-                <FontAwesome
-                  name="camera"
-                  size={18}
-                  color={Colors.blackColor}
-                />
+          <ScrollView
+            horizontal
+            style={styles.mediaPreviewRow}
+            contentContainerStyle={{ alignItems: "center" }}
+          >
+            {media.map((file, index) => (
+              <View key={index} style={styles.mediaBox}>
+                {file.type === "image/jpeg" ? (
+                  <Image
+                    source={{ uri: file.uri }}
+                    style={styles.mediaImage}
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <Video
+                    source={{ uri: file.uri }}
+                    style={styles.mediaImage}
+                    resizeMode="cover"
+                    shouldPlay
+                    isLooping
+                  />
+                )}
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={() => handleRemoveMedia(index)}
+                >
+                  <AntDesign name="close" size={14} color="white" />
+                </TouchableOpacity>
               </View>
-              <Text style={styles.mediaText}>Photo (5/5)</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.mediaButton}>
-              <View style={styles.iconBox}>
-                <FontAwesome
-                  name="video-camera"
-                  size={18}
-                  color={Colors.blackColor}
-                />
-              </View>
-              <Text style={styles.mediaText}>Video (2/2)</Text>
-            </TouchableOpacity>
-          </View>
+            ))}
+            <View style={styles.mediaRow}>
+              <TouchableOpacity
+                style={styles.mediaButton}
+                onPress={() => handleMediaUpload("photo")}
+              >
+                <View style={styles.iconBox}>
+                  <FontAwesome
+                    name="camera"
+                    size={18}
+                    color={Colors.blackColor}
+                  />
+                </View>
+                <Text style={styles.mediaText}>Photo (5/5)</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.mediaButton}
+                onPress={() => handleMediaUpload("video")}
+              >
+                <View style={styles.iconBox}>
+                  <FontAwesome
+                    name="video-camera"
+                    size={18}
+                    color={Colors.blackColor}
+                  />
+                </View>
+                <Text style={styles.mediaText}>Video (2/2)</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Customer Name</Text>
             <TextInput
               style={styles.input}
               placeholder="Type your name here"
               placeholderTextColor="#a7abc3"
-              value={userName}
-              onChangeText={setUserName}
+              value={customerName}
+              onChangeText={setCustomerName}
             />
-            {errors.userName && (
-              <Text style={styles.errorText}>{errors.userName}</Text>
+            {errors.customerName && (
+              <Text style={styles.errorText}>{errors.customerName}</Text>
             )}
           </View>
           <View style={styles.inputContainer}>
@@ -185,9 +321,20 @@ const WriteReviewModal = ({
               <Text style={styles.errorText}>{errors.email}</Text>
             )}
           </View>
-          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+          <TouchableOpacity
+            style={styles.submitButton}
+            onPress={handleSubmitReview}
+          >
             <Text style={styles.submitText}>Submit Review</Text>
           </TouchableOpacity>
+          <ReviewSubmittedSuccessModal
+            visible={isSuccessModalVisible}
+            onClose={() => {
+              setIsSuccessModalVisible(false);
+              onClose();
+            }}
+            {...reviewData}
+          />
         </View>
       </View>
     </Modal>
@@ -272,14 +419,40 @@ const styles = StyleSheet.create({
     height: 100,
     textAlignVertical: "top",
   },
+  mediaPreviewRow: {
+    flexDirection: "row",
+    marginBottom: 10,
+  },
+  mediaBox: {
+    width: 80,
+    height: 80,
+    marginRight: 10,
+    position: "relative",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    overflow: "hidden",
+  },
+  mediaImage: {
+    width: "100%",
+    height: "100%",
+  },
+  deleteButton: {
+    position: "absolute",
+    top: 5,
+    right: 5,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    borderRadius: 5,
+    padding: 3,
+  },
   mediaRow: {
     flexDirection: "row",
     justifyContent: "flex-start",
-    marginBottom: 15,
+
     gap: 10,
   },
   mediaButton: {
-    flex: 0.25,
+    flex: 0.2,
     borderWidth: 1,
     borderColor: Colors.HMborderColor,
     borderRadius: 5,

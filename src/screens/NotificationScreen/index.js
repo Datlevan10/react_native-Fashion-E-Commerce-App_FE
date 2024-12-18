@@ -15,7 +15,7 @@ import Colors from "../../styles/Color";
 import NotificationCard from "../../components/NotificationCard";
 import { Feather, MaterialIcons } from "react-native-vector-icons";
 import { formatDistanceToNow } from "date-fns";
-import API_BASE_URL from "../../config/config";
+import API_BASE_URL from "../../configs/config";
 
 export default function NotificationScreen({ navigation }) {
   const [notifications, setNotifications] = useState([]);
