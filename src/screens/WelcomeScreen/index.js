@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Image, StyleSheet, ActivityIndicator } from "react-native";
 import apiService from "../../api/ApiService";
-import API_BASE_URL from "../../config/config";
+import API_BASE_URL from "../../configs/config";
 
 export default function WelcomeScreen({ navigation }) {
   const [logoSource, setLogoSource] = useState([]);

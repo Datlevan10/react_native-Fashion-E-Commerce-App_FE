@@ -11,8 +11,7 @@ import {
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import apiService from "../../api/ApiService";
-import Feather from "react-native-vector-icons/Feather";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { FontAwesome, Feather } from "@expo/vector-icons";
 import IconWithBadge from "../../components/IconWithBadge";
 import AddToCartButton from "../../components/AddToCartButton";
 import CustomButton from "../../components/CustomButton";
@@ -30,6 +29,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function ProductDetailScreen({ route, navigation }) {
   const [storeName, setStoreName] = useState("");
+  const [customerId, setCustomerId] = useState(null);
   const { product, images, colors, sizes } = route.params;
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -38,6 +38,11 @@ export default function ProductDetailScreen({ route, navigation }) {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
+    const fetchCustomerId = async () => {
+      const customerId = await SecureStore.getItemAsync("customer_id");
+      setCustomerId(customerId);
+    };
+
     const checkIfFavorite = async () => {
       const customerId = await SecureStore.getItemAsync("customer_id");
       if (!customerId) return;
@@ -64,17 +69,18 @@ export default function ProductDetailScreen({ route, navigation }) {
           if (fetchedReviews.length > 0) {
             setReviews(fetchedReviews);
           } else {
-            setReviews(null); // Không có review nào
+            setReviews(null);
           }
         } else {
-          setReviews(null); // Không có dữ liệu trả về
+          setReviews(null);
         }
       } catch (error) {
         console.error("Error fetching reviews:", error);
-        setReviews(null); // Xử lý lỗi
+        setReviews(null);
       }
     };
 
+    fetchCustomerId();
     checkIfFavorite();
     loadStoreName();
     getReviewsByProductId();
@@ -272,6 +278,8 @@ export default function ProductDetailScreen({ route, navigation }) {
             <WriteReviewModal
               visible={isReviewModalVisible}
               onClose={() => setIsReviewModalVisible(false)}
+              customerId={customerId}
+              productId={product.productId}
               productName={product.productName}
               productImage={images[selectedImageIndex]}
               onSubmit={(reviewData) => {

@@ -17,7 +17,7 @@ import IconWithBadge from "../../components/IconWithBadge";
 import apiService from "../../api/ApiService";
 import ProductCard from "../../components/ProductCard";
 import Colors from "../../styles/Color";
-import API_BASE_URL from "../../config/config";
+import API_BASE_URL from "../../configs/config";
 import ShowAlertWithTitleContentAndTwoActions from "../../components/ShowAlertWithTitleContentAndTwoActions ";
 
 export default function WishlistScreen({ navigation }) {

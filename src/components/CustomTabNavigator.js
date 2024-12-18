@@ -13,7 +13,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import IconWithBadge from "./IconWithBadge";
 import Colors from "../styles/Color";
 import apiService from "../api/ApiService";
-import API_BASE_URL from "../config/config";
+import API_BASE_URL from "../configs/config";
 
 const Tab = createBottomTabNavigator();
 
