@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
@@ -165,6 +166,7 @@ class ProductController extends Controller
             ], 500);
         }
     }
+
     // method PUT
     public function update(Request $request, Product $product) {
         $validator = Validator::make($request->all(), [
@@ -297,6 +299,54 @@ class ProductController extends Controller
             ], 200);
         }
     }
+
+    // method GET products by review star
+    public function filterProductsByStars(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'stars' => 'required|integer|min:1|max:5',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid stars parameter',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $stars = $request->input('stars');
+
+        $productIds = DB::table('reviews')
+            ->where('stars_review', $stars)
+            ->where('status', 'approved')
+            ->pluck('product_id')
+            ->unique();
+
+        if ($productIds->isEmpty()) {
+            return response()->json([
+                'message' => "No products found with {$stars} stars",
+                'count' => 0,
+            ], 200);
+        }
+
+        $products = Product::whereIn('product_id', $productIds)->get();
+
+        if ($products->isEmpty()) {
+            return response()->json([
+                'message' => "No products found with {$stars} stars",
+                'count' => 0,
+            ], 200);
+        }
+
+        $count = $products->count();
+
+        return response()->json([
+            'message' => "Found {$count} products with {$stars} stars",
+            // 'count' => $count,
+            'data' => ProductResource::collection($products),
+        ], 200);
+    }
+
 
 
 }
