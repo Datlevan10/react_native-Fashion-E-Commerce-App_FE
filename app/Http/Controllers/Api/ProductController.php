@@ -347,6 +347,125 @@ class ProductController extends Controller
         ], 200);
     }
 
+    // method GET products by size
+    public function filterProductsBySizes(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'size' => 'required|string',
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid size parameter',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $size = $request->input('size');
+
+        $productIds = DB::table('products')
+            ->select('product_id')
+            ->whereRaw("
+                EXISTS (
+                    SELECT 1
+                    FROM json_array_elements(products.size) AS size_element
+                    WHERE size_element->>'size' = ?
+                )
+            ", [$size])
+            ->pluck('product_id');
+
+        if ($productIds->isEmpty()) {
+            return response()->json([
+                'message' => "No products found with size {$size}",
+                'count' => 0,
+            ], 200);
+        }
+
+        $products = Product::whereIn('product_id', $productIds)->get();
+
+        if ($products->isEmpty()) {
+            return response()->json([
+                'message' => "No products found with size {$size}",
+                'count' => 0,
+            ], 200);
+        }
+
+        $count = $products->count();
+
+        return response()->json([
+            'message' => "Found {$count} products with size {$size}",
+            'data' => ProductResource::collection($products),
+        ], 200);
+    }
+
+    // method GET products by total_review
+    public function filterProductsByTotalReviews(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'filter' => 'required|string|in:highest,lowest',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid filter parameter',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $filter = $request->input('filter');
+
+        $products = Product::orderBy('total_review', $filter === 'highest' ? 'desc' : 'asc')
+            ->take(10)
+            ->get();
+
+        if ($products->isEmpty()) {
+            return response()->json([
+                'message' => "No products found with {$filter} total reviews",
+                'count' => 0,
+            ], 200);
+        }
+
+        $count = $products->count();
+
+        return response()->json([
+            'message' => "Found {$count} products with {$filter} total reviews",
+            'data' => ProductResource::collection($products),
+        ], 200);
+    }
+
+    // method GET products by average_review
+    public function filterProductsByAverageReviews(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'filter' => 'required|string|in:highest,lowest',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid filter parameter',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $filter = $request->input('filter');
+
+        $products = Product::orderBy('average_review', $filter === 'highest' ? 'desc' : 'asc')
+            ->take(10)
+            ->get();
+
+        if ($products->isEmpty()) {
+            return response()->json([
+                'message' => "No products found with {$filter} average reviews",
+                'count' => 0,
+            ], 200);
+        }
+
+        $count = $products->count();
+
+        return response()->json([
+            'message' => "Found {$count} products with {$filter} average reviews",
+            'data' => ProductResource::collection($products),
+        ], 200);
+    }
 
 }
