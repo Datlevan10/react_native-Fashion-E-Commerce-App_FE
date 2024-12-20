@@ -30,14 +30,20 @@ Route::prefix('')->group(function () {
 
 
     // Category and Product Routes
+    Route::prefix('categories')->group(function () {
+        Route::get('/{limit}/limit', [CategoryController::class, 'getLimitedCategories']);
+    });
     Route::apiResource('categories', CategoryController::class);
-    Route::get('/categories/{limit}/limit', [CategoryController::class, 'getLimitedCategories']);
-    Route::get('products/search', [ProductController::class, 'searchProducts']);
+
+
+    Route::prefix('products')->group(function () {
+        Route::get('/search', [ProductController::class, 'searchProducts']);
+        Route::get('filter-by-stars', [ProductController::class, 'filterProductsByStars']);
+        Route::get('category/{category_id}', [ProductController::class, 'getProductsByCategoryId']);
+        Route::get('category/{category_id}/{limit}/limit', [ProductController::class, 'getLimitedProductsByCategoryId']);
+        Route::get('{limit}/limit', [ProductController::class, 'getLimitedProducts']);
+    });
     Route::apiResource('products', ProductController::class);
-    Route::get('products/category/{category_id}', [ProductController::class, 'getProductsByCategoryId']);
-    Route::get('products/category/{category_id}/{limit}/limit', [ProductController::class, 'getLimitedProductsByCategoryId']);
-    Route::get('/products/{limit}/limit', [ProductController::class, 'getLimitedProducts']);
-    Route::get('/products/search', [ProductController::class, 'searchProducts']);
 
     // User Management Routes (Admin, Staff, Customer)
     Route::apiResource('admins', AdminController::class);
