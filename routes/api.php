@@ -39,6 +39,9 @@ Route::prefix('')->group(function () {
     Route::prefix('products')->group(function () {
         Route::get('/search', [ProductController::class, 'searchProducts']);
         Route::get('filter-by-stars', [ProductController::class, 'filterProductsByStars']);
+        Route::get('filter-by-sizes', [ProductController::class, 'filterProductsBySizes']);
+        Route::get('filter-by-total-reviews', [ProductController::class, 'filterProductsByTotalReviews']);
+        Route::get('filter-by-average-reviews', [ProductController::class, 'filterProductsByAverageReviews']);
         Route::get('category/{category_id}', [ProductController::class, 'getProductsByCategoryId']);
         Route::get('category/{category_id}/{limit}/limit', [ProductController::class, 'getLimitedProductsByCategoryId']);
         Route::get('{limit}/limit', [ProductController::class, 'getLimitedProducts']);
