@@ -1,15 +1,9 @@
 import React from "react";
-import {
-  Modal,
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Colors from "../styles/Color";
 import LottieView from "lottie-react-native";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
+import Modal from "react-native-modal";
 
 const ReviewSubmittedSuccessModal = ({
   visible,
@@ -25,10 +19,12 @@ const ReviewSubmittedSuccessModal = ({
 }) => {
   return (
     <Modal
-      visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={onClose}
+      isVisible={visible}
+      animationIn="zoomIn"
+      animationOut="zoomOut"
+      useNativeDriver={true}
+      onBackdropPress={onClose}
+      onBackButtonPress={onClose}
     >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
@@ -49,16 +45,17 @@ const ReviewSubmittedSuccessModal = ({
               />
               <View style={styles.productInfo}>
                 <Text style={styles.productName}>{productName}</Text>
-                <Text style={styles.stars}>
+                <View style={styles.stars}>
                   {Array.from({ length: stars }).map((_, index) => (
                     <FontAwesome
                       key={index}
                       name="star"
                       size={28}
                       color={Colors.yellowColor}
+                      style={styles.starIcon}
                     />
                   ))}
-                </Text>
+                </View>
               </View>
             </View>
 
@@ -85,29 +82,31 @@ const ReviewSubmittedSuccessModal = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
   },
   modalContainer: {
-    width: "90%",
+    width: "100%",
     backgroundColor: "white",
     borderRadius: 5,
     padding: 20,
     alignItems: "center",
   },
   title: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 10,
+    color: "green",
+    marginBottom: 15,
+    textAlign: "center"
   },
   subTitle: {
-    fontSize: 14,
+    fontSize: 16,
     color: "gray",
     marginBottom: 20,
+    textAlign: "center"
   },
   discountIcon: {
-    fontSize: 40,
+    fontSize: 50,
     marginBottom: 10,
   },
   discountValue: {
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#f0f0f0",
     borderRadius: 10,
-    padding: 10,
+    padding: 15,
     marginBottom: 20,
   },
   productContainer: {
@@ -146,6 +145,10 @@ const styles = StyleSheet.create({
   },
   stars: {
     marginTop: 10,
+    flexDirection: "row",
+  },
+  starIcon: {
+    marginRight: 3,
   },
   reviewContainer: {
     marginTop: 10,
@@ -155,32 +158,36 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   reviewContent: {
-    fontSize: 14,
+    fontSize: 16,
     color: "gray",
+    marginTop: 10,
   },
   reviewInfo: {
     marginTop: 10,
     alignItems: "flex-end",
-    
   },
   customerName: {
     fontSize: 18,
+    fontStyle: "italic",
+    fontWeight: "500"
   },
   customerEmail: {
     fontSize: 16,
     color: "gray",
+    fontStyle: "italic",
   },
   closeButton: {
-    backgroundColor: "#007bff",
+    backgroundColor: Colors.blackColor,
     borderRadius: 5,
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
   closeButtonText: {
     color: "white",
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "bold",
   },
+  bold: { fontWeight: "bold" },
 });
 
 export default ReviewSubmittedSuccessModal;

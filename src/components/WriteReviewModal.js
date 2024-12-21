@@ -35,9 +35,6 @@ const WriteReviewModal = ({
   const [customerName, setCustomerName] = useState("");
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({});
-  
-  const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
-  const [reviewData, setReviewData] = useState({});
 
   const handleMediaUpload = async (type) => {
     const permissionResult =
@@ -108,7 +105,7 @@ const WriteReviewModal = ({
     return maxLength - value.length;
   };
 
-  const handleSubmitReview = async () => {
+  const handleReviewSubmit = async () => {
     if (!validateInputs()) {
       return;
     }
@@ -123,20 +120,13 @@ const WriteReviewModal = ({
     formData.append("customer_email", email);
 
     media.forEach((file, index) => {
-      console.log(`File ${index}:`, file);
-      formData.append(`media[${index}]`, {
-        uri: file.uri,
-        type: file.type,
-        name: file.name,
-      });
+      formData.append(`media[${index}]`, file);
     });
 
     try {
       const response = await ApiService.writeReviewProduct(formData);
-      // console.log(response.status);
       if (response.status === 201) {
-        // alert("Review submitted successfully!");
-        setReviewData({
+        const submittedData = {
           productName,
           productImage,
           stars: rating,
@@ -144,9 +134,8 @@ const WriteReviewModal = ({
           content,
           customerName,
           customerEmail: email,
-        });
-        setIsSuccessModalVisible(true);
-        // onClose();
+        };
+        onSubmit(submittedData);
       } else {
         alert("Failed to submit review. Please try again.");
       }
@@ -323,18 +312,10 @@ const WriteReviewModal = ({
           </View>
           <TouchableOpacity
             style={styles.submitButton}
-            onPress={handleSubmitReview}
+            onPress={handleReviewSubmit}
           >
             <Text style={styles.submitText}>Submit Review</Text>
           </TouchableOpacity>
-          <ReviewSubmittedSuccessModal
-            visible={isSuccessModalVisible}
-            onClose={() => {
-              setIsSuccessModalVisible(false);
-              onClose();
-            }}
-            {...reviewData}
-          />
         </View>
       </View>
     </Modal>

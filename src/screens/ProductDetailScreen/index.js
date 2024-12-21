@@ -24,6 +24,7 @@ import ShowAlertWithTitleContentAndTwoActions from "../../components/ShowAlertWi
 import NoReviewBox from "../../components/NoReviewBox";
 import ReviewBox from "../../components/ReviewBox";
 import WriteReviewModal from "../../components/WriteReviewModal";
+import ReviewSubmittedSuccessModal from "../../components/ReviewSubmittedSuccessModal";
 
 const { width, height } = Dimensions.get("window");
 
@@ -34,8 +35,11 @@ export default function ProductDetailScreen({ route, navigation }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [isReviewModalVisible, setIsReviewModalVisible] = useState(false);
+  // const [isReviewModalVisible, setIsReviewModalVisible] = useState(false);
   const [reviews, setReviews] = useState([]);
+  const [isWriteReviewModalVisible, setWriteReviewModalVisible] = useState(false);
+  const [isReviewSubmittedSuccessModalVisible, setReviewSubmittedSuccessModalVisible] = useState(false);
+  const [submittedReviewData, setSubmittedReviewData] = useState(null);
 
   useEffect(() => {
     const fetchCustomerId = async () => {
@@ -85,6 +89,20 @@ export default function ProductDetailScreen({ route, navigation }) {
     loadStoreName();
     getReviewsByProductId();
   }, []);
+
+  const reloadReviews = async () => {
+    try {
+      const response = await apiService.getReviewByProductId(product.productId);
+      if (response.status === 200) {
+        setReviews(response?.data?.data || []);
+      } else {
+        setReviews(null);
+      }
+    } catch (error) {
+      console.error("Error reloading reviews:", error);
+      setReviews(null);
+    }
+  };
 
   const handleAddToWishlist = async () => {
     try {
@@ -267,26 +285,40 @@ export default function ProductDetailScreen({ route, navigation }) {
                 title="Customer Reviews"
                 subtitle="No review yet. Any feedback? Let us know"
                 buttonText="Write Review"
-                onWriteReview={() => setIsReviewModalVisible(true)}
+                onWriteReview={() => setWriteReviewModalVisible(true)}
               />
             ) : (
               <ReviewBox
                 reviews={reviews}
-                onWriteReview={() => setIsReviewModalVisible(true)}
+                onWriteReview={() => setWriteReviewModalVisible(true)}
               />
             )}
-            <WriteReviewModal
-              visible={isReviewModalVisible}
-              onClose={() => setIsReviewModalVisible(false)}
-              customerId={customerId}
-              productId={product.productId}
-              productName={product.productName}
-              productImage={images[selectedImageIndex]}
-              onSubmit={(reviewData) => {
-                console.log("Submitted review:", reviewData);
-                setIsReviewModalVisible(false);
-              }}
-            />
+            {isWriteReviewModalVisible && !isReviewSubmittedSuccessModalVisible && (
+              <WriteReviewModal
+                visible={isWriteReviewModalVisible}
+                onClose={() => setWriteReviewModalVisible(false)}
+                customerId={customerId}
+                productId={product.productId}
+                productName={product.productName}
+                productImage={images[selectedImageIndex]}
+                onSubmit={(data) => {
+                  setSubmittedReviewData(data);
+                  setWriteReviewModalVisible(false);
+                  setReviewSubmittedSuccessModalVisible(true);
+                }}
+              />
+            )}
+
+            {isReviewSubmittedSuccessModalVisible && submittedReviewData && (
+              <ReviewSubmittedSuccessModal
+                visible={isReviewSubmittedSuccessModalVisible}
+                onClose={() => {
+                  setReviewSubmittedSuccessModalVisible(false);
+                  reloadReviews();
+                }}
+                {...submittedReviewData}
+              />
+            )}
           </View>
         </View>
       </ScrollView>
