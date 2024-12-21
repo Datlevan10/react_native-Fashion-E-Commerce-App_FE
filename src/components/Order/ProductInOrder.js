@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "react-native-vector-icons";
 import * as Clipboard from 'expo-clipboard';
-import ShowAlertWithTitleContentAndOneActions from "./ShowAlertWithTitleContentAndOneActions ";
+import ShowAlertWithTitleContentAndOneActions from "../Alert/ShowAlertWithTitleContentAndOneActions ";
 
 const ProductInOrder = ({ image, productName, description, orderId }) => {
   

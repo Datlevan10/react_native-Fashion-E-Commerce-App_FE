@@ -14,11 +14,11 @@ import {
 import React, { useState } from "react";
 import Colors from "../../styles/Color";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
-import InformationCustomerForm from "../../components/InformationCustomerForm";
-import ItemInCart from "../../components/ItemInCart";
-import ItemDetail from "../../components/ItemDetail";
-import SelectShipping from "../../components/SelectShipping";
-import PaymentMethod from "../../components/PaymentMethod";
+import InformationCustomerForm from "../../components/Profile/InformationCustomerForm";
+import ItemInCart from "../../components/Cart/ItemInCart";
+import ItemDetail from "../../components/Cart/ItemDetail";
+import SelectShipping from "../../components/Cart/SelectShipping";
+import PaymentMethod from "../../components/Cart/PaymentMethod";
 
 import imageTest from "../../../assets/image/kid-2.jpg";
 

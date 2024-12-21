@@ -5,8 +5,8 @@ import ExploreScreen from "../ExploreScreen";
 import NotificationScreen from "../NotificationScreen";
 import ProfileScreen from "../ProfileScreen";
 import HomeContentScreen from "./HomeContentScreen";
-import CustomTabLabel from "../../components/CustomTabLabel ";
-import CustomTabNavigator from "../../components/CustomTabNavigator";
+import CustomTabLabel from "../../components/Navbar/CustomTabLabel ";
+import CustomTabNavigator from "../../components/Navbar/CustomTabNavigator";
 import WishlistScreen from "../WishlistScreen";
 
 const Tab = createBottomTabNavigator();

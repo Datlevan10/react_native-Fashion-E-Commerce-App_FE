@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { View, Text, Alert, StyleSheet, TouchableOpacity } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
-import CustomTextInput from "../../components/CustomTextInput";
+import CustomTextInput from "../../components/TextField/CustomTextInput";
 import Colors from "../../styles/Color";
-import CustomHandleButton from "../../components/CustomHandleButton";
-import CustomLinkText from "../../components/CustomLinkText";
+import CustomHandleButton from "../../components/Button/CustomHandleButton";
+import CustomLinkText from "../../components/Other/CustomLinkText";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");

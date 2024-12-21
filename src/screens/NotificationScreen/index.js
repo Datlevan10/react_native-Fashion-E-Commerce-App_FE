@@ -12,7 +12,7 @@ import {
 import * as SecureStore from "expo-secure-store";
 import apiService from "../../api/ApiService";
 import Colors from "../../styles/Color";
-import NotificationCard from "../../components/NotificationCard";
+import NotificationCard from "../../components/Notification/NotificationCard";
 import { Feather, MaterialIcons } from "react-native-vector-icons";
 import { formatDistanceToNow } from "date-fns";
 import API_BASE_URL from "../../configs/config";

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import Colors from "../styles/Color";
+import Colors from "../../styles/Color";
 
 const NoReviewBox = ({
   title = "Customer review",

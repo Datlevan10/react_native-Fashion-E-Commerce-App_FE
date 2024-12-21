@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import Colors from "../styles/Color";
+import Colors from "../../styles/Color";
 
 export default function SizeSelector({ sizes }) {
   const [selectedSize, setSelectedSize] = useState(null);

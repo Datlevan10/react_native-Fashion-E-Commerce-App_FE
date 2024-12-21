@@ -8,8 +8,8 @@ import {
   Dimensions,
   RefreshControl,
 } from "react-native";
-import ProductCard from "../../components/ProductCard";
-import CategoryForm from "../../components/CategoryForm";
+import ProductCard from "../../components/Product/ProductCard";
+import CategoryForm from "../../components/Category/CategoryForm";
 import Colors from "../../styles/Color";
 import apiService from "../../api/ApiService";
 import API_BASE_URL from "../../configs/config";

@@ -13,12 +13,12 @@ import {
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { Feather, MaterialIcons } from "react-native-vector-icons";
-import IconWithBadge from "../../components/IconWithBadge";
+import IconWithBadge from "../../components/Navbar/IconWithBadge";
 import apiService from "../../api/ApiService";
-import ProductCard from "../../components/ProductCard";
+import ProductCard from "../../components/Product/ProductCard";
 import Colors from "../../styles/Color";
 import API_BASE_URL from "../../configs/config";
-import ShowAlertWithTitleContentAndTwoActions from "../../components/ShowAlertWithTitleContentAndTwoActions ";
+import ShowAlertWithTitleContentAndTwoActions from "../../components/Alert/ShowAlertWithTitleContentAndTwoActions ";
 
 export default function WishlistScreen({ navigation }) {
   const [storeName, setStoreName] = useState("");

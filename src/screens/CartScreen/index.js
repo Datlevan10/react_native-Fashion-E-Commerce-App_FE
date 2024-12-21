@@ -7,8 +7,8 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
-import FilterBox from "../../components/FilterBox";
-import CartForm from "../../components/CartForm";
+import FilterBox from "../../components/Other/FilterBox";
+import CartForm from "../../components/Cart/CartForm";
 import Feather from "react-native-vector-icons/Feather";
 import Colors from "../../styles/Color";
 import { Linking } from "react-native";

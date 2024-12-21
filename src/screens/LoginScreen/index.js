@@ -10,15 +10,15 @@ import {
   Platform,
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
-import CustomTextInput from "../../components/CustomTextInput";
-import PasswordTextInput from "../../components/PasswordTextInput";
-import CustomHandleButton from "../../components/CustomHandleButton";
-import SocialLoginButton from "../../components/SocialLoginButton";
-import CustomLinkText from "../../components/CustomLinkText";
+import CustomTextInput from "../../components/TextField/CustomTextInput";
+import PasswordTextInput from "../../components/TextField/PasswordTextInput";
+import CustomHandleButton from "../../components/Button/CustomHandleButton";
+import SocialLoginButton from "../../components/Button/SocialLoginButton";
+import CustomLinkText from "../../components/Other/CustomLinkText";
 import Checkbox from "expo-checkbox";
 import Colors from "../../styles/Color";
 import { LinearGradient } from "expo-linear-gradient";
-import ShowAlertWithTitleContentAndOneActions from "../../components/ShowAlertWithTitleContentAndOneActions ";
+import ShowAlertWithTitleContentAndOneActions from "../../components/Alert/ShowAlertWithTitleContentAndOneActions ";
 import apiService from "../../api/ApiService";
 
 export default function LoginScreen({ navigation }) {

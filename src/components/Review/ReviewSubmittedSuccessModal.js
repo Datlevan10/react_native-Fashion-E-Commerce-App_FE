@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import Colors from "../styles/Color";
+import Colors from "../../styles/Color";
 import LottieView from "lottie-react-native";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
 import Modal from "react-native-modal";

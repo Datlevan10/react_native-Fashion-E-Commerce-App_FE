@@ -8,10 +8,10 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import ProductCard from "../../components/ProductCard";
+import ProductCard from "../../components/Product/ProductCard";
 import { Feather, MaterialIcons } from "react-native-vector-icons";
-import FilterBox from "../../components/FilterBox";
-import CategoryForm from "../../components/CategoryForm";
+import FilterBox from "../../components/Other/FilterBox";
+import CategoryForm from "../../components/Category/CategoryForm";
 import Colors from "../../styles/Color";
 import apiService from "../../api/ApiService";
 import API_BASE_URL from "../../configs/config";
