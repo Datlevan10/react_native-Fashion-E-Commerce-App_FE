@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Image, StyleSheet, ActivityIndicator } from "react-native";
 import apiService from "../../api/ApiService";
 import API_BASE_URL from "../../configs/config";
+import Colors from "../../styles/Color";
 
 export default function WelcomeScreen({ navigation }) {
   const [logoSource, setLogoSource] = useState([]);
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: Colors.whiteBgColor,
   },
   logo: {
     width: 150,

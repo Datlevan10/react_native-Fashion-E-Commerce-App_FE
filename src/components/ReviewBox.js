@@ -52,14 +52,20 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
         <View style={styles.row}>
           <View style={[styles.avatar, { backgroundColor }]}>
             <Text style={[styles.avatarText, { color: textColor }]}>
-              {item.customer_name.charAt(0)}
+              {`${item.customer_name.trim().charAt(0)}${item.customer_name
+                .trim()
+                .split(" ")
+                .pop()
+                .charAt(0)}`}
             </Text>
           </View>
           <View style={styles.customerInfo}>
             <Text style={styles.customerName}>{item.customer_name}</Text>
             <View style={styles.reviewDateBox}>
               <MaterialIcons name="verified" size={12} color="#2196F3" />
-              <Text style={styles.reviewDate}>{item.review_date}</Text>
+              <Text style={styles.reviewDate}>
+                Review on {item.review_date}
+              </Text>
             </View>
           </View>
         </View>
@@ -272,7 +278,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   reviewContainer: {
-    marginTop: 20,
+    marginTop: 15,
     // padding: 16,
     // backgroundColor: "#f9f9f9",
     // borderRadius: 8,
@@ -327,10 +333,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   customerName: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 18,
+    fontWeight: "500",
   },
   reviewDateBox: {
+    marginTop: 3,
     flexDirection: "row",
     gap: 3,
   },
