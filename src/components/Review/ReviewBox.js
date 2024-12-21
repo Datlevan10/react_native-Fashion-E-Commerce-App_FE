@@ -11,9 +11,23 @@ import {
 import { FontAwesome, MaterialIcons, AntDesign } from "@expo/vector-icons";
 import Colors from "../../styles/Color";
 import ScoreBar from "../Review/ScoreBar";
+import API_BASE_URL from "../../configs/config";
 
 const ReviewBox = ({ reviews, onWriteReview }) => {
   const [filteredReviews, setFilteredReviews] = useState([]);
+
+  const allImagesWithRatings = useMemo(() => {
+    return reviews
+      .filter(
+        (review) => Array.isArray(review.media) && review.media.length > 0
+      )
+      .flatMap((review) =>
+        review.media.map((image) => ({
+          uri: `${API_BASE_URL}${image}`,
+          stars_review: review.stars_review,
+        }))
+      );
+  }, [reviews]);
 
   const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
@@ -89,7 +103,7 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
             {item.media.map((image, index) => (
               <Image
                 key={index}
-                source={{ uri: image }}
+                source={{ uri: `${API_BASE_URL}${image}` }}
                 style={styles.reviewImage}
               />
             ))}
@@ -151,6 +165,21 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
           <Text style={styles.allPhotos}>All photos</Text>
         </TouchableOpacity>
       </View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.imageScrollContainer}
+      >
+        {allImagesWithRatings.map((item, index) => (
+          <View key={index} style={styles.imageBox}>
+            <Image source={{ uri: item.uri }} style={styles.reviewImage} />
+            <View style={styles.ratingOverlay}>
+              <FontAwesome name="star" size={12} color={Colors.yellowColor} />
+              <Text style={styles.ratingText}>{item.stars_review}</Text>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
       <Text style={styles.title}>Reviews with comments</Text>
       <ScrollView
         horizontal
@@ -261,6 +290,35 @@ const styles = StyleSheet.create({
     color: "#007BFF",
     textAlign: "right",
     marginLeft: 5,
+  },
+  imageScrollContainer: {
+    marginVertical: 15
+  },
+  imageBox: {
+    
+  },
+  reviewImage: {
+    width: "100%",
+    height: "100%",
+  },
+  ratingOverlay: {
+    position: "absolute",
+    bottom: 0,
+    width: "91%",
+    height: "25%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: 5,
+    borderBottomRightRadius: 5,
+    borderBottomLeftRadius: 5
+  },
+  ratingText: {
+    fontSize: 14,
+    color: Colors.whiteColor,
+    fontWeight: "500",
+    marginRight: 5
   },
   filterButtonsContainer: {
     marginVertical: 10,
@@ -379,6 +437,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     marginRight: 8,
+    // borderWidth: 1,
     borderRadius: 8,
   },
   divider: {

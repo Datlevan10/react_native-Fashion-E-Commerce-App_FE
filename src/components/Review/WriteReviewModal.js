@@ -8,6 +8,10 @@ import {
   Image,
   Alert,
   ScrollView,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Platform
 } from "react-native";
 import Modal from "react-native-modal";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
@@ -15,7 +19,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Video } from "expo-av";
 import Colors from "../../styles/Color";
 import ApiService from "../../api/ApiService";
-import ReviewSubmittedSuccessModal from "./ReviewSubmittedSuccessModal";
+import * as FileSystem from "expo-file-system";
 
 const WriteReviewModal = ({
   visible,
@@ -119,6 +123,7 @@ const WriteReviewModal = ({
     formData.append("customer_name", customerName);
     formData.append("customer_email", email);
 
+    // fix submit review with media
     media.forEach((file, index) => {
       formData.append(`media[${index}]`, file);
     });
@@ -155,169 +160,177 @@ const WriteReviewModal = ({
       onBackdropPress={onClose}
       onBackButtonPress={onClose}
     >
-      <View style={styles.overlay}>
-        <View style={styles.container}>
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <AntDesign name="close" size={24} color={Colors.blackColor} />
-          </TouchableOpacity>
-          <Text style={styles.title}>Rating & Review</Text>
-          <View style={styles.productInfo}>
-            <Image source={{ uri: productImage }} style={styles.productImage} />
-            <View style={styles.productDetails}>
-              <Text style={styles.productName}>{productName}</Text>
-              <View style={styles.stars}>
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <FontAwesome
-                    key={star}
-                    name={star <= rating ? "star" : "star"}
-                    size={30}
-                    color={
-                      star <= rating
-                        ? Colors.yellowColor
-                        : Colors.defaultStarColor
-                    }
-                    onPress={() => handleRating(star)}
-                  />
-                ))}
+      <KeyboardAvoidingView
+        style={styles.overlay}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.container}>
+            <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+              <AntDesign name="close" size={24} color={Colors.blackColor} />
+            </TouchableOpacity>
+            <Text style={styles.title}>Rating & Review</Text>
+            <View style={styles.productInfo}>
+              <Image
+                source={{ uri: productImage }}
+                style={styles.productImage}
+              />
+              <View style={styles.productDetails}>
+                <Text style={styles.productName}>{productName}</Text>
+                <View style={styles.stars}>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <FontAwesome
+                      key={star}
+                      name={star <= rating ? "star" : "star"}
+                      size={30}
+                      color={
+                        star <= rating
+                          ? Colors.yellowColor
+                          : Colors.defaultStarColor
+                      }
+                      onPress={() => handleRating(star)}
+                    />
+                  ))}
+                </View>
+                {errors.rating && (
+                  <Text style={styles.errorText}>{errors.rating}</Text>
+                )}
               </View>
-              {errors.rating && (
-                <Text style={styles.errorText}>{errors.rating}</Text>
+            </View>
+            <View style={styles.inputContainer}>
+              <View style={styles.labelRow}>
+                <Text style={styles.label}>Review Title </Text>
+                <Text style={styles.charCount}>{titleLength}/100</Text>
+              </View>
+              <TextInput
+                style={styles.input}
+                placeholder="Example: Easy to use"
+                placeholderTextColor="#a7abc3"
+                maxLength={100}
+                value={title}
+                onChangeText={(text) =>
+                  setTitleLength(handleTextChange(setTitle, 100, text))
+                }
+              />
+              {errors.title && (
+                <Text style={styles.errorText}>{errors.title}</Text>
               )}
             </View>
-          </View>
-          <View style={styles.inputContainer}>
-            <View style={styles.labelRow}>
-              <Text style={styles.label}>Review Title </Text>
-              <Text style={styles.charCount}>{titleLength}/100</Text>
+            <View style={styles.inputContainer}>
+              <View style={styles.labelRow}>
+                <Text style={styles.label}>Product Review</Text>
+                <Text style={styles.charCount}>{contentLength}/2000</Text>
+              </View>
+              <TextInput
+                style={styles.textArea}
+                placeholder="Example: I have experienced this product. Product is made of good material and is very comfortable to wear."
+                placeholderTextColor="#a7abc3"
+                multiline
+                maxLength={2000}
+                value={content}
+                onChangeText={(text) =>
+                  setContentLength(handleTextChange(setContent, 2000, text))
+                }
+              />
+              {errors.content && (
+                <Text style={styles.errorText}>{errors.content}</Text>
+              )}
             </View>
-            <TextInput
-              style={styles.input}
-              placeholder="Example: Easy to use"
-              placeholderTextColor="#a7abc3"
-              maxLength={100}
-              value={title}
-              onChangeText={(text) =>
-                setTitleLength(handleTextChange(setTitle, 100, text))
-              }
-            />
-            {errors.title && (
-              <Text style={styles.errorText}>{errors.title}</Text>
-            )}
-          </View>
-          <View style={styles.inputContainer}>
-            <View style={styles.labelRow}>
-              <Text style={styles.label}>Product Review</Text>
-              <Text style={styles.charCount}>{contentLength}/2000</Text>
-            </View>
-            <TextInput
-              style={styles.textArea}
-              placeholder="Example: I have experienced this product. Product is made of good material and is very comfortable to wear."
-              placeholderTextColor="#a7abc3"
-              multiline
-              maxLength={2000}
-              value={content}
-              onChangeText={(text) =>
-                setContentLength(handleTextChange(setContent, 2000, text))
-              }
-            />
-            {errors.content && (
-              <Text style={styles.errorText}>{errors.content}</Text>
-            )}
-          </View>
-          <ScrollView
-            horizontal
-            style={styles.mediaPreviewRow}
-            contentContainerStyle={{ alignItems: "center" }}
-          >
-            {media.map((file, index) => (
-              <View key={index} style={styles.mediaBox}>
-                {file.type === "image/jpeg" ? (
-                  <Image
-                    source={{ uri: file.uri }}
-                    style={styles.mediaImage}
-                    resizeMode="cover"
-                  />
-                ) : (
-                  <Video
-                    source={{ uri: file.uri }}
-                    style={styles.mediaImage}
-                    resizeMode="cover"
-                    shouldPlay
-                    isLooping
-                  />
-                )}
+            <ScrollView
+              horizontal
+              style={styles.mediaPreviewRow}
+              contentContainerStyle={{ alignItems: "center" }}
+            >
+              {media.map((file, index) => (
+                <View key={index} style={styles.mediaBox}>
+                  {file.type === "image/jpeg" ? (
+                    <Image
+                      source={{ uri: file.uri }}
+                      style={styles.mediaImage}
+                      resizeMode="cover"
+                    />
+                  ) : (
+                    <Video
+                      source={{ uri: file.uri }}
+                      style={styles.mediaImage}
+                      resizeMode="cover"
+                      shouldPlay
+                      isLooping
+                    />
+                  )}
+                  <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => handleRemoveMedia(index)}
+                  >
+                    <AntDesign name="close" size={14} color="white" />
+                  </TouchableOpacity>
+                </View>
+              ))}
+              <View style={styles.mediaRow}>
                 <TouchableOpacity
-                  style={styles.deleteButton}
-                  onPress={() => handleRemoveMedia(index)}
+                  style={styles.mediaButton}
+                  onPress={() => handleMediaUpload("photo")}
                 >
-                  <AntDesign name="close" size={14} color="white" />
+                  <View style={styles.iconBox}>
+                    <FontAwesome
+                      name="camera"
+                      size={18}
+                      color={Colors.blackColor}
+                    />
+                  </View>
+                  <Text style={styles.mediaText}>Photo (5/5)</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.mediaButton}
+                  onPress={() => handleMediaUpload("video")}
+                >
+                  <View style={styles.iconBox}>
+                    <FontAwesome
+                      name="video-camera"
+                      size={18}
+                      color={Colors.blackColor}
+                    />
+                  </View>
+                  <Text style={styles.mediaText}>Video (2/2)</Text>
                 </TouchableOpacity>
               </View>
-            ))}
-            <View style={styles.mediaRow}>
-              <TouchableOpacity
-                style={styles.mediaButton}
-                onPress={() => handleMediaUpload("photo")}
-              >
-                <View style={styles.iconBox}>
-                  <FontAwesome
-                    name="camera"
-                    size={18}
-                    color={Colors.blackColor}
-                  />
-                </View>
-                <Text style={styles.mediaText}>Photo (5/5)</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.mediaButton}
-                onPress={() => handleMediaUpload("video")}
-              >
-                <View style={styles.iconBox}>
-                  <FontAwesome
-                    name="video-camera"
-                    size={18}
-                    color={Colors.blackColor}
-                  />
-                </View>
-                <Text style={styles.mediaText}>Video (2/2)</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
+            </ScrollView>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Customer Name</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Type your name here"
-              placeholderTextColor="#a7abc3"
-              value={customerName}
-              onChangeText={setCustomerName}
-            />
-            {errors.customerName && (
-              <Text style={styles.errorText}>{errors.customerName}</Text>
-            )}
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Customer Name</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Type your name here"
+                placeholderTextColor="#a7abc3"
+                value={customerName}
+                onChangeText={setCustomerName}
+              />
+              {errors.customerName && (
+                <Text style={styles.errorText}>{errors.customerName}</Text>
+              )}
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Customer Email</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Your email is private and is used to send you discount"
+                placeholderTextColor="#a7abc3"
+                value={email}
+                onChangeText={setEmail}
+              />
+              {errors.email && (
+                <Text style={styles.errorText}>{errors.email}</Text>
+              )}
+            </View>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleReviewSubmit}
+            >
+              <Text style={styles.submitText}>Submit Review</Text>
+            </TouchableOpacity>
           </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Customer Email</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Your email is private and is used to send you discount"
-              placeholderTextColor="#a7abc3"
-              value={email}
-              onChangeText={setEmail}
-            />
-            {errors.email && (
-              <Text style={styles.errorText}>{errors.email}</Text>
-            )}
-          </View>
-          <TouchableOpacity
-            style={styles.submitButton}
-            onPress={handleReviewSubmit}
-          >
-            <Text style={styles.submitText}>Submit Review</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };

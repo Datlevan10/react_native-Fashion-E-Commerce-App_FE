@@ -21,6 +21,13 @@ const ExploreScreen = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
 
+  useEffect(() => {
+    // load data
+    loadStoreName();
+    loadCategories();
+    loadListAllProducts();
+  }, []);
+
   const loadStoreName = async () => {
     try {
       const response = await apiService.getStores();
@@ -65,9 +72,7 @@ const ExploreScreen = ({ navigation }) => {
           productImage: {
             uri: `${API_BASE_URL}${item.image[0].url}`,
           },
-          imageArr: item.image.map(
-            (img) => `${API_BASE_URL}${img.url}`
-          ),
+          imageArr: item.image.map((img) => `${API_BASE_URL}${img.url}`),
           categoryName: item.category_name,
           averageReview: item.average_review,
           totalReview: item.total_review,
@@ -83,13 +88,6 @@ const ExploreScreen = ({ navigation }) => {
       console.error("Failed to load products:", error);
     }
   };
-
-  useEffect(() => {
-    // load data
-    loadStoreName();
-    loadCategories();
-    loadListAllProducts();
-  }, []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
