@@ -13,9 +13,9 @@ import {
 } from "react-native";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { PanGestureHandler } from "react-native-gesture-handler";
-import CustomTextInput from "../../components/CustomTextInput";
-import PasswordTextInput from "../../components/PasswordTextInput";
-import CustomHandleButton from "../../components/CustomHandleButton";
+import CustomTextInput from "../../components/TextField/CustomTextInput";
+import PasswordTextInput from "../../components/TextField/PasswordTextInput";
+import CustomHandleButton from "../../components/Button/CustomHandleButton";
 import imageTest from "../../../assets/image/profile.png";
 import Colors from "../../styles/Color";
 

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 import { AntDesign } from "react-native-vector-icons";
-import Colors from "../styles/Color";
+import Colors from "../../styles/Color";
 
 const NotificationCard = ({
   message,

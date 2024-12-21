@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Feather, FontAwesome } from "react-native-vector-icons";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import Colors from "../styles/Color";
+import Colors from "../../styles/Color";
 
 const ProductCard = ({
   imageSource,
@@ -30,7 +30,7 @@ const ProductCard = ({
   imageHeight = "150%",
 }) => {
   const [currentImageSource, setCurrentImageSource] = useState(imageSource);
-  const errorImage = require("../../assets/image/default_image.jpg");
+  const errorImage = require("../../../assets/image/default_image.jpg");
 
   return (
     <TouchableOpacity

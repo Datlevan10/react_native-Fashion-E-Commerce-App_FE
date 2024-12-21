@@ -9,10 +9,10 @@ import {
   Alert,
   Platform,
 } from "react-native";
-import CustomTextInput from "../../components/CustomTextInput";
-import PasswordTextInput from "../../components/PasswordTextInput";
-import CustomHandleButton from "../../components/CustomHandleButton";
-import CustomLinkText from "../../components/CustomLinkText";
+import CustomTextInput from "../../components/TextField/CustomTextInput";
+import PasswordTextInput from "../../components/TextField/PasswordTextInput";
+import CustomHandleButton from "../../components/Button/CustomHandleButton";
+import CustomLinkText from "../../components/Other/CustomLinkText";
 import Checkbox from "expo-checkbox";
 import Colors from "../../styles/Color";
 import { LinearGradient } from "expo-linear-gradient";

@@ -12,19 +12,19 @@ import {
 import * as SecureStore from "expo-secure-store";
 import apiService from "../../api/ApiService";
 import { FontAwesome, Feather } from "@expo/vector-icons";
-import IconWithBadge from "../../components/IconWithBadge";
-import AddToCartButton from "../../components/AddToCartButton";
-import CustomButton from "../../components/CustomButton";
-import ColorSelector from "../../components/ColorSelector";
-import SizeSelector from "../../components/SizeSelector";
-import ProductInfoInDetail from "../../components/ProductInfoInDetail";
+import IconWithBadge from "../../components/Navbar/IconWithBadge";
+import AddToCartButton from "../../components/Button/AddToCartButton";
+import CustomButton from "../../components/Button/CustomButton";
+import ColorSelector from "../../components/Product/ColorSelector";
+import SizeSelector from "../../components/Product/SizeSelector";
+import ProductInfoInDetail from "../../components/Product/ProductInfoInDetail";
 import Colors from "../../styles/Color";
-import ShowAlertWithTitleContentAndOneActions from "../../components/ShowAlertWithTitleContentAndOneActions ";
-import ShowAlertWithTitleContentAndTwoActions from "../../components/ShowAlertWithTitleContentAndTwoActions ";
-import NoReviewBox from "../../components/NoReviewBox";
-import ReviewBox from "../../components/ReviewBox";
-import WriteReviewModal from "../../components/WriteReviewModal";
-import ReviewSubmittedSuccessModal from "../../components/ReviewSubmittedSuccessModal";
+import ShowAlertWithTitleContentAndOneActions from "../../components/Alert/ShowAlertWithTitleContentAndOneActions ";
+import ShowAlertWithTitleContentAndTwoActions from "../../components/Alert/ShowAlertWithTitleContentAndTwoActions ";
+import NoReviewBox from "../../components/Review/NoReviewBox";
+import ReviewBox from "../../components/Review/ReviewBox";
+import WriteReviewModal from "../../components/Review/WriteReviewModal";
+import ReviewSubmittedSuccessModal from "../../components/Review/ReviewSubmittedSuccessModal";
 
 const { width, height } = Dimensions.get("window");
 

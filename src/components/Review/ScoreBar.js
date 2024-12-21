@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import Colors from "../styles/Color";
+import Colors from "../../styles/Color";
 
 const ScoreBar = ({ reviews, onFilterByStar }) => {
   const calculateStarDistribution = () => {

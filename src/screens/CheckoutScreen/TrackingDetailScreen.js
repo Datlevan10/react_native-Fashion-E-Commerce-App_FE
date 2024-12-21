@@ -14,9 +14,9 @@ import {
 import Feather from "react-native-vector-icons/Feather";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Colors from "../../styles/Color";
-import ProductInOrder from "../../components/ProductInOrder";
-import TrackingInfo from "../../components/TrackingForm";
-import CustomHandleButton from "../../components/CustomHandleButton";
+import ProductInOrder from "../../components/Order/ProductInOrder";
+import TrackingInfo from "../../components/Order/TrackingForm";
+import CustomHandleButton from "../../components/Button/CustomHandleButton";
 
 import imageTest from "../../../assets/image/nguyen_thanh_chuc.jpg";
 

@@ -13,8 +13,8 @@ import Modal from "react-native-modal";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { Video } from "expo-av";
-import Colors from "../styles/Color";
-import ApiService from "../api/ApiService";
+import Colors from "../../styles/Color";
+import ApiService from "../../api/ApiService";
 import ReviewSubmittedSuccessModal from "./ReviewSubmittedSuccessModal";
 
 const WriteReviewModal = ({

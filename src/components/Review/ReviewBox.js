@@ -9,8 +9,8 @@ import {
   ScrollView,
 } from "react-native";
 import { FontAwesome, MaterialIcons, AntDesign } from "@expo/vector-icons";
-import Colors from "../styles/Color";
-import ScoreBar from "./ScoreBar";
+import Colors from "../../styles/Color";
+import ScoreBar from "../Review/ScoreBar";
 
 const ReviewBox = ({ reviews, onWriteReview }) => {
   const [filteredReviews, setFilteredReviews] = useState([]);

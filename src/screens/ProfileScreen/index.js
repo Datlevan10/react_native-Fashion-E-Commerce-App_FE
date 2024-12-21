@@ -14,10 +14,10 @@ import Colors from "../../styles/Color";
 import Feather from "react-native-vector-icons/Feather";
 import { LinearGradient } from "expo-linear-gradient";
 import { handleLogout } from "../../utils/AuthUtils";
-import ProfileInfoForm from "../../components/ProfileInfoForm";
-import ProfileStats from "../../components/ProfileStats";
-import OtherInformationForm from "../../components/OtherInformationForm";
-import ShowAlertWithTitleContentAndTwoActions from "../../components/ShowAlertWithTitleContentAndTwoActions ";
+import ProfileInfoForm from "../../components/Profile/ProfileInfoForm";
+import ProfileStats from "../../components/Profile/ProfileStats";
+import OtherInformationForm from "../../components/Profile/OtherInformationForm";
+import ShowAlertWithTitleContentAndTwoActions from "../../components/Alert/ShowAlertWithTitleContentAndTwoActions ";
 
 import imageDefault from "../../../assets/image/men.jpg";
 

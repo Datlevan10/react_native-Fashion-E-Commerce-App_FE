@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import Colors from "../../styles/Color";
 import { MaterialIcons, Feather, Ionicons } from "@expo/vector-icons";
-import CustomHandleButton from "../../components/CustomHandleButton";
+import CustomHandleButton from "../../components/Button/CustomHandleButton";
 
 export default function DetailProfileScreen({ route, navigation }) {
   const { image, username, fullName, email, phoneNumber, address } =

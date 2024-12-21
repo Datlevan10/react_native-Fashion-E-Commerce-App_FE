@@ -1,27 +1,32 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Colors from '../styles/Color';
+import Colors from '../../styles/Color';
 
-const CustomTextInput = ({ value, onChangeText, placeholder, prefixIcon }) => {
+const PasswordTextInput = ({ value, onChangeText, placeholder }) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <View style={styles.container}>
-      {prefixIcon && (
-        <MaterialIcons name={prefixIcon} size={20} color="gray" style={styles.icon} />
-      )}
+      <MaterialIcons name="lock" size={20} color="gray" style={styles.icon} />
       <TextInput
         style={styles.input}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
+        secureTextEntry={!showPassword}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
       />
       {isFocused && value ? (
-        <TouchableOpacity onPress={() => onChangeText('')}>
-          <MaterialIcons name="clear" size={20} color="#db4437" style={styles.icon} />
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <MaterialIcons
+            name={showPassword ? 'visibility' : 'visibility-off'}
+            size={20}
+            color="#179e7a"
+            style={styles.icon}
+          />
         </TouchableOpacity>
       ) : null}
     </View>
@@ -50,4 +55,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomTextInput;
+export default PasswordTextInput;

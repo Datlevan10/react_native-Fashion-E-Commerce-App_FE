@@ -10,10 +10,10 @@ import {
 } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import IconWithBadge from "./IconWithBadge";
-import Colors from "../styles/Color";
-import apiService from "../api/ApiService";
-import API_BASE_URL from "../configs/config";
+import IconWithBadge from "../Navbar/IconWithBadge";
+import Colors from "../../styles/Color";
+import apiService from "../../api/ApiService";
+import API_BASE_URL from "../../configs/config";
 
 const Tab = createBottomTabNavigator();
 
