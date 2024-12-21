@@ -35,7 +35,6 @@ export default function ProductDetailScreen({ route, navigation }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
-  // const [isReviewModalVisible, setIsReviewModalVisible] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [isWriteReviewModalVisible, setWriteReviewModalVisible] = useState(false);
   const [isReviewSubmittedSuccessModalVisible, setReviewSubmittedSuccessModalVisible] = useState(false);

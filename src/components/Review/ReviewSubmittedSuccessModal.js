@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Colors from "../../styles/Color";
-import LottieView from "lottie-react-native";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
 import Modal from "react-native-modal";
+import ConfettiCannon from "react-native-confetti-cannon";
 
 const ReviewSubmittedSuccessModal = ({
   visible,
@@ -17,6 +17,8 @@ const ReviewSubmittedSuccessModal = ({
   customerEmail,
   discountValue = "10% OFF",
 }) => {
+  const confettiRef = useRef(null);
+
   return (
     <Modal
       isVisible={visible}
@@ -25,6 +27,7 @@ const ReviewSubmittedSuccessModal = ({
       useNativeDriver={true}
       onBackdropPress={onClose}
       onBackButtonPress={onClose}
+      onModalShow={() => confettiRef.current?.start()}
     >
       <View style={styles.overlay}>
         <View style={styles.modalContainer}>
@@ -75,6 +78,13 @@ const ReviewSubmittedSuccessModal = ({
           </TouchableOpacity>
         </View>
       </View>
+      <ConfettiCannon
+        count={300}
+        origin={{ x: 200, y: 0 }}
+        autoStart={false}
+        ref={confettiRef}
+        fadeOut={true}
+      />
     </Modal>
   );
 };
@@ -97,13 +107,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "green",
     marginBottom: 15,
-    textAlign: "center"
+    textAlign: "center",
   },
   subTitle: {
     fontSize: 16,
     color: "gray",
     marginBottom: 20,
-    textAlign: "center"
+    textAlign: "center",
   },
   discountIcon: {
     fontSize: 50,
@@ -169,7 +179,7 @@ const styles = StyleSheet.create({
   customerName: {
     fontSize: 18,
     fontStyle: "italic",
-    fontWeight: "500"
+    fontWeight: "500",
   },
   customerEmail: {
     fontSize: 16,
