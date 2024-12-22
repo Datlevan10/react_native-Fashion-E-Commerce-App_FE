@@ -3,8 +3,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\{
-    AdminController, CartController, CartDetailController,
-    ProductController, CategoryController, CustomerController,
+    AdminController,
+    CartController,
+    CartDetailController,
+    ProductController,
+    CategoryController,
+    CustomerController,
     EventController,
     NotificationController,
     OrderController,
@@ -22,11 +26,13 @@ Route::prefix('')->group(function () {
     Route::apiResource('store_settings', StoreSettingController::class);
 
     // Event Routes
+    Route::prefix('events')->group(function () {
+        Route::get('/is-active/active', [EventController::class, 'getActiveEvents']);
+        Route::get('/is-active/inactive', [EventController::class, 'getInactiveEvents']);
+        Route::put('/{event_id}/set-active', [EventController::class, 'activateEvent']);
+        Route::put('/{event_id}/set-inactive', [EventController::class, 'deactivateEvent']);
+    });
     Route::apiResource('events', EventController::class);
-    Route::get('events/is-active/active', [EventController::class, 'getActiveEvents']);
-    Route::get('events/is-active/inactive', [EventController::class, 'getInactiveEvents']);
-    Route::put('events/{event_id}/set-active', [EventController::class, 'activateEvent']);
-    Route::put('events/{event_id}/set-inactive', [EventController::class, 'deactivateEvent']);
 
 
     // Category and Product Routes
@@ -82,17 +88,22 @@ Route::prefix('')->group(function () {
     Route::apiResource('order_details', OrderDetailController::class);
 
     // Notification Routes
+    Route::prefix('notifications')->group(function () {
+        Route::post('/hide/{notification_id}', [NotificationController::class, 'hideNotification']);
+    });
     Route::apiResource('notifications', NotificationController::class);
-    Route::post('/notifications/hide/{notification_id}', [NotificationController::class, 'hideNotification']);
+
     // Review Routes
+    Route::prefix('reviews')->group(function () {
+        Route::post('/delete-review', [ReviewController::class, 'destroyMany']);
+        Route::get('/product/{product_id}', [ReviewController::class, 'getReviewsByProductId']);
+        Route::get('/status/pending', [ReviewController::class, 'getPendingReviews']);
+        Route::get('/status/approved', [ReviewController::class, 'getApprovedReviews']);
+        Route::get('/status/unpublished', [ReviewController::class, 'getUnpublishedReviews']);
+        Route::put('/{review_id}/publish', [ReviewController::class, 'publishReview']);
+        Route::put('/{review_id}/unpublish', [ReviewController::class, 'unpublishReview']);
+    });
     Route::apiResource('reviews', ReviewController::class);
-    Route::post('/reviews/delete-review', [ReviewController::class, 'destroyMany']);
-    Route::get('/reviews/product/{product_id}', [ReviewController::class, 'getReviewsByProductId']);
-    Route::get('/reviews/status/pending', [ReviewController::class, 'getPendingReviews']);
-    Route::get('/reviews/status/approved', [ReviewController::class, 'getApprovedReviews']);
-    Route::get('/reviews/status/unpublished', [ReviewController::class, 'getUnpublishedReviews']);
-    Route::put('/reviews/{review_id}/publish', [ReviewController::class, 'publishReview']);
-    Route::put('/reviews/{review_id}/unpublish', [ReviewController::class, 'unpublishReview']);
 
     // Authenticated User Route
     Route::get('/user', function (Request $request) {
