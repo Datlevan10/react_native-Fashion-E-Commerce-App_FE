@@ -249,7 +249,7 @@ class ReviewController extends Controller
 
             foreach ($reviews as $review) {
                 if ($review->media) {
-                    $mediaPaths = json_decode($review->media);
+                    $mediaPaths = $review->media;
                     foreach ($mediaPaths as $mediaPath) {
                         Storage::disk('public')->delete(str_replace('/storage/', '', $mediaPath));
                     }
