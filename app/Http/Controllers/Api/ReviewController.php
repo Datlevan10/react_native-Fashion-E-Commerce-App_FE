@@ -15,21 +15,22 @@ use Illuminate\Support\Facades\Validator;
 class ReviewController extends Controller
 {
     // method GET
-    public function index() {
+    public function index()
+    {
         $reviews = Review::get();
         if ($reviews->count() > 0) {
             return response()->json([
                 'message' => 'Get reviews success',
                 'data' => ReviewResource::collection($reviews)
             ], 200);
-        }
-        else {
+        } else {
             return response()->json(['message' => 'No record available'], 200);
         }
     }
 
     // method POST
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'customer_id' => 'nullable|string',
             'product_id' => 'required|string',
@@ -98,8 +99,9 @@ class ReviewController extends Controller
     }
 
     // GET review by product_id
-    public function getReviewsByProductId($product_id) {
-        $reviews = Review::where('product_id', $product_id)->get();
+    public function getReviewsByProductId($product_id)
+    {
+        $reviews = Review::where('product_id', $product_id)->where('status', 'approved')->get();
 
         if ($reviews->count() > 0) {
             return response()->json([
@@ -112,7 +114,8 @@ class ReviewController extends Controller
     }
 
     // GET review by status pending
-    public function getPendingReviews() {
+    public function getPendingReviews()
+    {
         $reviews = Review::where('status', 'pending')->get();
 
         if ($reviews->count() > 0) {
@@ -126,7 +129,8 @@ class ReviewController extends Controller
     }
 
     // GET review by status approved
-    public function getApprovedReviews() {
+    public function getApprovedReviews()
+    {
         $reviews = Review::where('status', 'approved')->get();
 
         if ($reviews->count() > 0) {
@@ -140,7 +144,8 @@ class ReviewController extends Controller
     }
 
     // GET review by status unpublished
-    public function getUnpublishedReviews() {
+    public function getUnpublishedReviews()
+    {
         $reviews = Review::where('status', 'unpublished')->get();
 
         if ($reviews->count() > 0) {
@@ -154,7 +159,8 @@ class ReviewController extends Controller
     }
 
     // method GET Detail review review_id
-    public function show($review_id) {
+    public function show($review_id)
+    {
         try {
             $review = Review::where('review_id', $review_id)->first();
             if (!$review) {
@@ -182,7 +188,8 @@ class ReviewController extends Controller
     }
 
     // method PUT Publish review
-    public function publishReview($review_id) {
+    public function publishReview($review_id)
+    {
         $review = Review::find($review_id);
 
         if (!$review) {
@@ -204,7 +211,8 @@ class ReviewController extends Controller
 
 
     // method PUT Unpublish review
-    public function unpublishReview($review_id) {
+    public function unpublishReview($review_id)
+    {
         $review = Review::find($review_id);
 
         if (!$review) {
@@ -290,5 +298,4 @@ class ReviewController extends Controller
             ], 500);
         }
     }
-
 }
