@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
-  Platform
+  Platform,
 } from "react-native";
 import Modal from "react-native-modal";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
@@ -123,7 +123,6 @@ const WriteReviewModal = ({
     formData.append("customer_name", customerName);
     formData.append("customer_email", email);
 
-    // fix submit review with media
     media.forEach((file, index) => {
       formData.append(`media[${index}]`, file);
     });
@@ -137,6 +136,8 @@ const WriteReviewModal = ({
           stars: rating,
           title,
           content,
+          media,
+          // media: media.map((file) => ({ uri: file.uri })),
           customerName,
           customerEmail: email,
         };

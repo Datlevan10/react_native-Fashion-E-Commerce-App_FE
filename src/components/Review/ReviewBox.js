@@ -172,9 +172,9 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
       >
         {allImagesWithRatings.map((item, index) => (
           <View key={index} style={styles.imageBox}>
-            <Image source={{ uri: item.uri }} style={styles.reviewImage} />
+            <Image source={{ uri: item.uri }} style={styles.reviewImages} />
             <View style={styles.ratingOverlay}>
-              <FontAwesome name="star" size={12} color={Colors.yellowColor} />
+              <FontAwesome name="star" size={14} color={Colors.yellowColor} />
               <Text style={styles.ratingText}>{item.stars_review}</Text>
             </View>
           </View>
@@ -292,19 +292,21 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   imageScrollContainer: {
-    marginVertical: 15
+    marginVertical: 15,
   },
   imageBox: {
-    
+    marginRight: 10,
   },
-  reviewImage: {
-    width: "100%",
-    height: "100%",
+  reviewImages: {
+    width: 100,
+    height: 100,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
   },
   ratingOverlay: {
     position: "absolute",
     bottom: 0,
-    width: "91%",
+    width: "100%",
     height: "25%",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     flexDirection: "row",
@@ -312,13 +314,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 5,
     borderBottomRightRadius: 5,
-    borderBottomLeftRadius: 5
+    borderBottomLeftRadius: 5,
   },
   ratingText: {
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.whiteColor,
     fontWeight: "500",
-    marginRight: 5
+    marginRight: 5,
   },
   filterButtonsContainer: {
     marginVertical: 10,

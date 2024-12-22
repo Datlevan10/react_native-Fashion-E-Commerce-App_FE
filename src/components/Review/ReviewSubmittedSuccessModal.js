@@ -13,6 +13,7 @@ const ReviewSubmittedSuccessModal = ({
   stars,
   title,
   content,
+  media = [],
   customerName,
   customerEmail,
   discountValue = "10% OFF",
@@ -66,6 +67,18 @@ const ReviewSubmittedSuccessModal = ({
               <Text style={styles.reviewTitle}>{title}</Text>
               <Text style={styles.reviewContent}>{content}</Text>
             </View>
+
+            {media.length > 0 && (
+              <View style={styles.mediaContainer}>
+                {media.map((file, index) => (
+                  <Image
+                    key={index}
+                    source={{ uri: file.uri }}
+                    style={styles.mediaImage}
+                  />
+                ))}
+              </View>
+            )}
 
             <View style={styles.reviewInfo}>
               <Text style={styles.customerName}>{customerName}</Text>
@@ -171,6 +184,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "gray",
     marginTop: 10,
+  },
+  mediaContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginVertical: 10,
+  },
+  mediaImage: {
+    width: 80,
+    height: 80,
+    marginRight: 10,
+    marginBottom: 10,
+    borderRadius: 8,
   },
   reviewInfo: {
     marginTop: 10,

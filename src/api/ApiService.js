@@ -68,7 +68,9 @@ const deleteItemInCart = async (cartDetailId) => {
 
 // Review
 const writeReviewProduct = async (reviewData) => {
-  return api.post("/reviews", reviewData);
+  return api.post("/reviews", reviewData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 };
 
 const getReviewByProductId = async (productId) => {
