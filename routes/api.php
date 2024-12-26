@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\{
     OrderDetailController,
     ProductFavoriteController,
     ReviewController,
+    SettingWidgetNoReviewController,
     StaffController,
     StoreController,
     StoreSettingController
@@ -104,6 +105,9 @@ Route::prefix('')->group(function () {
         Route::put('/{review_id}/unpublish', [ReviewController::class, 'unpublishReview']);
     });
     Route::apiResource('reviews', ReviewController::class);
+
+    // Settings Widget No Reviews Routes
+    Route::apiResource('settings_widget_no_reviews', SettingWidgetNoReviewController::class);
 
     // Authenticated User Route
     Route::get('/user', function (Request $request) {
