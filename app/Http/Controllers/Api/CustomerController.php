@@ -262,9 +262,9 @@ class CustomerController extends Controller
         }
 
         $customer = Customer::where('email', $request->identifier)
-                            ->orWhere('phone_number', $request->identifier)
-                            ->orWhere('user_name', $request->identifier)
-                            ->first();
+            ->orWhere('phone_number', $request->identifier)
+            ->orWhere('user_name', $request->identifier)
+            ->first();
 
         if (!$customer || !Hash::check($request->password, $customer->password)) {
             return response()->json([
@@ -282,8 +282,8 @@ class CustomerController extends Controller
         $expiresAt = now()->addDays(30);
 
         DB::table('refresh_tokens')
-        ->where('customer_id', $customer->customer_id)
-        ->delete();
+            ->where('customer_id', $customer->customer_id)
+            ->delete();
 
 
         DB::table('refresh_tokens')->insert([
@@ -377,5 +377,4 @@ class CustomerController extends Controller
             'expires_in' => 900,
         ], 200);
     }
-
 }

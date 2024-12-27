@@ -13,21 +13,22 @@ use Illuminate\Support\Facades\Validator;
 class StoreController extends Controller
 {
     // method GET
-    public function index() {
+    public function index()
+    {
         $stores = Store::get();
         if ($stores->count() > 0) {
             return response()->json([
                 'message' => 'Get stores success',
                 'data' => StoreResource::collection($stores)
             ], 200);
-        }
-        else {
+        } else {
             return response()->json(['message' => 'No record available'], 200);
         }
     }
 
     // method POST
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'store_name' => 'required|string|unique:stores,store_name',
             'description' => 'required|string',
@@ -85,7 +86,8 @@ class StoreController extends Controller
     }
 
     // method PUT
-    public function update(Request $request, Store $store) {
+    public function update(Request $request, Store $store)
+    {
         $validator = Validator::make($request->all(), [
             'store_name' => 'sometimes|string|unique:stores,store_name,' . $store->store_id . ',store_id|max:255',
             'description' => 'sometimes|string',
@@ -147,7 +149,8 @@ class StoreController extends Controller
     }
 
     // method GET Detail with store_id
-    public function show($store_id) {
+    public function show($store_id)
+    {
         try {
             $store = Store::where('store_id', $store_id)->first();
             if (!$store) {
@@ -175,7 +178,8 @@ class StoreController extends Controller
     }
 
     // method DELETE
-    public function destroy(Store $store) {
+    public function destroy(Store $store)
+    {
         if ($store->logo_url) {
             Storage::disk('public')->delete(str_replace('/storage/', '', $store->logo_url));
         }

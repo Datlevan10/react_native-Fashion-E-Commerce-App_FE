@@ -11,21 +11,22 @@ use App\Http\Resources\ProductFavoriteResource;
 class ProductFavoriteController extends Controller
 {
     // method GET
-    public function index() {
+    public function index()
+    {
         $product_favorites = ProductFavorite::get();
         if ($product_favorites->count() > 0) {
             return response()->json([
                 // 'message' => 'Get product favorite success',
                 'data' => ProductFavoriteResource::collection($product_favorites)
             ], 200);
-        }
-        else {
+        } else {
             return response()->json(['message' => 'No record available'], 200);
         }
     }
 
     // method GET by customer_id
-    public function getFavoriteProductByCustomerId($customer_id) {
+    public function getFavoriteProductByCustomerId($customer_id)
+    {
         $product_favorites = ProductFavorite::where('customer_id', $customer_id)->get();
 
         if ($product_favorites->isEmpty()) {
@@ -74,7 +75,8 @@ class ProductFavoriteController extends Controller
     }
 
     // method DELETE
-    public function destroy($product_favorite_id) {
+    public function destroy($product_favorite_id)
+    {
         $product_favorite = ProductFavorite::find($product_favorite_id);
 
         if (!$product_favorite) {

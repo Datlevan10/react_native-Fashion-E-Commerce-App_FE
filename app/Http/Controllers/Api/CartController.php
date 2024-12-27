@@ -13,21 +13,22 @@ use App\Http\Resources\CartResource;
 class CartController extends Controller
 {
     // method GET
-    public function index() {
+    public function index()
+    {
         $carts = Cart::get();
         if ($carts->count() > 0) {
             return response()->json([
                 'message' => 'Get cart success',
                 'data' => CartResource::collection($carts)
             ], 200);
-        }
-        else {
+        } else {
             return response()->json(['message' => 'No record available'], 200);
         }
     }
 
     // method GET Cart by cart_id
-    public function getCartByCartId($cart_id) {
+    public function getCartByCartId($cart_id)
+    {
         $cart = Cart::with('cartDetails')->where('cart_id', $cart_id)->first();
 
         if (!$cart) {
@@ -41,7 +42,8 @@ class CartController extends Controller
     }
 
     // method GET all Cart by customer_id
-    public function getAllCartByCustomerId($customer_id) {
+    public function getAllCartByCustomerId($customer_id)
+    {
         $carts = Cart::where('customer_id', $customer_id)->get();
 
         if ($carts->count() > 0) {
@@ -55,7 +57,8 @@ class CartController extends Controller
     }
 
     // method GET Cart by customer_id
-    public function getNotOrderedCartByCustomerId($customer_id) {
+    public function getNotOrderedCartByCustomerId($customer_id)
+    {
         $cart = Cart::with('cartDetails')->where('customer_id', $customer_id)
             ->where('cart_status', false)
             ->first();
@@ -71,7 +74,8 @@ class CartController extends Controller
     }
 
     // method POST
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $request->validate([
             'customer_id' => 'required',
             'product_id' => 'required',
@@ -135,7 +139,8 @@ class CartController extends Controller
     }
 
     // method GET Detail with cart_id
-    public function show($cart_id) {
+    public function show($cart_id)
+    {
         try {
             $cart = Cart::where('cart_id', $cart_id)->first();
             if (!$cart) {
