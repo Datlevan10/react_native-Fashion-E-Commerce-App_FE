@@ -15,21 +15,22 @@ use Illuminate\Support\Facades\Validator;
 class ProductController extends Controller
 {
     // method GET
-    public function index() {
+    public function index()
+    {
         $products = Product::get();
         if ($products->count() > 0) {
             return response()->json([
                 // 'message' => 'Get product success',
                 'data' => ProductResource::collection($products)
             ], 200);
-        }
-        else {
+        } else {
             return response()->json(['message' => 'No record available'], 200);
         }
     }
 
     // method GET Product by category_id
-    public function getProductsByCategoryId($category_id) {
+    public function getProductsByCategoryId($category_id)
+    {
         $categoryExists = Category::where('category_id', $category_id)->exists();
 
         if (!$categoryExists) {
@@ -81,7 +82,8 @@ class ProductController extends Controller
     }
 
     // method POST
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'category_id' => 'required|exists:categories,category_id',
             'product_name' => 'required|string|max:255',
@@ -97,7 +99,7 @@ class ProductController extends Controller
             'note' => 'nullable|string|max:255',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             Log::error('Validation failed', [
                 'errors' => $validator->messages(),
                 'request' => $request->all(),
@@ -140,7 +142,8 @@ class ProductController extends Controller
     }
 
     // method GET Detail with product_id
-    public function show($product_id) {
+    public function show($product_id)
+    {
         try {
             $product = Product::where('product_id', $product_id)->first();
             if (!$product) {
@@ -168,7 +171,8 @@ class ProductController extends Controller
     }
 
     // method PUT
-    public function update(Request $request, Product $product) {
+    public function update(Request $request, Product $product)
+    {
         $validator = Validator::make($request->all(), [
             'category_id' => 'sometimes|exists:categories,category_id',
             'product_name' => 'sometimes|string|max:255',
@@ -184,7 +188,7 @@ class ProductController extends Controller
             'note' => 'nullable|string|max:255',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             Log::error('Validation failed', [
                 'errors' => $validator->messages(),
                 'request' => $request->all(),
@@ -224,27 +228,9 @@ class ProductController extends Controller
         ], 200);
     }
 
-    // // method DELETE
-    // public function destroy(Product $product) {
-    //     if ($product->image) {
-    //         $imagePaths = is_string($product->image) ? json_decode($product->image) : $product->image;
-
-    //         if (is_array($imagePaths)) {
-    //             foreach ($imagePaths as $imagePath) {
-    //                 Storage::disk('public')->delete(str_replace('/storage/', '', $imagePath));
-    //             }
-    //         }
-    //     }
-
-    //     $product->delete();
-
-    //     return response()->json([
-    //         'message' => 'Product deleted successfully',
-    //     ], 200);
-    // }
-
     // method DELETE
-    public function destroy(Product $product) {
+    public function destroy(Product $product)
+    {
         if ($product->image) {
             $imagePaths = is_string($product->image) ? json_decode($product->image, true) : $product->image;
 
@@ -467,5 +453,4 @@ class ProductController extends Controller
             'data' => ProductResource::collection($products),
         ], 200);
     }
-
 }

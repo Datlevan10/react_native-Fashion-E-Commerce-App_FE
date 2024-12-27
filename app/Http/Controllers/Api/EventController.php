@@ -13,15 +13,15 @@ use Illuminate\Support\Facades\Validator;
 class EventController extends Controller
 {
     // method GET
-    public function index() {
+    public function index()
+    {
         $events = Event::get();
         if ($events->count() > 0) {
             return response()->json([
                 'message' => 'Get events success',
                 'data' => EventResource::collection($events)
             ], 200);
-        }
-        else {
+        } else {
             return response()->json(['message' => 'No record available'], 200);
         }
     }
@@ -77,7 +77,8 @@ class EventController extends Controller
     }
 
     // method GET Detail event event_id
-    public function show($event_id) {
+    public function show($event_id)
+    {
         try {
             $event = Event::where('event_id', $event_id)->first();
             if (!$event) {

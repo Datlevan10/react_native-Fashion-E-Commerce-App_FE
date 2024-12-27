@@ -13,15 +13,15 @@ use Illuminate\Support\Facades\Validator;
 class CategoryController extends Controller
 {
     // method GET
-    public function index() {
+    public function index()
+    {
         $categories = Category::get();
         if ($categories->count() > 0) {
             return response()->json([
                 'message' => 'Get Category success',
                 'data' => CategoryResource::collection($categories)
             ], 200);
-        }
-        else {
+        } else {
             return response()->json(['message' => 'No Record Available'], 200);
         }
     }
@@ -38,7 +38,8 @@ class CategoryController extends Controller
     }
 
     // method POST
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
 
         $validator = Validator::make($request->all(), [
             'category_name' => 'required|string|max:255',
@@ -46,7 +47,7 @@ class CategoryController extends Controller
             'description' => 'required|string',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             Log::error('Validation failed', [
                 'errors' => $validator->messages(),
                 'request' => $request->all(),
@@ -61,7 +62,7 @@ class CategoryController extends Controller
         // Handle image with Storage
         if ($request->hasFile('image_category')) {
             $image = $request->file('image_category');
-            $imageName = time().'.'.$image->getClientOriginalExtension();
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
             $imagePath = $image->storeAs('categories', $imageName, 'public');
             $imageUrl = Storage::url($imagePath);
         }
@@ -79,7 +80,8 @@ class CategoryController extends Controller
     }
 
     // method GET Detail with category_id
-    public function show($category_id) {
+    public function show($category_id)
+    {
         try {
             $category = Category::where('category_id', $category_id)->first();
             if (!$category) {
@@ -107,14 +109,15 @@ class CategoryController extends Controller
     }
 
     // method PUT
-    public function update(Request $request, Category $category) {
+    public function update(Request $request, Category $category)
+    {
         $validator = Validator::make($request->all(), [
             'category_name' => 'sometimes|string|max:255',
             'image_category' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'description' => 'sometimes|string|max:255',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             Log::error('Validation failed', [
                 'errors' => $validator->messages(),
                 'request' => $request->all(),
@@ -152,7 +155,8 @@ class CategoryController extends Controller
 
 
     // method DELETE
-    public function destroy(Category $category) {
+    public function destroy(Category $category)
+    {
         if ($category->image_category) {
             Storage::disk('public')->delete(str_replace('/storage/', '', $category->image_category));
         }

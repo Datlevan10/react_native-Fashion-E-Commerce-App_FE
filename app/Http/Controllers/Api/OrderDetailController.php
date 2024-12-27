@@ -11,15 +11,15 @@ use App\Http\Resources\OrderDetailResource;
 class OrderDetailController extends Controller
 {
     // method GET
-    public function index() {
+    public function index()
+    {
         $order_details = OrderDetail::get();
         if ($order_details->count() > 0) {
             return response()->json([
                 // 'message' => 'Get cart success',
                 'data' => OrderDetailResource::collection($order_details)
             ], 200);
-        }
-        else {
+        } else {
             return response()->json(['message' => 'No record available'], 200);
         }
     }

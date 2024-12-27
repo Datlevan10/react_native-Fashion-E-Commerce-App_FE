@@ -12,21 +12,22 @@ use App\Http\Resources\CartDetailResource;
 class CartDetailController extends Controller
 {
     // method GET
-    public function index() {
+    public function index()
+    {
         $cart_details = CartDetail::get();
         if ($cart_details->count() > 0) {
             return response()->json([
                 'message' => 'Get cart detail success',
                 'data' => CartDetailResource::collection($cart_details)
             ], 200);
-        }
-        else {
+        } else {
             return response()->json(['message' => 'No record available'], 200);
         }
     }
 
     // method GET CartDetail by cart_id
-    public function getCartDetailByCartId($cart_id) {
+    public function getCartDetailByCartId($cart_id)
+    {
         $cart_details = CartDetail::where('cart_id', $cart_id)->get();
 
         if ($cart_details->count() > 0) {
@@ -40,7 +41,8 @@ class CartDetailController extends Controller
     }
 
     // method GET all CartDetail by customer_id
-    public function getAllCartDetailByCustomerId($customer_id) {
+    public function getAllCartDetailByCustomerId($customer_id)
+    {
         $cart_details = CartDetail::where('customer_id', $customer_id)->get();
 
         if ($cart_details->count() > 0) {
@@ -54,7 +56,8 @@ class CartDetailController extends Controller
     }
 
     // method GET CartDetails with is_checked_out = false
-    public function getNotOrderedCartDetailByCustomerId() {
+    public function getNotOrderedCartDetailByCustomerId()
+    {
         $uncheckedCartDetails = CartDetail::where('is_checked_out', false)->get();
 
         if ($uncheckedCartDetails->count() > 0) {
@@ -69,7 +72,8 @@ class CartDetailController extends Controller
 
 
     // method GET Detail with cart_detail_id
-    public function show($cart_detail_id) {
+    public function show($cart_detail_id)
+    {
         try {
             $cart_detail = CartDetail::where('cart_detail_id', $cart_detail_id)->first();
             if (!$cart_detail) {

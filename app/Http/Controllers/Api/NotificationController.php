@@ -80,6 +80,4 @@ class NotificationController extends Controller
 
         return response()->json(['message' => 'Notification hidden successfully'], 200);
     }
-
-
 }

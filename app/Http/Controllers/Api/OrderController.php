@@ -18,15 +18,15 @@ use Illuminate\Support\Facades\Validator;
 class OrderController extends Controller
 {
     // method GET
-    public function index() {
+    public function index()
+    {
         $orders = Order::get();
         if ($orders->count() > 0) {
             return response()->json([
                 'message' => 'Get order success',
                 'data' => OrderResource::collection($orders)
             ], 200);
-        }
-        else {
+        } else {
             return response()->json(['message' => 'No record available'], 200);
         }
     }
@@ -63,8 +63,8 @@ class OrderController extends Controller
             }
 
             $cartDetails = CartDetail::where('cart_id', $request->cart_id)
-                            ->where('is_checked_out', false)
-                            ->get();
+                ->where('is_checked_out', false)
+                ->get();
 
             if ($cartDetails->isEmpty()) {
                 return response()->json(['message' => 'No items in cart to checkout'], 400);
@@ -110,7 +110,6 @@ class OrderController extends Controller
                 'message' => 'Order created successfully from cart',
                 'data' => new OrderResource($order)
             ], 201);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Order creation failed', [
