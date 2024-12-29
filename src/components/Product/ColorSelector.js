@@ -6,8 +6,6 @@ import Colors from "../../styles/Color";
 export default function ColorSelector({ colors }) {
   const [selectedColor, setSelectedColor] = useState(null);
 
-  // const colors = [Colors.blackProduct, Colors.blueProduct, Colors.lightBlueProduct];
-
   return (
     <View style={styles.container}>
       <View style={styles.labelContainer}>

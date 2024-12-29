@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
-    color: Colors.grayColor,
+    color: Colors.blackColor,
     marginBottom: 16,
     textAlign: "center",
   },
