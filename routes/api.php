@@ -15,10 +15,10 @@ use App\Http\Controllers\Api\{
     OrderDetailController,
     ProductFavoriteController,
     ReviewController,
-    SettingWidgetNoReviewController,
     StaffController,
     StoreController,
-    StoreSettingController
+    StoreSettingController,
+    WidgetNoReviewSettingController
 };
 
 Route::prefix('')->group(function () {
@@ -107,7 +107,10 @@ Route::prefix('')->group(function () {
     Route::apiResource('reviews', ReviewController::class);
 
     // Settings Widget No Reviews Routes
-    Route::apiResource('settings_widget_no_reviews', SettingWidgetNoReviewController::class);
+    Route::prefix('widget_no_reviews_settings')->group(function () {
+        Route::post('/{no_review_setting_id}/reset', [WidgetNoReviewSettingController::class, 'resetDefaultSettings']);
+    });
+    Route::apiResource('widget_no_reviews_settings', WidgetNoReviewSettingController::class);
 
     // Authenticated User Route
     Route::get('/user', function (Request $request) {
