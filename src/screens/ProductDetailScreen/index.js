@@ -25,6 +25,7 @@ import NoReviewBox from "../../components/Review/NoReviewBox";
 import ReviewBox from "../../components/Review/ReviewBox";
 import WriteReviewModal from "../../components/Review/WriteReviewModal";
 import ReviewSubmittedSuccessModal from "../../components/Review/ReviewSubmittedSuccessModal";
+import WidgetLoading from "../../components/Review/WidgetLoading";
 
 const { width, height } = Dimensions.get("window");
 
@@ -36,9 +37,14 @@ export default function ProductDetailScreen({ route, navigation }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [reviews, setReviews] = useState([]);
-  const [isWriteReviewModalVisible, setWriteReviewModalVisible] = useState(false);
-  const [isReviewSubmittedSuccessModalVisible, setReviewSubmittedSuccessModalVisible] = useState(false);
+  const [isWriteReviewModalVisible, setWriteReviewModalVisible] =
+    useState(false);
+  const [
+    isReviewSubmittedSuccessModalVisible,
+    setReviewSubmittedSuccessModalVisible,
+  ] = useState(false);
   const [submittedReviewData, setSubmittedReviewData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCustomerId = async () => {
@@ -83,10 +89,27 @@ export default function ProductDetailScreen({ route, navigation }) {
       }
     };
 
-    fetchCustomerId();
-    checkIfFavorite();
-    loadStoreName();
-    getReviewsByProductId();
+    // fetchCustomerId();
+    // checkIfFavorite();
+    // loadStoreName();
+    // getReviewsByProductId();
+    const fetchData = async () => {
+      try {
+        await Promise.all([
+          fetchCustomerId(),
+          loadStoreName(),
+          getReviewsByProductId(),
+        ]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const reloadReviews = async () => {
@@ -279,7 +302,9 @@ export default function ProductDetailScreen({ route, navigation }) {
           </View>
           <View style={styles.reviewContainer}>
             <Text style={styles.reviewContainerTitle}>CUSTOMER REVIEW</Text>
-            {reviews === null ? (
+            {isLoading ? (
+              <WidgetLoading />
+            ) : reviews === null ? (
               <NoReviewBox
                 title="Customer Reviews"
                 subtitle="No review yet. Any feedback? Let us know"
@@ -292,27 +317,28 @@ export default function ProductDetailScreen({ route, navigation }) {
                 onWriteReview={() => setWriteReviewModalVisible(true)}
               />
             )}
-            {isWriteReviewModalVisible && !isReviewSubmittedSuccessModalVisible && (
-              <WriteReviewModal
-                visible={isWriteReviewModalVisible}
-                onClose={() => setWriteReviewModalVisible(false)}
-                customerId={customerId}
-                productId={product.productId}
-                productName={product.productName}
-                productImage={images[selectedImageIndex]}
-                onSubmit={(data) => {
-                  setSubmittedReviewData(data);
-                  setWriteReviewModalVisible(false);
-                  setReviewSubmittedSuccessModalVisible(true);
-                }}
-              />
-            )}
-
+            {isWriteReviewModalVisible &&
+              !isReviewSubmittedSuccessModalVisible && (
+                <WriteReviewModal
+                  visible={isWriteReviewModalVisible}
+                  onClose={() => setWriteReviewModalVisible(false)}
+                  customerId={customerId}
+                  productId={product.productId}
+                  productName={product.productName}
+                  productImage={images[selectedImageIndex]}
+                  onSubmit={(data) => {
+                    setSubmittedReviewData(data);
+                    setWriteReviewModalVisible(false);
+                    setReviewSubmittedSuccessModalVisible(true);
+                  }}
+                />
+              )}
             {isReviewSubmittedSuccessModalVisible && submittedReviewData && (
               <ReviewSubmittedSuccessModal
                 visible={isReviewSubmittedSuccessModalVisible}
                 onClose={() => {
                   setReviewSubmittedSuccessModalVisible(false);
+                  <WidgetLoading />;
                   reloadReviews();
                 }}
                 {...submittedReviewData}

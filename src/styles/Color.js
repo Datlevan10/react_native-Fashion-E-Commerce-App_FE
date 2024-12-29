@@ -1,13 +1,13 @@
 const Colors = {
   // Color background
-  whiteBgColor: "#ffffff",
+  whiteBgColor: "#FFFFFF",
   grayBgColor: "#f4f4f4",
   yellowColor: "#FFB400",
   defaultStarColor: "#cccccc",
   // Custom color
   blackColor: "#333",
   darkBlack: "#000",
-  whiteColor: "#fff",
+  whiteColor: "#FFF",
   darkGray: "#b4b3b3",
   redColor: "#ed1b41",
   yellowColor: "#ffc32b",

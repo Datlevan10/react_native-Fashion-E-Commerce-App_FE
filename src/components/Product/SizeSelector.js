@@ -5,8 +5,6 @@ import Colors from "../../styles/Color";
 export default function SizeSelector({ sizes }) {
   const [selectedSize, setSelectedSize] = useState(null);
 
-  // const sizes = ['XS', 'M', 'L'];
-
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Size</Text>
