@@ -6,19 +6,19 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class SettingWidgetNoReview extends Model
+class WidgetNoReviewSetting extends Model
 {
     use HasFactory;
 
-    protected $table = 'settings_widget_no_reviews';
+    protected $table = 'widget_no_reviews_settings';
 
-    protected $primaryKey = 'no_review_id';
+    protected $primaryKey = 'no_review_setting_id';
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
         'admin_id',
-        'product_id',
+        'store_id',
         'no_review_title_text',
         'no_review_subtitle_text',
         'button_text',
@@ -35,7 +35,7 @@ class SettingWidgetNoReview extends Model
         parent::boot();
 
         static::creating(function ($no_review) {
-            $no_review->no_review_id = Str::random(8);
+            $no_review->no_review_setting_id = Str::random(8);
         });
     }
 }

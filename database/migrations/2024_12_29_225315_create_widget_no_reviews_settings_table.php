@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('settings_widget_no_reviews', function (Blueprint $table) {
-            $table->string('no_review_id')->primary();
+        Schema::create('widget_no_reviews_settings', function (Blueprint $table) {
+            $table->string('no_review_setting_id')->primary();
             $table->string('admin_id');
             $table->string('store_id')->nullable();
             $table->string('no_review_title_text');
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('settings_widget_no_reviews');
+        Schema::dropIfExists('widget_no_reviews_settings');
     }
 };

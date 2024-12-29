@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SettingWidgetNoReviewResource extends JsonResource
+class WidgetNoReviewSettingResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,8 +14,9 @@ class SettingWidgetNoReviewResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        // return parent::toArray($request);
         return [
-            'no_review_id' => $this->no_review_id,
+            'no_review_setting_id' => $this->no_review_setting_id,
             'admin_id' => $this->admin_id,
             'store_id' => $this->store_id,
             'no_review_title_text' => $this->no_review_title_text,
