@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import Colors from "../../styles/Color";
 import { FontAwesome, AntDesign } from "@expo/vector-icons";
@@ -18,6 +18,7 @@ const ReviewSubmittedSuccessModal = ({
   customerEmail,
   discountValue = "10% OFF",
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const confettiRef = useRef(null);
 
   return (
@@ -86,7 +87,13 @@ const ReviewSubmittedSuccessModal = ({
             </View>
           </View>
 
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => {
+              setIsLoading(true);
+              onClose();
+            }}
+          >
             <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
         </View>

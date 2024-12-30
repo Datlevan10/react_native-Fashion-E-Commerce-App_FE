@@ -36,6 +36,8 @@ export default function ProductDetailScreen({ route, navigation }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [isWriteReviewModalVisible, setWriteReviewModalVisible] =
     useState(false);
@@ -170,6 +172,45 @@ export default function ProductDetailScreen({ route, navigation }) {
     }
   };
 
+  const handleAddToCart = async (
+    customerId,
+    product,
+    selectedColor,
+    selectedSize
+  ) => {
+    if (!selectedColor || !selectedSize) {
+      Alert.alert(
+        "Error",
+        "Please select a color and size before adding to cart."
+      );
+      return;
+    }
+
+    try {
+      const productData = {
+        customer_id: customerId,
+        product_id: product.productId,
+        quantity: 1, // Default quantity is 1
+        color: selectedColor,
+        size: selectedSize,
+      };
+
+      const response = await apiService.addProductToCart(productData);
+
+      if (response.status === 201) {
+        Alert.alert("Success", "Product added to cart successfully.");
+      } else {
+        Alert.alert(
+          "Error",
+          "Failed to add product to cart. Please try again."
+        );
+      }
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      Alert.alert("Error", "An unexpected error occurred. Please try again.");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.itemOne}>
@@ -274,10 +315,16 @@ export default function ProductDetailScreen({ route, navigation }) {
 
           <View style={styles.selectionRow}>
             <View style={styles.column}>
-              <ColorSelector colors={colors} />
+              <ColorSelector
+                colors={colors}
+                onColorSelect={(color) => setSelectedColor(color)}
+              />
             </View>
             <View style={styles.column}>
-              <SizeSelector sizes={sizes} />
+              <SizeSelector
+                sizes={sizes}
+                onSizeSelect={(size) => setSelectedSize(size)}
+              />
             </View>
           </View>
           <View style={styles.buttonContainer}>
@@ -288,9 +335,11 @@ export default function ProductDetailScreen({ route, navigation }) {
               color={Colors.blackColor}
               borderColor={Colors.blackColor}
               onPress={() =>
-                ShowAlertWithTitleContentAndOneActions(
-                  "Notification",
-                  "Product added to cart successfully"
+                handleAddToCart(
+                  customerId,
+                  product,
+                  selectedColor,
+                  selectedSize
                 )
               }
             />
@@ -338,8 +387,8 @@ export default function ProductDetailScreen({ route, navigation }) {
                 visible={isReviewSubmittedSuccessModalVisible}
                 onClose={() => {
                   setReviewSubmittedSuccessModalVisible(false);
-                  <WidgetLoading />;
-                  reloadReviews();
+                  setIsLoading(true);
+                  reloadReviews().finally(() => setIsLoading(false));
                 }}
                 {...submittedReviewData}
               />
@@ -444,7 +493,7 @@ const styles = StyleSheet.create({
   selectionRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 25,
+    marginBottom: 15,
     gap: 30,
   },
   reviewContainer: {
