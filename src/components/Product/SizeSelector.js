@@ -2,8 +2,13 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Colors from "../../styles/Color";
 
-export default function SizeSelector({ sizes }) {
+export default function SizeSelector({ sizes, onSizeSelect }) {
   const [selectedSize, setSelectedSize] = useState(null);
+
+  const handleSizeSelect = (size) => {
+    setSelectedSize(size);
+    onSizeSelect(size);
+  };
 
   return (
     <View style={styles.container}>
@@ -16,7 +21,7 @@ export default function SizeSelector({ sizes }) {
               styles.sizeButton,
               selectedSize === size && styles.selectedSizeButton,
             ]}
-            onPress={() => setSelectedSize(size)}
+            onPress={() => handleSizeSelect(size)}
           >
             <Text
               style={[
@@ -47,6 +52,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     gap: 10,
+    marginTop: 15,
   },
   sizeButton: {
     width: 40,
