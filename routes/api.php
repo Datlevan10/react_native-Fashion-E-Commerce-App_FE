@@ -72,16 +72,21 @@ Route::prefix('')->group(function () {
     Route::get('product_favorites/customer/{customer_id}', [ProductFavoriteController::class, 'getFavoriteProductByCustomerId']);
 
     // Cart and CartDetail Routes
+    Route::prefix('carts')->group(function () {
+        Route::get('/{cart_id}', [CartController::class, 'getCartByCartId']);
+        Route::get('/all-carts/customer/{customer_id}', [CartController::class, 'getAllCartByCustomerId']);
+        Route::get('/not-ordered-carts/customer/{customer_id}', [CartController::class, 'getNotOrderedCartByCustomerId']);
+    });
     Route::apiResource('carts', CartController::class);
-    Route::get('carts/{cart_id}', [CartController::class, 'getCartByCartId']);
-    Route::get('carts/all-carts/customer/{customer_id}', [CartController::class, 'getAllCartByCustomerId']);
-    Route::get('carts/not-ordered-carts/customer/{customer_id}', [CartController::class, 'getNotOrderedCartByCustomerId']);
 
+    Route::prefix('cart_details')->group(function () {
+        Route::get('/cart/{cart_id}', [CartDetailController::class, 'getCartDetailByCartId']);
+        Route::get('/customer/{customer_id}/all-cart-details', [CartDetailController::class, 'getAllCartDetailByCustomerId']);
+        Route::get('/customer/{customer_id}/not-ordered-cart_details', [CartDetailController::class, 'getNotOrderedCartDetailByCustomerId']);
+        Route::delete('/{cart_detail_id}/delete-item-in-cart', [CartDetailController::class, 'deleteItemInCart']);
+    });
     Route::resource('cart_details', CartDetailController::class)->except(['destroy']);
-    Route::get('cart_details/cart/{cart_id}', [CartDetailController::class, 'getCartDetailByCartId']);
-    Route::get('cart_details/customer/{customer_id}/all-cart-details', [CartDetailController::class, 'getAllCartDetailByCustomerId']);
-    Route::get('cart_details/customer/{customer_id}/not-ordered-cart_details', [CartDetailController::class, 'getNotOrderedCartDetailByCustomerId']);
-    Route::delete('cart_details/{cart_detail_id}/delete-item-in-cart', [CartDetailController::class, 'deleteItemInCart']);
+
 
     // Order and Order Detail Routes
     Route::apiResource('orders', OrderController::class);
