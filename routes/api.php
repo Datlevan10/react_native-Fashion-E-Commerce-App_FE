@@ -108,6 +108,10 @@ Route::prefix('')->group(function () {
         Route::get('/status/unpublished', [ReviewController::class, 'getUnpublishedReviews']);
         Route::put('/{review_id}/publish', [ReviewController::class, 'publishReview']);
         Route::put('/{review_id}/unpublish', [ReviewController::class, 'unpublishReview']);
+        Route::get('/filter-by-star', [ReviewController::class, 'filterReviewsByStar']);
+        Route::get('/filter-by-newest', [ReviewController::class, 'filterReviewByNewest']);
+        Route::get('/filter-by-oldest', [ReviewController::class, 'filterReviewByOldest']);
+        Route::get('/filter-by-media', [ReviewController::class, 'filterReviewByMedia']);
     });
     Route::apiResource('reviews', ReviewController::class);
 
