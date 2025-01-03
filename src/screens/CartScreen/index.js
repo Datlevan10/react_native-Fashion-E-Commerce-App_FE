@@ -19,6 +19,7 @@ import imageTest2 from "../../../assets/image/kid-4.jpg";
 import imageTest3 from "../../../assets/image/kid-5.jpg";
 import imageTest4 from "../../../assets/image/kid-6.jpg";
 import imageTest5 from "../../../assets/image/kid-7.jpg";
+import ApiService from "../../api/ApiService";
 
 const products = [
   {
@@ -51,16 +52,6 @@ const products = [
     price: 599.99,
     initialQuantity: 1,
   },
-  // {
-  //   id: 4,
-  //   productImage: imageTest3,
-  //   categoryName: "Electronics",
-  //   productName: "Laptop",
-  //   initialColor: "Green",
-  //   initialSize: "S",
-  //   price: 599.99,
-  //   initialQuantity: 1,
-  // },
 ];
 
 const handleLearnMore = () => {
@@ -192,9 +183,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 22,
     color: Colors.blackColor,
-    fontWeight: "bold",
+    fontWeight: "600",
     flex: 1,
     textAlign: "center",
   },
