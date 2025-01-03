@@ -62,6 +62,11 @@ const addProductToCart = async (productData) => {
   return api.post("/carts", productData);
 };
 
+const getProductInCartDetailByCustomerId = async (customerId) => {
+  return api.get(`/cart_details/customer/${customerId}/not-ordered-cart_details`);
+}
+
+
 const deleteItemInCart = async (cartDetailId) => {
   return api.delete(`/cart_details/${cartDetailId}/delete-item-in-cart`);
 };
@@ -72,6 +77,24 @@ const writeReviewProduct = async (reviewData) => {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
+
+const filterReviewsByStar = async (productId) => {
+  return api.get(`/reviews/filter-by-star?stars_review=/${star}&product_id=${productId}`);
+};
+
+const filterReviewByNewest = async (productId) => {
+  return api.get(`/reviews/filter-by-newest&product_id=${productId}`);
+};
+
+const filterReviewByOldest = async (productId) => {
+  return api.get(`/reviews/filter-by-oldest&product_id=${productId}`);
+};
+
+const filterReviewByMedia = async (productId) => {
+  return api.get(`/reviews/filter-by-media?product_id=${productId}`);
+};
+
+
 
 const getReviewByProductId = async (productId) => {
   return api.get(`/reviews/product/${productId}`);
@@ -97,8 +120,13 @@ export default {
   getEventImageActive,
   getFeatureProducts,
   addProductToCart,
+  getProductInCartDetailByCustomerId,
   deleteItemInCart,
   writeReviewProduct,
+  filterReviewsByStar,
+  filterReviewByNewest,
+  filterReviewByOldest,
+  filterReviewByMedia,
   getReviewByProductId,
   addProductToFavorite,
   getInfoCustomerByCustomerId,
