@@ -298,4 +298,139 @@ class ReviewController extends Controller
             ], 500);
         }
     }
+
+    // method GET reviews by star
+    public function filterReviewsByStar(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'stars_review' => 'required|integer|min:1|max:5',
+            'product_id' => 'required|string|exists:products,product_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $starsReview = $request->stars_review;
+        $productId = $request->product_id;
+
+        $reviews = Review::where('stars_review', $starsReview)
+            ->where('product_id', $productId)
+            ->where('status', 'approved')
+            ->get();
+
+        $count = $reviews->count();
+
+        if ($count > 0) {
+            return response()->json([
+                'message' => "Found {$count} reviews with {$starsReview} stars for product ID {$productId}",
+                'data' => ReviewResource::collection($reviews),
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => "No reviews found with {$starsReview} stars for product ID {$productId}",
+            ], 200);
+        }
+    }
+
+    // method GET newest reviews by product_id
+    public function filterReviewByNewest(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|string|exists:products,product_id',
+            'limit' => 'nullable|integer|min:1|max:100',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $productId = $request->product_id;
+        $limit = $request->input('limit', 3);
+
+        $reviews = Review::where('product_id', $productId)
+            ->where('status', 'approved')
+            ->orderBy('created_at', 'desc')
+            ->take($limit)
+            ->get();
+
+        $count = $reviews->count();
+
+        return response()->json([
+            'message' => "Found {$count} newest reviews success",
+            'data' => ReviewResource::collection($reviews),
+        ], 200);
+    }
+
+    // method GET oldest reviews by product_id
+    public function filterReviewByOldest(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|string|exists:products,product_id',
+            'limit' => 'nullable|integer|min:1|max:100',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $productId = $request->product_id;
+        $limit = $request->input('limit', 3);
+
+        $reviews = Review::where('product_id', $productId)
+            ->where('status', 'approved')
+            ->orderBy('created_at', 'asc')
+            ->take($limit)
+            ->get();
+
+        $count = $reviews->count();
+
+        return response()->json([
+            'message' => "Found {$count} oldest reviews success",
+            'data' => ReviewResource::collection($reviews),
+        ], 200);
+    }
+
+    // method GET media reviews by product_id
+    public function filterReviewByMedia(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|string|exists:products,product_id',
+            'limit' => 'nullable|integer|min:1|max:100',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $productId = $request->product_id;
+        $limit = $request->input('limit', 3);
+
+        $reviews = Review::where('product_id', $productId)
+            ->where('status', 'approved')
+            ->whereNotNull('media')
+            ->whereRaw("json_array_length(media) > 0")
+            ->orderBy('created_at', 'desc')
+            ->take($limit)
+            ->get();
+
+        $count = $reviews->count();
+
+        return response()->json([
+            'message' => "Found {$count} reviews with media success",
+            'data' => ReviewResource::collection($reviews),
+        ], 200);
+    }
 }
