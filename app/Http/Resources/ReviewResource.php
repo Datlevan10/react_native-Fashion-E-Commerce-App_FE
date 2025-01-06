@@ -17,6 +17,7 @@ class ReviewResource extends JsonResource
         // return parent::toArray($request);
         return [
             'review_id' => $this->review_id,
+            'admin_id' => $this->admin_id,
             'customer_id' => $this->customer_id,
             'product_id' => $this->product_id,
             'product_name' => $this->product ? $this->product->product_name : null,
@@ -31,6 +32,8 @@ class ReviewResource extends JsonResource
             'media' => $this->media,
             'status' => $this->status,
             'review_date' => $this->review_date,
+            'reply' => $this->reply,
+            'reply_date' => $this->reply_date,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

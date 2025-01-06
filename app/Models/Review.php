@@ -23,6 +23,7 @@ class Review extends Model
     ];
 
     protected $fillable = [
+        'admin_id',
         'customer_id',
         'product_id',
         'customer_name',
@@ -34,6 +35,8 @@ class Review extends Model
         'media',
         'status',
         'review_date',
+        'reply',
+        'reply_date',
     ];
 
     protected static function boot()
