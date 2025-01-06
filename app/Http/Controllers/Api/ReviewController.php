@@ -188,8 +188,19 @@ class ReviewController extends Controller
     }
 
     // method PUT Publish review
-    public function publishReview($review_id)
+    public function publishReview(Request $request, $review_id)
     {
+        $validator = Validator::make($request->all(), [
+            'admin_id' => 'required|string|exists:admins,admin_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
         $review = Review::find($review_id);
 
         if (!$review) {
@@ -201,6 +212,7 @@ class ReviewController extends Controller
         }
 
         $review->status = 'approved';
+        $review->admin_id = $request->admin_id;
         $review->save();
 
         return response()->json([
@@ -209,10 +221,20 @@ class ReviewController extends Controller
         ], 200);
     }
 
-
     // method PUT Unpublish review
-    public function unpublishReview($review_id)
+    public function unpublishReview(Request $request, $review_id)
     {
+        $validator = Validator::make($request->all(), [
+            'admin_id' => 'required|string|exists:admins,admin_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
         $review = Review::find($review_id);
 
         if (!$review) {
@@ -224,6 +246,7 @@ class ReviewController extends Controller
         }
 
         $review->status = 'unpublished';
+        $review->admin_id = $request->admin_id;
         $review->save();
 
         return response()->json([
@@ -231,6 +254,44 @@ class ReviewController extends Controller
             'data' => new ReviewResource($review)
         ], 200);
     }
+
+
+    // method PUT Reply review
+    public function replyReview(Request $request, $review_id)
+    {
+        $validator = Validator::make($request->all(), [
+            'reply' => 'required|string',
+            'admin_id' => 'required|string|exists:admins,admin_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $review = Review::find($review_id);
+
+        if (!$review) {
+            return response()->json(['message' => 'Review not found'], 404);
+        }
+
+        if ($review->status !== 'approved') {
+            return response()->json(['message' => 'Only approved reviews can be replied to'], 400);
+        }
+
+        $review->reply = $request->reply;
+        $review->reply_date = now();
+        $review->admin_id = $request->admin_id;
+        $review->save();
+
+        return response()->json([
+            'message' => 'Reply review successfully',
+            'data' => new ReviewResource($review)
+        ], 200);
+    }
+
 
     // method DELETE
     public function destroyMany(Request $request)
