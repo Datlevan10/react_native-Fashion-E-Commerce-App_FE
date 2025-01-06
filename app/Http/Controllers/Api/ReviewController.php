@@ -382,7 +382,6 @@ class ReviewController extends Controller
                 'errors' => $validator->messages(),
             ], 422);
         }
-
         $productId = $request->product_id;
         $limit = $request->input('limit', 3);
 
