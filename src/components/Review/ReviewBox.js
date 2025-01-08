@@ -38,6 +38,24 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
     return color;
   };
 
+  const getContrastColor = (bgColor) => {
+    const r = parseInt(bgColor.slice(1, 3), 16);
+    const g = parseInt(bgColor.slice(3, 5), 16);
+    const b = parseInt(bgColor.slice(5, 7), 16);
+
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+    return luminance > 0.5 ? "#000000" : "#FFFFFF";
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = String(date.getFullYear());
+    return `${day}/${month}/${year}`;
+  };
+
   const onFilterReviews = (filter) => {
     console.log("Selected filter:", filter);
     switch (filter) {
@@ -59,7 +77,7 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
 
   const renderReview = ({ item }) => {
     const backgroundColor = getRandomColor();
-    const textColor = getRandomColor();
+    const textColor = getContrastColor(backgroundColor);
 
     return (
       <View style={styles.reviewContainer}>
@@ -78,7 +96,7 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
             <View style={styles.reviewDateBox}>
               <MaterialIcons name="verified" size={12} color="#2196F3" />
               <Text style={styles.reviewDate}>
-                Review on {item.review_date}
+                Review on {formatDate(item.review_date)}
               </Text>
             </View>
           </View>
@@ -119,6 +137,16 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
             <Text style={styles.reportText}>Report</Text>
           </TouchableOpacity>
         </View>
+        {item.reply && item.admin_id && (
+          <View style={styles.replyReviewContainer}>
+            <View style={styles.row}>
+              <Text style={styles.replyFrom}>
+                Reply from {item.admin_name}
+              </Text>
+            </View>
+            <Text style={styles.replyText}>{item.reply}</Text>
+          </View>
+        )}
 
         <View style={styles.dividerReview} />
       </View>
@@ -441,6 +469,20 @@ const styles = StyleSheet.create({
     marginRight: 8,
     // borderWidth: 1,
     borderRadius: 8,
+  },
+  replyReviewContainer: {
+    backgroundColor: "#F5F5F5",
+    borderRadius: 5,
+    padding: 10,
+  },
+  replyFrom: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: Colors.blackColor,
+  },
+  replyText: {
+    fontSize: 16,
+    color: "#333",
   },
   divider: {
     height: 1,
