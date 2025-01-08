@@ -18,6 +18,7 @@ class ReviewResource extends JsonResource
         return [
             'review_id' => $this->review_id,
             'admin_id' => $this->admin_id,
+            'admin_name' => $this->admin ? $this->admin->full_name : null,
             'customer_id' => $this->customer_id,
             'product_id' => $this->product_id,
             'product_name' => $this->product ? $this->product->product_name : null,
