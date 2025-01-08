@@ -103,6 +103,7 @@ Route::prefix('')->group(function () {
     Route::prefix('reviews')->group(function () {
         Route::post('/delete-review', [ReviewController::class, 'destroyMany']);
         Route::get('/product/{product_id}', [ReviewController::class, 'getReviewsByProductId']);
+        Route::get('/product/{product_id}/limit', [ReviewController::class, 'getReviewsByProductIdLimit']);
         Route::get('/status/pending', [ReviewController::class, 'getPendingReviews']);
         Route::get('/status/approved', [ReviewController::class, 'getApprovedReviews']);
         Route::get('/status/unpublished', [ReviewController::class, 'getUnpublishedReviews']);

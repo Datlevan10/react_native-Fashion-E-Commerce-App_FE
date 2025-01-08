@@ -113,6 +113,38 @@ class ReviewController extends Controller
         }
     }
 
+    // GET review by product_id with limit
+    public function getReviewsByProductIdLimit(Request $request, $product_id)
+    {
+        $validator = Validator::make($request->all(), [
+            'limit' => 'required|integer|min:1|max:100',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $limit = $request->limit;
+
+        $reviews = Review::where('product_id', $product_id)
+            ->where('status', 'approved')
+            ->take($limit)
+            ->get();
+
+        if ($reviews->count() > 0) {
+            return response()->json([
+                'message' => "Get reviews by product_id with limit $limit success",
+                'data' => ReviewResource::collection($reviews)
+            ], 200);
+        } else {
+            return response()->json(['message' => 'No reviews found for this product'], 200);
+        }
+    }
+
+
     // GET review by status pending
     public function getPendingReviews()
     {
