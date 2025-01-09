@@ -81,7 +81,7 @@ const writeReviewProduct = async (reviewData) => {
 
 const filterReviewsByStar = async (star, productId) => {
   return api.get(
-    `/reviews/filter-by-star?stars_review=/${star}&product_id=${productId}`
+    `/reviews/filter-by-star?stars_review=${star}&product_id=${productId}`
   );
 };
 
@@ -102,9 +102,7 @@ const getReviewByProductId = async (productId) => {
 };
 
 const getReviewByProductIdLimit = async (productId, limit) => {
-  return api.get(
-    `/reviews/product/${productId}/limit?limit=${parseInt(limit, 10)}`
-  );
+  return api.get(`/reviews/product/${productId}/limit?limit=${parseInt(limit, 10)}`);
 };
 // Notification
 const getNotification = async (customerId) => {
