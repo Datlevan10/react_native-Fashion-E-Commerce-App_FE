@@ -13,12 +13,21 @@ import Colors from "../../styles/Color";
 import ScoreBar from "../Review/ScoreBar";
 import API_BASE_URL from "../../configs/config";
 import WidgetLoading from "./WidgetLoading";
+import apiService from "../../api/ApiService";
+import NoFilterResultModal from "./NoFilterResultModal";
 
 const ReviewBox = ({ reviews, onWriteReview }) => {
+  useEffect(() => {
+    console.log("isLoading state changed:", isLoading);
+  }, [isLoading]);
+
   const [filteredReviews, setFilteredReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(3);
-  const visibleReviews = reviews.slice(0, visibleCount);
+  const visibleReviews = useMemo(() => {
+    const source = filteredReviews.length > 0 ? filteredReviews : reviews;
+    return source.slice(0, visibleCount);
+  }, [filteredReviews, reviews, visibleCount]);
 
   const loadMoreReviews = () => {
     setIsLoading(true);
@@ -69,22 +78,23 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
     return `${day}/${month}/${year}`;
   };
 
-  const onFilterReviews = (filter) => {
-    console.log("Selected filter:", filter);
-    switch (filter) {
-      case "all":
-        setFilteredReviews(reviews);
-        break;
-      case "helpful":
-        setFilteredReviews(
-          reviews.filter((review) => review.helpful_count > 0)
-        );
-        break;
-      default:
-        setFilteredReviews(
-          reviews.filter((review) => review.star_rating === parseInt(filter))
-        );
-        break;
+  const onFilterReviews = async (star, productId) => {
+    // console.log("Filtering reviews by star:", star);
+    setIsLoading(true);
+    try {
+      const response = await apiService.filterReviewsByStar(star, productId);
+      if (response.status === 200) {
+        const filteredReviews = response.data.data || [];
+        console.log("Filtered reviews:", filteredReviews);
+        setFilteredReviews(filteredReviews);
+      } else {
+        console.error("Failed to filter reviews", response.status);
+      }
+    } catch (error) {
+      console.error("Error while filtering reviews", error);
+      setFilteredReviews([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -185,7 +195,9 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
           </Text>
           <ScoreBar
             reviews={reviews}
-            onFilterByStar={(star) => onFilterReviews(star.toString())}
+            onFilterByStar={(star) =>
+              onFilterReviews(star.toString(), reviews[0]?.product_id)
+            }
           />
           <View style={styles.divider} />
           <Text style={styles.titleReviewCard}>Review this product</Text>
@@ -253,7 +265,10 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
         {isLoading ? (
           <WidgetLoading />
         ) : (
-          visibleCount < reviews.length && (
+          visibleCount <
+            (filteredReviews.length > 0
+              ? filteredReviews.length
+              : reviews.length) && (
             <TouchableOpacity
               style={styles.loadMoreButton}
               onPress={loadMoreReviews}
