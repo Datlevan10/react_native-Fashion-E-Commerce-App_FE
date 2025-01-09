@@ -12,9 +12,22 @@ import { FontAwesome, MaterialIcons, AntDesign } from "@expo/vector-icons";
 import Colors from "../../styles/Color";
 import ScoreBar from "../Review/ScoreBar";
 import API_BASE_URL from "../../configs/config";
+import WidgetLoading from "./WidgetLoading";
 
 const ReviewBox = ({ reviews, onWriteReview }) => {
   const [filteredReviews, setFilteredReviews] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(3);
+  const visibleReviews = reviews.slice(0, visibleCount);
+
+  const loadMoreReviews = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      const newCount = visibleCount + 3;
+      setVisibleCount(newCount > reviews.length ? reviews.length : newCount);
+      setIsLoading(false);
+    }, 1000);
+  };
 
   const allImagesWithRatings = useMemo(() => {
     return reviews
@@ -140,9 +153,7 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
         {item.reply && item.admin_id && (
           <View style={styles.replyReviewContainer}>
             <View style={styles.row}>
-              <Text style={styles.replyFrom}>
-                Reply from {item.admin_name}
-              </Text>
+              <Text style={styles.replyFrom}>Reply from {item.admin_name}</Text>
             </View>
             <Text style={styles.replyText}>{item.reply}</Text>
           </View>
@@ -233,19 +244,32 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
         ))}
       </ScrollView>
       <ScrollView>
-        {reviews.map((item, index) => (
-          <View key={item.review_id || index} style={styles.reviewContainer}>
-            {renderReview({ item })}
+        {visibleReviews.map((review, index) => (
+          <View key={review.review_id || index}>
+            {renderReview({ item: review })}
           </View>
         ))}
+
+        {isLoading ? (
+          <WidgetLoading />
+        ) : (
+          visibleCount < reviews.length && (
+            <TouchableOpacity
+              style={styles.loadMoreButton}
+              onPress={loadMoreReviews}
+            >
+              <Text style={styles.loadMoreButtonText}>Load more reviews</Text>
+            </TouchableOpacity>
+          )
+        )}
       </ScrollView>
 
       {/* <FlatList
-        data={reviews}
-        keyExtractor={(item) => item.review_id}
-        renderItem={renderReview}
-        nestedScrollEnabled
-      /> */}
+          data={reviews}
+          keyExtractor={(item) => item.review_id}
+          renderItem={renderReview}
+          nestedScrollEnabled
+        /> */}
     </View>
   );
 };
@@ -503,6 +527,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     marginBottom: 10,
+  },
+  loadMoreButton: {
+    marginVertical: 20,
+    width: "45%",
+    padding: 10,
+    backgroundColor: Colors.whiteBgColor,
+    borderRadius: 5,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    alignSelf: "flex-end",
+  },
+  loadMoreButtonText: {
+    color: Colors.blackColor,
+    fontSize: 16,
+    fontWeight: "500",
+    textAlign: "center",
   },
 });
 
