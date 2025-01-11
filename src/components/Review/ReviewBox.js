@@ -79,13 +79,11 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
   };
 
   const onFilterReviews = async (star, productId) => {
-    // console.log("Filtering reviews by star:", star);
     setIsLoading(true);
     try {
       const response = await apiService.filterReviewsByStar(star, productId);
       if (response.status === 200) {
         const filteredReviews = response.data.data || [];
-        console.log("Filtered reviews:", filteredReviews);
         setFilteredReviews(filteredReviews);
       } else {
         console.error("Failed to filter reviews", response.status);
@@ -94,7 +92,7 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
       console.error("Error while filtering reviews", error);
       setFilteredReviews([]);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => setIsLoading(false), 500);
     }
   };
 
@@ -256,26 +254,27 @@ const ReviewBox = ({ reviews, onWriteReview }) => {
         ))}
       </ScrollView>
       <ScrollView>
-        {visibleReviews.map((review, index) => (
-          <View key={review.review_id || index}>
-            {renderReview({ item: review })}
-          </View>
-        ))}
-
         {isLoading ? (
           <WidgetLoading />
         ) : (
-          visibleCount <
-            (filteredReviews.length > 0
-              ? filteredReviews.length
-              : reviews.length) && (
-            <TouchableOpacity
-              style={styles.loadMoreButton}
-              onPress={loadMoreReviews}
-            >
-              <Text style={styles.loadMoreButtonText}>Load more reviews</Text>
-            </TouchableOpacity>
-          )
+          <>
+            {visibleReviews.map((review, index) => (
+              <View key={review.review_id || index}>
+                {renderReview({ item: review })}
+              </View>
+            ))}
+            {visibleCount <
+              (filteredReviews.length > 0
+                ? filteredReviews.length
+                : reviews.length) && (
+              <TouchableOpacity
+                style={styles.loadMoreButton}
+                onPress={loadMoreReviews}
+              >
+                <Text style={styles.loadMoreButtonText}>Load more reviews</Text>
+              </TouchableOpacity>
+            )}
+          </>
         )}
       </ScrollView>
 
