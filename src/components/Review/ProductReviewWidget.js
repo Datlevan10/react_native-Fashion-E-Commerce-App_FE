@@ -10,13 +10,13 @@ import {
 } from "react-native";
 import { FontAwesome, MaterialIcons, AntDesign } from "@expo/vector-icons";
 import Colors from "../../styles/Color";
-import ScoreBar from "../Review/ScoreBar";
+import ScoreBar from "./ScoreBar";
 import API_BASE_URL from "../../configs/config";
 import WidgetLoading from "./WidgetLoading";
 import apiService from "../../api/ApiService";
 import NoFilterResultModal from "./NoFilterResultModal";
 
-const ReviewBox = ({ reviews, onWriteReview }) => {
+const ProductReviewWidget = ({ reviews, onWriteReview }) => {
   useEffect(() => {
     console.log("isLoading state changed:", isLoading);
   }, [isLoading]);
@@ -560,4 +560,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReviewBox;
+export default ProductReviewWidget;

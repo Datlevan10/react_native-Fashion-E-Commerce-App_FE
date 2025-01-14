@@ -22,7 +22,7 @@ import Colors from "../../styles/Color";
 import ShowAlertWithTitleContentAndOneActions from "../../components/Alert/ShowAlertWithTitleContentAndOneActions ";
 import ShowAlertWithTitleContentAndTwoActions from "../../components/Alert/ShowAlertWithTitleContentAndTwoActions ";
 import NoReviewBox from "../../components/Review/NoReviewBox";
-import ReviewBox from "../../components/Review/ReviewBox";
+import ProductReviewWidget from "../../components/Review/ProductReviewWidget";
 import WriteReviewModal from "../../components/Review/WriteReviewModal";
 import ReviewSubmittedSuccessModal from "../../components/Review/ReviewSubmittedSuccessModal";
 import WidgetLoading from "../../components/Review/WidgetLoading";
@@ -361,7 +361,7 @@ export default function ProductDetailScreen({ route, navigation }) {
                 onWriteReview={() => setWriteReviewModalVisible(true)}
               />
             ) : (
-              <ReviewBox
+              <ProductReviewWidget
                 reviews={reviews}
                 onWriteReview={() => setWriteReviewModalVisible(true)}
               />
