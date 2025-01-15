@@ -26,6 +26,7 @@ import ProductReviewWidget from "../../components/Review/ProductReviewWidget";
 import WriteReviewModal from "../../components/Review/WriteReviewModal";
 import ReviewSubmittedSuccessModal from "../../components/Review/ReviewSubmittedSuccessModal";
 import WidgetLoading from "../../components/Review/WidgetLoading";
+import TestimonialReviewWidget from "../../components/Review/TestimonialReviewWidget";
 
 const { width, height } = Dimensions.get("window");
 
@@ -210,6 +211,15 @@ export default function ProductDetailScreen({ route, navigation }) {
       Alert.alert("Error", "An unexpected error occurred. Please try again.");
     }
   };
+  const mockReviews = [
+    {
+      review_id: "1",
+      customer_name: "John Doe",
+      review_product: "Great product!",
+      stars_review: 5,
+      review_date: "2025-01-16T12:00:00Z",
+    },
+  ];
 
   return (
     <View style={styles.container}>
@@ -349,6 +359,9 @@ export default function ProductDetailScreen({ route, navigation }) {
               onPress={() => console.log("BUY NOW Clicked")}
             />
           </View>
+          {/* <View>
+            <TestimonialReviewWidget reviews={reviews} />
+          </View> */}
           <View style={styles.reviewContainer}>
             <Text style={styles.reviewContainerTitle}>CUSTOMER REVIEW</Text>
             {isLoading ? (
