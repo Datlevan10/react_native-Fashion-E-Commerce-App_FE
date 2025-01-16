@@ -101,7 +101,11 @@ class ReviewController extends Controller
     // GET review by product_id
     public function getReviewsByProductId($product_id)
     {
-        $reviews = Review::where('product_id', $product_id)->where('status', 'approved')->get();
+        $reviews = Review::where('product_id', $product_id)
+            ->where('status', 'approved')
+            ->orderBy('is_featured', 'desc')
+            ->orderBy('review_date', 'desc')
+            ->get();
 
         if ($reviews->count() > 0) {
             return response()->json([
@@ -112,6 +116,7 @@ class ReviewController extends Controller
             return response()->json(['message' => 'No reviews found for this product'], 200);
         }
     }
+
 
     // GET review by product_id with limit
     public function getReviewsByProductIdLimit(Request $request, $product_id)
@@ -324,6 +329,73 @@ class ReviewController extends Controller
         ], 200);
     }
 
+    // method PUT Feature review
+    public function featureReview(Request $request, $review_id)
+    {
+        $validator = Validator::make($request->all(), [
+            'admin_id' => 'required|string|exists:admins,admin_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $review = Review::find($review_id);
+
+        if (!$review) {
+            return response()->json(['message' => 'Review not found'], 404);
+        }
+
+        if ($review->status !== 'approved') {
+            return response()->json(['message' => 'Only approved reviews can be featured'], 400);
+        }
+
+        $review->is_featured = true;
+        $review->admin_id = $request->admin_id;
+        $review->save();
+
+        return response()->json([
+            'message' => 'Review featured successfully',
+            'data' => new ReviewResource($review)
+        ], 200);
+    }
+
+    // method PUT Unfeature review
+    public function unFeatureReview(Request $request, $review_id)
+    {
+        $validator = Validator::make($request->all(), [
+            'admin_id' => 'required|string|exists:admins,admin_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $review = Review::find($review_id);
+
+        if (!$review) {
+            return response()->json(['message' => 'Review not found'], 404);
+        }
+
+        if (!$review->is_featured) {
+            return response()->json(['message' => 'Review is not featured'], 400);
+        }
+
+        $review->is_featured = false;
+        $review->admin_id = $request->admin_id;
+        $review->save();
+
+        return response()->json([
+            'message' => 'Review unfeatured successfully',
+            'data' => new ReviewResource($review)
+        ], 200);
+    }
 
     // method DELETE
     public function destroyMany(Request $request)

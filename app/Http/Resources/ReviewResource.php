@@ -33,6 +33,7 @@ class ReviewResource extends JsonResource
             'media' => $this->media,
             'status' => $this->status,
             'review_date' => $this->review_date,
+            'is_featured' => $this->is_featured,
             'reply' => $this->reply,
             'reply_date' => $this->reply_date,
             'created_at' => $this->created_at,
