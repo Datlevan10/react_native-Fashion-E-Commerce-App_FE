@@ -37,6 +37,7 @@ class Review extends Model
         'review_date',
         'reply',
         'reply_date',
+        'is_featured',
     ];
 
     protected static function boot()
