@@ -359,9 +359,9 @@ export default function ProductDetailScreen({ route, navigation }) {
               onPress={() => console.log("BUY NOW Clicked")}
             />
           </View>
-          {/* <View>
+          <View>
             <TestimonialReviewWidget reviews={reviews} />
-          </View> */}
+          </View>
           <View style={styles.reviewContainer}>
             <Text style={styles.reviewContainerTitle}>CUSTOMER REVIEW</Text>
             {isLoading ? (
