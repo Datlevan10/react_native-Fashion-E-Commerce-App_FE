@@ -124,12 +124,16 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
         </View>
         <View style={styles.row}>
           <View style={styles.starContainer}>
-            {[...Array(item.stars_review)].map((_, index) => (
+            {[...Array(5)].map((_, index) => (
               <FontAwesome
                 key={index}
                 name="star"
                 size={20}
-                color={Colors.yellowColor}
+                color={
+                  index < item.stars_review
+                    ? Colors.yellowColor
+                    : Colors.starColorNoRating
+                }
               />
             ))}
           </View>

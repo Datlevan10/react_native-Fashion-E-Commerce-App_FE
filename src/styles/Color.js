@@ -10,6 +10,7 @@ const Colors = {
   darkBlack: "#000",
   whiteColor: "#FFF",
   darkGray: "#74788d",
+  starColorNoRating: "#e7e7e2",
   redColor: "#ed1b41",
   yellowColor: "#ffc32b",
 
