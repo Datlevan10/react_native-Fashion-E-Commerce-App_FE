@@ -6,9 +6,10 @@ const Colors = {
   defaultStarColor: "#cccccc",
   // Custom color
   blackColor: "#333",
+
   darkBlack: "#000",
   whiteColor: "#FFF",
-  darkGray: "#b4b3b3",
+  darkGray: "#74788d",
   redColor: "#ed1b41",
   yellowColor: "#ffc32b",
 

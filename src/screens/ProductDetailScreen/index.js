@@ -359,11 +359,14 @@ export default function ProductDetailScreen({ route, navigation }) {
               onPress={() => console.log("BUY NOW Clicked")}
             />
           </View>
-          <View>
-            <TestimonialReviewWidget reviews={reviews} />
+          <View style={styles.reviewContainer}>
+            {isLoading ? (
+              <WidgetLoading />
+            ) : (
+              <TestimonialReviewWidget reviews={reviews} />
+            )}
           </View>
           <View style={styles.reviewContainer}>
-            <Text style={styles.reviewContainerTitle}>CUSTOMER REVIEW</Text>
             {isLoading ? (
               <WidgetLoading />
             ) : reviews === null ? (

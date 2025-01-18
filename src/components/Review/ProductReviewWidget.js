@@ -174,6 +174,7 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.reviewContainerTitle}>CUSTOMER REVIEW</Text>
       <View style={styles.reviewCard}>
         <View style={styles.statsContainer}>
           <View style={styles.averageReviewContainer}>
@@ -290,7 +291,7 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 16,
+    // marginVertical: 16,
     flex: 1,
   },
   reviewCard: {
@@ -408,6 +409,10 @@ const styles = StyleSheet.create({
     // padding: 16,
     // backgroundColor: "#f9f9f9",
     // borderRadius: 8,
+  },
+  reviewContainerTitle: {
+    fontSize: 18,
+    marginBottom: 15,
   },
   row: {
     flexDirection: "row",
