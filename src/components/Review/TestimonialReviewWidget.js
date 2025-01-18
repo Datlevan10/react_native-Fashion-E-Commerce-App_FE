@@ -8,10 +8,15 @@ import {
 } from "react-native";
 import { Entypo, AntDesign, FontAwesome } from "@expo/vector-icons";
 import Colors from "../../styles/Color";
+import ReviewDetailModal from "./ReviewDetailModal";
+import WidgetLoading from "../../components/Review/WidgetLoading";
 
 const TestimonialReviewWidget = ({ reviews }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedReview, setSelectedReview] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -29,6 +34,20 @@ const TestimonialReviewWidget = ({ reviews }) => {
 
     return () => clearInterval(interval);
   }, [reviews.length]);
+
+  const openModal = (item) => {
+    setIsLoading(true); // Bắt đầu loading
+    setTimeout(() => {
+      setSelectedReview(item);
+      setModalVisible(true);
+      setIsLoading(false); // Kết thúc loading
+    }, 1000); // Giả lập thời gian tải (1 giây)
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedReview(null);
+  };
 
   const previousReview = () => {
     setCurrentIndex((prevIndex) => {
@@ -74,7 +93,14 @@ const TestimonialReviewWidget = ({ reviews }) => {
           renderItem={({ item }) => (
             <View style={styles.reviewBox}>
               <Entypo name="quote" size={24} color={Colors.darkGray} />
-              <Text style={styles.reviewContent}>{item.review_product}</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  // console.log("Selected Item:", item);
+                  openModal(item);
+                }}
+              >
+                <Text style={styles.reviewContent}>{item.review_product}</Text>
+              </TouchableOpacity>
               <Text style={styles.customerName}>{item.customer_name}</Text>
               <View style={styles.rating}>
                 {[...Array(item.stars_review)].map((_, index) => (
@@ -97,6 +123,21 @@ const TestimonialReviewWidget = ({ reviews }) => {
         <TouchableOpacity onPress={nextReview} style={styles.navigationRight}>
           <AntDesign name="right" size={16} color={Colors.whiteBgColor} />
         </TouchableOpacity>
+
+        {/* {isLoading ? (
+          <WidgetLoading />
+        ) : (
+          <ReviewDetailModal
+            visible={isModalVisible}
+            onClose={() => setModalVisible(false)}
+            review={selectedReview}
+          />
+        )} */}
+        <ReviewDetailModal
+            visible={isModalVisible}
+            onClose={() => setModalVisible(false)}
+            review={selectedReview}
+          />
       </View>
     </View>
   );
