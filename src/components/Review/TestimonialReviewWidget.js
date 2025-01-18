@@ -103,12 +103,16 @@ const TestimonialReviewWidget = ({ reviews }) => {
               </TouchableOpacity>
               <Text style={styles.customerName}>{item.customer_name}</Text>
               <View style={styles.rating}>
-                {[...Array(item.stars_review)].map((_, index) => (
+                {[...Array(5)].map((_, index) => (
                   <FontAwesome
                     key={index}
                     name="star"
                     size={16}
-                    color={Colors.yellowColor}
+                    color={
+                      index < item.stars_review
+                        ? Colors.yellowColor
+                        : Colors.starColorNoRating
+                    }
                   />
                 ))}
               </View>
@@ -134,10 +138,10 @@ const TestimonialReviewWidget = ({ reviews }) => {
           />
         )} */}
         <ReviewDetailModal
-            visible={isModalVisible}
-            onClose={() => setModalVisible(false)}
-            review={selectedReview}
-          />
+          visible={isModalVisible}
+          onClose={() => setModalVisible(false)}
+          review={selectedReview}
+        />
       </View>
     </View>
   );
