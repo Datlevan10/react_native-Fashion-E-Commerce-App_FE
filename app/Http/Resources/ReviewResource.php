@@ -22,6 +22,8 @@ class ReviewResource extends JsonResource
             'customer_id' => $this->customer_id,
             'product_id' => $this->product_id,
             'product_name' => $this->product ? $this->product->product_name : null,
+            'product_price' => $this->product ? $this->product->new_price : null,
+            'product_image' => $this->product ? $this->product->image : null,
             'customer_name' => $this->customer_name,
             'customer_email' => $this->customer_email,
             'customer_type' => $this->customer_type,
