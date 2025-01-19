@@ -36,12 +36,12 @@ const TestimonialReviewWidget = ({ reviews }) => {
   }, [reviews.length]);
 
   const openModal = (item) => {
-    setIsLoading(true); // Bắt đầu loading
+    setIsLoading(true);
     setTimeout(() => {
       setSelectedReview(item);
       setModalVisible(true);
-      setIsLoading(false); // Kết thúc loading
-    }, 1000); // Giả lập thời gian tải (1 giây)
+      setIsLoading(false);
+    }, 1000);
   };
 
   const closeModal = () => {
@@ -99,7 +99,13 @@ const TestimonialReviewWidget = ({ reviews }) => {
                   openModal(item);
                 }}
               >
-                <Text style={styles.reviewContent}>{item.review_product}</Text>
+                <Text
+                  style={styles.reviewContent}
+                  numberOfLines={4}
+                  ellipsizeMode="tail"
+                >
+                  {item.review_product}
+                </Text>
               </TouchableOpacity>
               <Text style={styles.customerName}>{item.customer_name}</Text>
               <View style={styles.rating}>

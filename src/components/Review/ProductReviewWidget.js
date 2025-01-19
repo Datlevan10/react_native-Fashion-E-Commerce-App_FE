@@ -17,9 +17,6 @@ import apiService from "../../api/ApiService";
 import NoFilterResultModal from "./NoFilterResultModal";
 
 const ProductReviewWidget = ({ reviews, onWriteReview }) => {
-  useEffect(() => {
-    console.log("isLoading state changed:", isLoading);
-  }, [isLoading]);
 
   const [filteredReviews, setFilteredReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

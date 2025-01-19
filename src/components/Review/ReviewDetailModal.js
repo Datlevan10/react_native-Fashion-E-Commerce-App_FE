@@ -8,22 +8,24 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../styles/Color";
+import apiService from "../../api/ApiService";
 import API_BASE_URL from "../../configs/config";
 import Modal from "react-native-modal";
 
 const { width } = Dimensions.get("window");
 
 const ReviewDetailModal = ({ visible, onClose, review }) => {
+  const navigation = useNavigation();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [avatarColor, setAvatarColor] = useState("#FFFFFF");
 
-  //   console.log("Selected Review Data:", review);
-
   useEffect(() => {
     if (visible) {
-      setAvatarColor(getRandomColor());
+      const randomColor = getRandomColor();
+      setAvatarColor(randomColor);
     }
   }, [visible]);
 
@@ -66,6 +68,38 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = String(date.getFullYear());
     return `${day}/${month}/${year}`;
+  };
+
+  const handleProductPress = async (productId) => {
+    try {
+      onClose();
+
+      const response = await apiService.getProductByProductId(productId);
+      const productDetails = response.data.data;
+
+      navigation.push("ProductDetailScreen", {
+        product: {
+          productId: productDetails.product_id,
+          productName: productDetails.product_name,
+          productImage: productDetails.image.map(
+            (img) => `${API_BASE_URL}${img.url}`
+          ),
+          description: productDetails.description,
+          oldPrice: productDetails.old_price,
+          newPrice: productDetails.new_price,
+          averageReview: productDetails.average_review,
+          totalReview: productDetails.total_review,
+          colorArr: productDetails.color.map((color) => `${color.color_code}`),
+          sizeArr: productDetails.size.map((size) => `${size.size}`),
+        },
+        images: productDetails.image.map((img) => `${API_BASE_URL}${img.url}`),
+        colors: productDetails.color.map((color) => `${color.color_code}`),
+        sizes: productDetails.size.map((size) => `${size.size}`),
+      });
+      console.log("Navigated to ProductDetailScreen");
+    } catch (error) {
+      console.error("Failed to load product details:", error);
+    }
   };
 
   return (
@@ -126,13 +160,11 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
 
             <View style={styles.detailsContainer}>
               <View style={styles.row}>
-                <View
-                  style={[styles.avatar, { backgroundColor: getRandomColor() }]}
-                >
+                <View style={[styles.avatar, { backgroundColor: avatarColor }]}>
                   <Text
                     style={[
                       styles.avatarText,
-                      { color: getContrastColor(getRandomColor()) },
+                      { color: getContrastColor(avatarColor) },
                     ]}
                   >
                     {`${review.customer_name
@@ -157,12 +189,16 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
                 </View>
               </View>
               <View style={styles.starContainer}>
-                {[...Array(review.stars_review)].map((_, index) => (
+                {[...Array(5)].map((_, index) => (
                   <AntDesign
                     key={index}
                     name="star"
                     size={18}
-                    color={Colors.yellowColor}
+                    color={
+                      index < review.stars_review
+                        ? Colors.yellowColor
+                        : Colors.starColorNoRating
+                    }
                   />
                 ))}
               </View>
@@ -191,7 +227,9 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
                   </Text>
                 )}
                 <View style={styles.productInfo}>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleProductPress(review.product_id)}
+                  >
                     <Text style={styles.productName}>
                       {review.product_name}
                     </Text>
