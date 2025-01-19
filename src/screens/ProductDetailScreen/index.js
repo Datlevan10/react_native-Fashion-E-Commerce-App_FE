@@ -39,6 +39,7 @@ export default function ProductDetailScreen({ route, navigation }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
+  const [reviewsTestimonial, setReviewsTestimonial] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [isWriteReviewModalVisible, setWriteReviewModalVisible] =
     useState(false);
@@ -69,6 +70,25 @@ export default function ProductDetailScreen({ route, navigation }) {
       }
     };
 
+    const getAllReviews = async () => {
+      try {
+        const response = await apiService.getAllReviews();
+
+        if (response.status === 200) {
+          const fetchedReviews = response?.data?.data || [];
+
+          if (fetchedReviews.length > 0) {
+            setReviewsTestimonial(fetchedReviews);
+          } else {
+            // console.log("No reviews found.");
+            setReviewsTestimonial(null);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
     const getReviewsByProductId = async () => {
       try {
         const response = await apiService.getReviewByProductId(
@@ -92,16 +112,13 @@ export default function ProductDetailScreen({ route, navigation }) {
       }
     };
 
-    // fetchCustomerId();
-    // checkIfFavorite();
-    // loadStoreName();
-    // getReviewsByProductId();
     const fetchData = async () => {
       try {
         await Promise.all([
           fetchCustomerId(),
           loadStoreName(),
           getReviewsByProductId(),
+          getAllReviews(),
         ]);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -191,7 +208,7 @@ export default function ProductDetailScreen({ route, navigation }) {
       const productData = {
         customer_id: customerId,
         product_id: product.productId,
-        quantity: 1, // Default quantity is 1
+        quantity: 1,
         color: selectedColor,
         size: selectedSize,
       };
@@ -363,7 +380,7 @@ export default function ProductDetailScreen({ route, navigation }) {
             {isLoading ? (
               <WidgetLoading />
             ) : (
-              <TestimonialReviewWidget reviews={reviews} />
+              <TestimonialReviewWidget reviews={reviewsTestimonial} />
             )}
           </View>
           <View style={styles.reviewContainer}>

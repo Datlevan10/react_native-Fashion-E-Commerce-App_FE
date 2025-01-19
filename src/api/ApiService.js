@@ -32,6 +32,10 @@ const getListAllProducts = async () => {
   return api.get("/products");
 };
 
+const getProductByProductId = async (productId) => {
+  return api.get(`/products/${productId}`);
+};
+
 const searchProducts = async (keyword) => {
   return api.get(`/products/search?keyword=${keyword}`);
 };
@@ -97,12 +101,18 @@ const filterReviewByMedia = async (productId) => {
   return api.get(`/reviews/filter-by-media?product_id=${productId}`);
 };
 
+const getAllReviews = async () => {
+  return api.get("/reviews");
+};
+
 const getReviewByProductId = async (productId) => {
   return api.get(`/reviews/product/${productId}`);
 };
 
 const getReviewByProductIdLimit = async (productId, limit) => {
-  return api.get(`/reviews/product/${productId}/limit?limit=${parseInt(limit, 10)}`);
+  return api.get(
+    `/reviews/product/${productId}/limit?limit=${parseInt(limit, 10)}`
+  );
 };
 // Notification
 const getNotification = async (customerId) => {
@@ -120,6 +130,7 @@ export default {
   getCategories,
   getStores,
   getListAllProducts,
+  getProductByProductId,
   searchProducts,
   getEventImageActive,
   getFeatureProducts,
@@ -131,6 +142,7 @@ export default {
   filterReviewByNewest,
   filterReviewByOldest,
   filterReviewByMedia,
+  getAllReviews,
   getReviewByProductId,
   getReviewByProductIdLimit,
   addProductToFavorite,
