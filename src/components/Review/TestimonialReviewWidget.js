@@ -78,6 +78,7 @@ const TestimonialReviewWidget = ({ reviews }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Our Customers Love Us</Text>
+      <Text style={styles.subtitle}>Real feedback from our valued customers</Text>
       <View style={styles.reviewContainer}>
         <TouchableOpacity
           onPress={previousReview}
@@ -163,7 +164,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "500",
-    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 18,
+    color: Colors.blackColor,
+    marginTop: 10,
+    marginBottom: 20,
   },
   reviewContainer: {
     flexDirection: "row",
@@ -181,7 +187,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
     width: 180,
     height: 200,
-    // marginHorizontal: 5,
   },
   customerName: {
     fontSize: 16,
@@ -210,7 +215,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,
-    // marginRight: 5,
     left: -7,
   },
   navigationRight: {
@@ -220,7 +224,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 5,
-    // marginLeft: 5,
     right: -7,
   },
 });

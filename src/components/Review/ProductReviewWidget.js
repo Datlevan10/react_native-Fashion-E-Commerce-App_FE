@@ -15,9 +15,14 @@ import API_BASE_URL from "../../configs/config";
 import WidgetLoading from "./WidgetLoading";
 import apiService from "../../api/ApiService";
 import NoFilterResultModal from "./NoFilterResultModal";
+import ReviewDetailModal from "./ReviewDetailModal";
+import {
+  getRandomColor,
+  getContrastColor,
+} from "../../../src/utils/colorUtils";
+import { formatDate } from "../../../src/utils/dateUtils";
 
 const ProductReviewWidget = ({ reviews, onWriteReview }) => {
-
   const [filteredReviews, setFilteredReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(3);
@@ -25,6 +30,8 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
     const source = filteredReviews.length > 0 ? filteredReviews : reviews;
     return source.slice(0, visibleCount);
   }, [filteredReviews, reviews, visibleCount]);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedReview, setSelectedReview] = useState(null);
 
   const loadMoreReviews = () => {
     setIsLoading(true);
@@ -48,33 +55,6 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
       );
   }, [reviews]);
 
-  const getRandomColor = () => {
-    const letters = "0123456789ABCDEF";
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  };
-
-  const getContrastColor = (bgColor) => {
-    const r = parseInt(bgColor.slice(1, 3), 16);
-    const g = parseInt(bgColor.slice(3, 5), 16);
-    const b = parseInt(bgColor.slice(5, 7), 16);
-
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-
-    return luminance > 0.5 ? "#000000" : "#FFFFFF";
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = String(date.getFullYear());
-    return `${day}/${month}/${year}`;
-  };
-
   const onFilterReviews = async (star, productId) => {
     setIsLoading(true);
     try {
@@ -91,6 +71,22 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
     } finally {
       setTimeout(() => setIsLoading(false), 500);
     }
+  };
+
+  const openModal = (image) => {
+    const review = reviews.find((rev) =>
+      rev.media.some((media) => `${API_BASE_URL}${media}` === image.uri)
+    );
+    if (review) {
+      // console.log("Data passed to ReviewDetailModal:", review);
+      setSelectedReview(review);
+      setModalVisible(true);
+    }
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedReview(null);
   };
 
   const renderReview = ({ item }) => {
@@ -221,16 +217,33 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
         showsHorizontalScrollIndicator={false}
         style={styles.imageScrollContainer}
       >
-        {allImagesWithRatings.map((item, index) => (
-          <View key={index} style={styles.imageBox}>
-            <Image source={{ uri: item.uri }} style={styles.reviewImages} />
-            <View style={styles.ratingOverlay}>
-              <FontAwesome name="star" size={14} color={Colors.yellowColor} />
-              <Text style={styles.ratingText}>{item.stars_review}</Text>
-            </View>
-          </View>
-        ))}
+        {allImagesWithRatings.map((item, index) =>
+          item.uri ? (
+            <TouchableOpacity
+              key={index}
+              style={styles.imageBox}
+              onPress={() => {
+                openModal(item);
+              }}
+            >
+              <Image source={{ uri: item.uri }} style={styles.reviewImages} />
+              <View style={styles.ratingOverlay}>
+                <FontAwesome name="star" size={14} color={Colors.yellowColor} />
+                <Text style={styles.ratingText}>{item.stars_review}</Text>
+              </View>
+            </TouchableOpacity>
+          ) : null
+        )}
+
+        {isModalVisible && selectedReview && (
+          <ReviewDetailModal
+            visible={isModalVisible}
+            review={selectedReview}
+            onClose={closeModal}
+          />
+        )}
       </ScrollView>
+
       <Text style={styles.title}>Reviews with comments</Text>
       <ScrollView
         horizontal
