@@ -14,6 +14,11 @@ import Colors from "../../styles/Color";
 import apiService from "../../api/ApiService";
 import API_BASE_URL from "../../configs/config";
 import Modal from "react-native-modal";
+import {
+  getRandomColor,
+  getContrastColor,
+} from "../../../src/utils/colorUtils";
+import { formatDate } from "../../../src/utils/dateUtils";
 
 const { width } = Dimensions.get("window");
 
@@ -44,31 +49,6 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
   if (!review) {
     return null;
   }
-
-  const getRandomColor = () => {
-    const letters = "0123456789ABCDEF";
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  };
-
-  const getContrastColor = (bgColor) => {
-    const r = parseInt(bgColor.slice(1, 3), 16);
-    const g = parseInt(bgColor.slice(3, 5), 16);
-    const b = parseInt(bgColor.slice(5, 7), 16);
-    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-    return luminance > 0.5 ? "#000000" : "#FFFFFF";
-  };
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = String(date.getFullYear());
-    return `${day}/${month}/${year}`;
-  };
 
   const handleProductPress = async (productId) => {
     try {
@@ -155,6 +135,7 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
             )}
 
             {(!review.media || review.media.length === 0) && (
+              // Handle lai cho nay
               <Text style={styles.noImageText}>No images available</Text>
             )}
 
@@ -413,6 +394,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "400",
     marginBottom: 10,
+    textDecorationLine: "underline",
   },
   productPrice: {
     fontSize: 18,
