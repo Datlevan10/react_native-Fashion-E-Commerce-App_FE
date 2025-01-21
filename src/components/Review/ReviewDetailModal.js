@@ -19,6 +19,7 @@ import {
   getContrastColor,
 } from "../../../src/utils/colorUtils";
 import { formatDate } from "../../../src/utils/dateUtils";
+import WidgetLoading from "./WidgetLoading";
 
 const { width } = Dimensions.get("window");
 
@@ -26,11 +27,19 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
   const navigation = useNavigation();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [avatarColor, setAvatarColor] = useState("#FFFFFF");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (visible) {
+      setIsLoading(true);
       const randomColor = getRandomColor();
       setAvatarColor(randomColor);
+
+      const timeout = setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+
+      return () => clearTimeout(timeout);
     }
   }, [visible]);
 
@@ -99,144 +108,154 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <AntDesign name="close" size={24} color="#000" />
           </TouchableOpacity>
-          <View style={styles.contentContainer}>
-            {review.media && review.media.length > 0 && (
-              <View style={styles.imageContainer}>
-                <TouchableOpacity
-                  onPress={handlePreviousImage}
-                  style={styles.navigationLeft}
-                >
-                  <AntDesign
-                    name="left"
-                    size={18}
-                    color={Colors.whiteBgColor}
-                  />
-                </TouchableOpacity>
-
-                <Image
-                  source={{
-                    uri: `${API_BASE_URL}${review.media[currentImageIndex]}`,
-                  }}
-                  style={styles.image}
-                  resizeMode="contain"
-                />
-
-                <TouchableOpacity
-                  onPress={handleNextImage}
-                  style={styles.navigationRight}
-                >
-                  <AntDesign
-                    name="right"
-                    size={16}
-                    color={Colors.whiteBgColor}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-
-            {(!review.media || review.media.length === 0) && (
-              // Handle lai cho nay
-              <Text style={styles.noImageText}>No images available</Text>
-            )}
-
-            <View style={styles.detailsContainer}>
-              <View style={styles.row}>
-                <View style={[styles.avatar, { backgroundColor: avatarColor }]}>
-                  <Text
-                    style={[
-                      styles.avatarText,
-                      { color: getContrastColor(avatarColor) },
-                    ]}
+          {isLoading ? (
+            <WidgetLoading />
+          ) : (
+            <View style={styles.contentContainer}>
+              {review.media && review.media.length > 0 && (
+                <View style={styles.imageContainer}>
+                  <TouchableOpacity
+                    onPress={handlePreviousImage}
+                    style={styles.navigationLeft}
                   >
-                    {`${review.customer_name
-                      .trim()
-                      .charAt(0)}${review.customer_name
-                      .trim()
-                      .split(" ")
-                      .pop()
-                      .charAt(0)}`}
-                  </Text>
+                    <AntDesign
+                      name="left"
+                      size={18}
+                      color={Colors.whiteBgColor}
+                    />
+                  </TouchableOpacity>
+
+                  <Image
+                    source={{
+                      uri: `${API_BASE_URL}${review.media[currentImageIndex]}`,
+                    }}
+                    style={styles.image}
+                    resizeMode="contain"
+                  />
+
+                  <TouchableOpacity
+                    onPress={handleNextImage}
+                    style={styles.navigationRight}
+                  >
+                    <AntDesign
+                      name="right"
+                      size={16}
+                      color={Colors.whiteBgColor}
+                    />
+                  </TouchableOpacity>
                 </View>
-                <View style={styles.customerInfo}>
-                  <Text style={styles.customerName}>
-                    {review.customer_name}
+              )}
+
+              {(!review.media || review.media.length === 0) && (
+                // Handle lai cho nay
+                <Text style={styles.noImageText}>No images available</Text>
+              )}
+
+              <View style={styles.detailsContainer}>
+                <View style={styles.row}>
+                  <View
+                    style={[styles.avatar, { backgroundColor: avatarColor }]}
+                  >
+                    <Text
+                      style={[
+                        styles.avatarText,
+                        { color: getContrastColor(avatarColor) },
+                      ]}
+                    >
+                      {`${review.customer_name
+                        .trim()
+                        .charAt(0)}${review.customer_name
+                        .trim()
+                        .split(" ")
+                        .pop()
+                        .charAt(0)}`}
+                    </Text>
+                  </View>
+                  <View style={styles.customerInfo}>
+                    <Text style={styles.customerName}>
+                      {review.customer_name}
+                    </Text>
+                    <View style={styles.reviewDateBox}>
+                      <MaterialIcons
+                        name="verified"
+                        size={12}
+                        color="#2196F3"
+                      />
+                      <Text style={styles.reviewDate}>
+                        Review on {formatDate(review.review_date)}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.starContainer}>
+                  {[...Array(5)].map((_, index) => (
+                    <AntDesign
+                      key={index}
+                      name="star"
+                      size={18}
+                      color={
+                        index < review.stars_review
+                          ? Colors.yellowColor
+                          : Colors.starColorNoRating
+                      }
+                    />
+                  ))}
+                </View>
+                <Text style={styles.reviewTitle}>{review.review_title}</Text>
+                <ScrollView style={{ maxHeight: 150 }}>
+                  <Text style={styles.reviewContent}>
+                    {review.review_product}
                   </Text>
-                  <View style={styles.reviewDateBox}>
-                    <MaterialIcons name="verified" size={12} color="#2196F3" />
-                    <Text style={styles.reviewDate}>
-                      Review on {formatDate(review.review_date)}
+                </ScrollView>
+                <View style={styles.divider} />
+                <Text style={styles.subtitleProduct}>Purchased item:</Text>
+                <View style={styles.productInfoContainer}>
+                  {review.product_image && review.product_image.length > 0 ? (
+                    <>
+                      <Image
+                        source={{
+                          uri: `${API_BASE_URL}${review.product_image[0].url}`,
+                        }}
+                        style={styles.productImage}
+                        resizeMode="cover"
+                      />
+                    </>
+                  ) : (
+                    <Text style={styles.noImageText}>
+                      No product image available
+                    </Text>
+                  )}
+                  <View style={styles.productInfo}>
+                    <TouchableOpacity
+                      onPress={() => handleProductPress(review.product_id)}
+                    >
+                      <Text style={styles.productName}>
+                        {review.product_name}
+                      </Text>
+                    </TouchableOpacity>
+                    <Text style={styles.productPrice}>
+                      ${review.product_price}
                     </Text>
                   </View>
                 </View>
-              </View>
-              <View style={styles.starContainer}>
-                {[...Array(5)].map((_, index) => (
-                  <AntDesign
-                    key={index}
-                    name="star"
-                    size={18}
-                    color={
-                      index < review.stars_review
-                        ? Colors.yellowColor
-                        : Colors.starColorNoRating
-                    }
-                  />
-                ))}
-              </View>
-              <Text style={styles.reviewTitle}>{review.review_title}</Text>
-              <ScrollView style={{ maxHeight: 150 }}>
-                <Text style={styles.reviewContent}>
-                  {review.review_product}
-                </Text>
-              </ScrollView>
-              <View style={styles.divider} />
-              <Text style={styles.subtitleProduct}>Purchased item:</Text>
-              <View style={styles.productInfoContainer}>
-                {review.product_image && review.product_image.length > 0 ? (
-                  <>
-                    <Image
-                      source={{
-                        uri: `${API_BASE_URL}${review.product_image[0].url}`,
-                      }}
-                      style={styles.productImage}
-                      resizeMode="cover"
-                    />
-                  </>
-                ) : (
-                  <Text style={styles.noImageText}>
-                    No product image available
-                  </Text>
-                )}
-                <View style={styles.productInfo}>
-                  <TouchableOpacity
-                    onPress={() => handleProductPress(review.product_id)}
-                  >
-                    <Text style={styles.productName}>
-                      {review.product_name}
-                    </Text>
+                <View style={styles.reportContainer}>
+                  <TouchableOpacity style={styles.likeButton}>
+                    <AntDesign name="like1" size={18} color={Colors.darkGray} />
+                    <Text style={styles.likeCountText}>(0)</Text>
                   </TouchableOpacity>
-                  <Text style={styles.productPrice}>
-                    ${review.product_price}
-                  </Text>
+                  <View style={styles.verticalDivider} />
+                  <TouchableOpacity style={styles.reportButton}>
+                    <MaterialIcons
+                      name="flag"
+                      size={18}
+                      color={Colors.darkGray}
+                    />
+                    <Text style={styles.reportText}>Report</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-              <View style={styles.reportContainer}>
-                <TouchableOpacity style={styles.likeButton}>
-                  <AntDesign name="like1" size={18} color={Colors.darkGray} />
-                  <Text style={styles.likeCountText}>(0)</Text>
-                </TouchableOpacity>
-                <View style={styles.verticalDivider} />
-                <TouchableOpacity style={styles.reportButton}>
-                  <MaterialIcons
-                    name="flag"
-                    size={18}
-                    color={Colors.darkGray}
-                  />
-                  <Text style={styles.reportText}>Report</Text>
-                </TouchableOpacity>
-              </View>
             </View>
-          </View>
+          )}
         </View>
       </View>
     </Modal>

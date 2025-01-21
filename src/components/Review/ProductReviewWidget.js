@@ -137,14 +137,24 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
         {item.media.length > 0 && (
           <View style={styles.mediaContainer}>
             {item.media.map((image, index) => (
-              <Image
+              <TouchableOpacity
                 key={index}
-                source={{ uri: `${API_BASE_URL}${image}` }}
-                style={styles.reviewImage}
-              />
+                onPress={() =>
+                  openModal({
+                    uri: `${API_BASE_URL}${image}`,
+                    stars_review: item.stars_review,
+                  })
+                }
+              >
+                <Image
+                  source={{ uri: `${API_BASE_URL}${image}` }}
+                  style={styles.reviewImage}
+                />
+              </TouchableOpacity>
             ))}
           </View>
         )}
+
         <View style={styles.row}>
           <TouchableOpacity style={styles.likeButton}>
             <AntDesign name="like1" size={18} color={Colors.grayColor} />
@@ -292,20 +302,12 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
           </>
         )}
       </ScrollView>
-
-      {/* <FlatList
-          data={reviews}
-          keyExtractor={(item) => item.review_id}
-          renderItem={renderReview}
-          nestedScrollEnabled
-        /> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    // marginVertical: 16,
     flex: 1,
   },
   reviewCard: {
