@@ -17,7 +17,7 @@ class ReviewController extends Controller
     // method GET
     public function index()
     {
-        $reviews = Review::get();
+        $reviews = Review::get()->where('status', 'approved');
         if ($reviews->count() > 0) {
             return response()->json([
                 'message' => 'Get reviews success',
