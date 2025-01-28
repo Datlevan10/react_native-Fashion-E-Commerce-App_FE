@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\{
     OrderController,
     OrderDetailController,
     ProductFavoriteController,
+    ReportReviewController,
     ReviewController,
     StaffController,
     StoreController,
@@ -118,6 +119,15 @@ Route::prefix('')->group(function () {
         Route::get('/filter-by-media', [ReviewController::class, 'filterReviewByMedia']);
     });
     Route::apiResource('reviews', ReviewController::class);
+
+    // Report Review Routes
+    Route::prefix('report_reviews')->group(function () {
+        // Route::get('/status/pending', [ReportReviewController::class, 'getPendingReports']);
+        // Route::get('/status/processed', [ReportReviewController::class, 'getProcessedReports']);
+        // Route::put('/{report_id}/process', [ReportReviewController::class, 'processReport']);
+        // Route::put('/{report_id}/unprocess', [ReportReviewController::class, 'unprocessReport']);
+    });
+    Route::apiResource('report_reviews', ReportReviewController::class);
 
     // Settings Widget No Reviews Routes
     Route::prefix('widget_no_reviews_settings')->group(function () {
