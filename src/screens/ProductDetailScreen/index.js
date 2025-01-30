@@ -114,7 +114,7 @@ export default function ProductDetailScreen({ route, navigation }) {
 
     const fetchData = async () => {
       try {
-        await Promise.all([
+        await Promise.allSettled([
           fetchCustomerId(),
           loadStoreName(),
           getReviewsByProductId(),
