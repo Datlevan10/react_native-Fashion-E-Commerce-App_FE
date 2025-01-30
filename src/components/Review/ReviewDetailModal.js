@@ -20,6 +20,7 @@ import {
 } from "../../../src/utils/colorUtils";
 import { formatDate } from "../../../src/utils/dateUtils";
 import WidgetLoading from "./WidgetLoading";
+import ReportReviewModal from "./ReportReviewModal";
 
 const { width } = Dimensions.get("window");
 
@@ -28,6 +29,7 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [avatarColor, setAvatarColor] = useState("#FFFFFF");
   const [isLoading, setIsLoading] = useState(true);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     if (visible) {
@@ -244,7 +246,10 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
                     <Text style={styles.likeCountText}>(0)</Text>
                   </TouchableOpacity>
                   <View style={styles.verticalDivider} />
-                  <TouchableOpacity style={styles.reportButton}>
+                  <TouchableOpacity
+                    style={styles.reportButton}
+                    onPress={() => setModalVisible(true)}
+                  >
                     <MaterialIcons
                       name="flag"
                       size={18}
@@ -252,6 +257,13 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
                     />
                     <Text style={styles.reportText}>Report</Text>
                   </TouchableOpacity>
+                  <ReportReviewModal
+                    isVisible={isModalVisible}
+                    onClose={() => setModalVisible(false)}
+                    storeName="H&M"
+                    // storeName={review.store_name}
+                    onReportSubmit={(reason) => console.log(reason)}
+                  />
                 </View>
               </View>
             </View>
