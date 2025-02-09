@@ -11,11 +11,14 @@ import Modal from "react-native-modal";
 import { RadioButton } from "react-native-paper";
 import Colors from "../../styles/Color";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import apiService from "../../api/ApiService";
 
 const ReportReviewModal = ({
   isVisible,
   onClose,
   storeName,
+  reviewId,
+  reporterId,
   onReportSubmit,
 }) => {
   const [selectedReason, setSelectedReason] = useState("");
@@ -28,10 +31,23 @@ const ReportReviewModal = ({
     "Other violations.",
   ];
 
-  const handleSubmit = () => {
+  const handleSubmitReport = async () => {
     if (selectedReason) {
-      onReportSubmit(selectedReason);
-      onClose();
+      try {
+        const data = {
+          review_id: reviewId,
+          reporter_id: reporterId,
+          report_reason: selectedReason,
+        };
+        // console.log("Sending data:", data);
+
+        await apiService.reportReview(data);
+        alert("Report submitted successfully.");
+        onClose();
+      } catch (error) {
+        console.error("Error submitting report:", error);
+        alert("Failed to submit report.");
+      }
     } else {
       alert("Please select a reason for reporting.");
     }
@@ -53,9 +69,8 @@ const ReportReviewModal = ({
 
         <Text style={styles.title}>Report this review</Text>
         <Text style={styles.subtitle}>
-          Thank you for taking the time to help {
-            <Text style={styles.storeName}>{storeName}</Text>
-          }. Your report is
+          Thank you for taking the time to help{" "}
+          {<Text style={styles.storeName}>{storeName}</Text>}. Your report is
           anonymous.
         </Text>
 
@@ -75,7 +90,10 @@ const ReportReviewModal = ({
             </TouchableOpacity>
           ))}
         </ScrollView>
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={handleSubmitReport}
+        >
           <Text style={styles.submitButtonText}>Report this review</Text>
         </TouchableOpacity>
       </View>

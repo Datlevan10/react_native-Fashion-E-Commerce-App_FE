@@ -157,7 +157,7 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
 
         <View style={styles.row}>
           <TouchableOpacity style={styles.likeButton}>
-            <AntDesign name="like1" size={18} color={Colors.grayColor} />
+            <AntDesign name="like1" size={18} color={Colors.darkGray} />
             <Text style={styles.likeCountText}>(0)</Text>
           </TouchableOpacity>
           <View style={styles.verticalDivider} />
