@@ -21,18 +21,26 @@ import {
 import { formatDate } from "../../../src/utils/dateUtils";
 import WidgetLoading from "./WidgetLoading";
 import ReportReviewModal from "./ReportReviewModal";
+import * as SecureStore from "expo-secure-store";
 
 const { width } = Dimensions.get("window");
 
 const ReviewDetailModal = ({ visible, onClose, review }) => {
   const navigation = useNavigation();
+  const [customerId, setCustomerId] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [avatarColor, setAvatarColor] = useState("#FFFFFF");
   const [isLoading, setIsLoading] = useState(true);
   const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
+    const fetchCustomerId = async () => {
+      const customerId = await SecureStore.getItemAsync("customer_id");
+      setCustomerId(customerId);
+    };
+
     if (visible) {
+      fetchCustomerId();
       setIsLoading(true);
       const randomColor = getRandomColor();
       setAvatarColor(randomColor);
@@ -262,7 +270,9 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
                     onClose={() => setModalVisible(false)}
                     storeName="H&M"
                     // storeName={review.store_name}
-                    onReportSubmit={(reason) => console.log(reason)}
+                    // onReportSubmit={(reason) => console.log(reason)}
+                    reviewId={review.review_id}
+                    reporterId={customerId}
                   />
                 </View>
               </View>

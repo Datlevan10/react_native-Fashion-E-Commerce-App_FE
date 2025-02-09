@@ -114,6 +114,12 @@ const getReviewByProductIdLimit = async (productId, limit) => {
     `/reviews/product/${productId}/limit?limit=${parseInt(limit, 10)}`
   );
 };
+
+// Report Review
+const reportReview = async (data) => {
+  return api.post(`/report_reviews`, data);
+};
+
 // Notification
 const getNotification = async (customerId) => {
   return api.get(`/notifications?customer_id=${customerId}`);
@@ -151,4 +157,5 @@ export default {
   removeProductFromFavorite,
   getNotification,
   hideNotification,
+  reportReview,
 };
