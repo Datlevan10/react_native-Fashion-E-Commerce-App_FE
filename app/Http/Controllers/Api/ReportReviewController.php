@@ -6,6 +6,7 @@ use App\Models\ReportReview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\ReportReviewResource;
 
 class ReportReviewController extends Controller
@@ -61,5 +62,54 @@ class ReportReviewController extends Controller
         } else {
             return response()->json(['message' => 'Report review failed'], 400);
         }
+    }
+
+    // method PUT publish Report
+
+    // method reply Report
+    public function replyReport(Request $request, $report_id)
+    {
+        $validator = Validator::make($request->all(), [
+            'reply' => 'required|string',
+            'admin_id' => 'required|string|exists:admins,admin_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $report_review = ReportReview::find($report_id);
+
+        if (!$report_review) {
+            return response()->json(['message' => 'Report not found'], 404);
+        }
+
+        $report_review->reply = $request->reply;
+        $report_review->handled_at = now();
+        $report_review->reply_at = now();
+        $report_review->handled_by = $request->admin_id;
+        $report_review->save();
+
+        return response()->json([
+            'message' => 'Reply report successfully',
+            'data' => new ReportReviewResource($report_review)
+        ], 200);
+    }
+
+    // method DELETE
+    public function destroy($report_id)
+    {
+        $report_review = ReportReview::find($report_id);
+
+        if (!$report_review) {
+            return response()->json(['message' => 'Report not found'], 404);
+        }
+
+        $report_review->delete();
+
+        return response()->json(['message' => 'Delete report success'], 200);
     }
 }
