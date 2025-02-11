@@ -122,10 +122,7 @@ Route::prefix('')->group(function () {
 
     // Report Review Routes
     Route::prefix('report_reviews')->group(function () {
-        // Route::get('/status/pending', [ReportReviewController::class, 'getPendingReports']);
-        // Route::get('/status/processed', [ReportReviewController::class, 'getProcessedReports']);
-        // Route::put('/{report_id}/process', [ReportReviewController::class, 'processReport']);
-        // Route::put('/{report_id}/unprocess', [ReportReviewController::class, 'unprocessReport']);
+        Route::put('/{report_id}/reply', [ReportReviewController::class, 'replyReport']);
     });
     Route::apiResource('report_reviews', ReportReviewController::class);
 

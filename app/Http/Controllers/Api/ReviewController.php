@@ -293,7 +293,7 @@ class ReviewController extends Controller
     }
 
 
-    // method PUT Reply review
+    // method PUT Reply review (Xử lý thêm case khi reply review sẽ gửi Email thông báo cho customer)
     public function replyReview(Request $request, $review_id)
     {
         $validator = Validator::make($request->all(), [
