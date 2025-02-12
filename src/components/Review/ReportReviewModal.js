@@ -12,6 +12,9 @@ import { RadioButton } from "react-native-paper";
 import Colors from "../../styles/Color";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import apiService from "../../api/ApiService";
+import ReportReviewSubmittedSuccessModal from "./ReportReviewSubmittedSuccessModal";
+
+const imageReportSuccess = require("../../../assets/image/write_report.png");
 
 const ReportReviewModal = ({
   isVisible,
@@ -31,6 +34,11 @@ const ReportReviewModal = ({
     "Other violations.",
   ];
 
+  const [
+    isReportReviewSubmittedSuccessModalVisible,
+    setReportReviewSubmittedSuccessModalVisible,
+  ] = useState(false);
+
   const handleSubmitReport = async () => {
     if (selectedReason) {
       try {
@@ -42,7 +50,8 @@ const ReportReviewModal = ({
         // console.log("Sending data:", data);
 
         await apiService.reportReview(data);
-        alert("Report submitted successfully.");
+        // alert("Report submitted successfully.");
+        setReportReviewSubmittedSuccessModalVisible(true);
         onClose();
       } catch (error) {
         console.error("Error submitting report:", error);
@@ -96,6 +105,13 @@ const ReportReviewModal = ({
         >
           <Text style={styles.submitButtonText}>Report this review</Text>
         </TouchableOpacity>
+        <ReportReviewSubmittedSuccessModal
+          visible={isReportReviewSubmittedSuccessModalVisible}
+          onClose={() => setReportReviewSubmittedSuccessModalVisible(false)}
+          imageReport={imageReportSuccess}
+          title="Thank you for taking the time to help H&M."
+          content="Your report is anonymous."
+        />
       </View>
     </Modal>
   );
@@ -108,7 +124,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   container: {
-    width: "90%",
+    width: "95%",
     height: "50%",
     backgroundColor: "white",
     borderRadius: 10,
