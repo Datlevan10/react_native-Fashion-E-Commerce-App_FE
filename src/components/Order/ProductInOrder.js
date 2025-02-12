@@ -1,13 +1,22 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { Ionicons } from "react-native-vector-icons";
-import * as Clipboard from 'expo-clipboard';
+import * as Clipboard from "expo-clipboard";
 import ShowAlertWithTitleContentAndOneActions from "../Alert/ShowAlertWithTitleContentAndOneActions ";
 
 const ProductInOrder = ({ image, productName, description, orderId }) => {
-  
   const copyToClipboard = () => {
-    ShowAlertWithTitleContentAndOneActions('Hề lôôô 🚚', 'Vui lòng chuyển món đồ này đến Nguyễn Thanh Chúc giúp mình 🤣🤣🤣 ')
+    ShowAlertWithTitleContentAndOneActions(
+      "Hề lôôô 🚚",
+      "Vui lòng chuyển món đồ này đến Nguyễn Thanh Chúc giúp mình 🤣🤣🤣 "
+    );
   };
 
   return (
@@ -73,8 +82,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   copyIcon: {
-    marginLeft: 10
-  }
+    marginLeft: 10,
+  },
 });
 
 export default ProductInOrder;
