@@ -101,6 +101,7 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
     }
   };
 
+  const modalHeight = review.media && review.media.length > 0 ? "80%" : "45%";
   return (
     <Modal
       isVisible={visible}
@@ -110,7 +111,7 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
       onBackdropPress={onClose}
     >
       <View style={styles.overlay}>
-        <View style={styles.container}>
+        <View style={[styles.container, { height: modalHeight }]}>
           <TouchableOpacity style={styles.allPhotosButton}>
             <MaterialIcons name="widgets" size={16} color="#000" />
             <Text style={styles.allPhotosText}>All photos</Text>
@@ -156,10 +157,10 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
                 </View>
               )}
 
-              {(!review.media || review.media.length === 0) && (
+              {/* {(!review.media || review.media.length === 0) && (
                 // Handle lai cho nay
                 <Text style={styles.noImageText}>No images available</Text>
-              )}
+              )} */}
 
               <View style={styles.detailsContainer}>
                 <View style={styles.row}>
