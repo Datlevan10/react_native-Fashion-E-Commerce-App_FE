@@ -51,8 +51,9 @@ const ReportReviewModal = ({
 
         await apiService.reportReview(data);
         // alert("Report submitted successfully.");
+        // Handle lai chox nay khi submit report thanh cong se tat modal ReportReviewModal va hien thi modal success
+        // onClose();
         setReportReviewSubmittedSuccessModalVisible(true);
-        onClose();
       } catch (error) {
         console.error("Error submitting report:", error);
         alert("Failed to submit report.");
