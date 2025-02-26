@@ -202,6 +202,7 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
           <ScoreBar
             reviews={reviews}
             onFilterByStar={(star) =>
+              console.log("Filter by star:", star) ||
               onFilterReviews(star.toString(), reviews[0]?.product_id)
             }
           />
@@ -263,16 +264,19 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
         {[
           { label: "All", filter: "all" },
           { label: "Most helpful", filter: "helpful" },
-          { label: "Highest rating", filter: "5" },
-          { label: "Lowest rating", filter: "4" },
-          { label: "Review with photo", filter: "3" },
-          { label: "2 Stars", filter: "2" },
-          { label: "1 Star", filter: "1" },
+          { label: "Highest rating", filter: "highest" },
+          { label: "Lowest rating", filter: "lowest" },
+          { label: "Review with photo", filter: "media" },
+          { label: "★ 5", filter: "5" },
+          { label: "★ 4", filter: "4" },
+          { label: "★ 3", filter: "3" },
+          { label: "★ 2", filter: "2" },
+          { label: "★ 1", filter: "1" },
         ].map((button) => (
           <TouchableOpacity
             key={button.filter}
             style={styles.filterButton}
-            onPress={() => onFilterReviews(button.filter)}
+            onPress={() => onFilterReviews(button.filter, reviews[0]?.product_id)}
           >
             <Text style={styles.filterButtonText}>{button.label}</Text>
           </TouchableOpacity>
