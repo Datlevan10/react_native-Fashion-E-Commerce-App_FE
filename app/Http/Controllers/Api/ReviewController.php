@@ -501,6 +501,73 @@ class ReviewController extends Controller
         }
     }
 
+    // method GET highest reviews by product_id
+    public function filterReviewByHighest(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|string|exists:products,product_id',
+            'limit' => 'nullable|integer|min:1|max:100',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $productId = $request->product_id;
+        $limit = $request->input('limit', 3);
+
+        $reviews = Review::where('product_id', $productId)
+            ->where('status', 'approved')
+            ->orderBy('stars_review', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->take($limit)
+            ->get();
+
+        $count = $reviews->count();
+
+        return response()->json([
+            'message' => "Found {$count} highest rated reviews success",
+            'data' => ReviewResource::collection($reviews),
+        ], 200);
+    }
+
+    // method GET lowest reviews by product_id
+    public function filterReviewByLowest(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|string|exists:products,product_id',
+            'limit' => 'nullable|integer|min:1|max:100',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $productId = $request->product_id;
+        $limit = $request->input('limit', 3);
+
+        $reviews = Review::where('product_id', $productId)
+            ->where('status', 'approved')
+            ->orderBy('stars_review', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->take($limit)
+            ->get();
+
+        $count = $reviews->count();
+
+        return response()->json([
+            'message' => "Found {$count} lowest rated reviews success",
+            'data' => ReviewResource::collection($reviews),
+        ], 200);
+    }
+
+
     // method GET newest reviews by product_id
     public function filterReviewByNewest(Request $request)
     {
