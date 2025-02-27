@@ -55,15 +55,36 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
       );
   }, [reviews]);
 
-  const onFilterReviews = async (star, productId) => {
+  const onFilterReviews = async (filter, productId) => {
     setIsLoading(true);
     try {
-      const response = await apiService.filterReviewsByStar(star, productId);
-      if (response.status === 200) {
-        const filteredReviews = response.data.data || [];
-        setFilteredReviews(filteredReviews);
+      let response;
+
+      if (["5", "4", "3", "2", "1"].includes(filter)) {
+        response = await apiService.filterReviewsByStar(filter, productId);
+      } else if (filter === "all") {
+        response = await apiService.getProductByProductId(productId);
+      } else if (filter === "helpful") {
+        // note handel filter by helpful
+      } else if (filter === "oldest") {
+        response = await apiService.filterReviewByOldest(productId);
+      } else if (filter === "newest") {
+        response = await apiService.filterReviewByNewest(productId);
+      } else if (filter === "highest") {
+        response = await apiService.filterReviewByHighest(productId);
+      } else if (filter === "lowest") {
+        response = await apiService.filterReviewByLowest(productId);
       } else {
-        console.error("Failed to filter reviews", response.status);
+        response = await api.get(
+          `/reviews/filter?filter=${filter}&product_id=${productId}`
+        );
+      }
+
+      if (response?.status === 200) {
+        setFilteredReviews(response.data.data || []);
+      } else {
+        console.error("Failed to filter reviews", response?.status);
+        setFilteredReviews([]);
       }
     } catch (error) {
       console.error("Error while filtering reviews", error);
@@ -266,6 +287,8 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
           { label: "Most helpful", filter: "helpful" },
           { label: "Highest rating", filter: "highest" },
           { label: "Lowest rating", filter: "lowest" },
+          { label: "Oldest", filter: "oldest" },
+          { label: "Newest", filter: "newest" },
           { label: "Review with photo", filter: "media" },
           { label: "★ 5", filter: "5" },
           { label: "★ 4", filter: "4" },
@@ -276,7 +299,9 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
           <TouchableOpacity
             key={button.filter}
             style={styles.filterButton}
-            onPress={() => onFilterReviews(button.filter, reviews[0]?.product_id)}
+            onPress={() =>
+              onFilterReviews(button.filter, reviews[0]?.product_id)
+            }
           >
             <Text style={styles.filterButtonText}>{button.label}</Text>
           </TouchableOpacity>
