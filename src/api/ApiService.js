@@ -89,12 +89,20 @@ const filterReviewsByStar = async (star, productId) => {
   );
 };
 
+const filterReviewByHighest = async (productId) => {
+  return api.get(`/reviews/filter-by-highest?product_id=${productId}`);
+};
+
+const filterReviewByLowest = async (productId) => {
+  return api.get(`/reviews/filter-by-lowest?product_id=${productId}`);
+};
+
 const filterReviewByNewest = async (productId) => {
-  return api.get(`/reviews/filter-by-newest&product_id=${productId}`);
+  return api.get(`/reviews/filter-by-newest?product_id=${productId}`);
 };
 
 const filterReviewByOldest = async (productId) => {
-  return api.get(`/reviews/filter-by-oldest&product_id=${productId}`);
+  return api.get(`/reviews/filter-by-oldest?product_id=${productId}`);
 };
 
 const filterReviewByMedia = async (productId) => {
@@ -145,6 +153,8 @@ export default {
   deleteItemInCart,
   writeReviewProduct,
   filterReviewsByStar,
+  filterReviewByHighest,
+  filterReviewByLowest,
   filterReviewByNewest,
   filterReviewByOldest,
   filterReviewByMedia,
