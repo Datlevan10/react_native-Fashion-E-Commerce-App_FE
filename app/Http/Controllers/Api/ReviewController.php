@@ -521,8 +521,8 @@ class ReviewController extends Controller
 
         $reviews = Review::where('product_id', $productId)
             ->where('status', 'approved')
-            ->orderBy('stars_review', 'desc') // Sắp xếp sao từ cao đến thấp
-            ->orderBy('created_at', 'desc') // Nếu cùng số sao, lấy mới nhất trước
+            ->orderBy('stars_review', 'desc')
+            ->orderBy('created_at', 'desc')
             ->take($limit)
             ->get();
 
@@ -554,8 +554,8 @@ class ReviewController extends Controller
 
         $reviews = Review::where('product_id', $productId)
             ->where('status', 'approved')
-            ->orderBy('stars_review', 'asc') // Sắp xếp sao từ thấp lên cao
-            ->orderBy('created_at', 'desc') // Nếu cùng số sao, lấy mới nhất trước
+            ->orderBy('stars_review', 'asc')
+            ->orderBy('created_at', 'desc')
             ->take($limit)
             ->get();
 
