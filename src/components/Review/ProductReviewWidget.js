@@ -72,12 +72,12 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
         response = await apiService.filterReviewByNewest(productId);
       } else if (filter === "highest") {
         response = await apiService.filterReviewByHighest(productId);
+      } else if (filter === "media") {
+        response = await apiService.filterReviewByMedia(productId);
       } else if (filter === "lowest") {
         response = await apiService.filterReviewByLowest(productId);
       } else {
-        response = await api.get(
-          `/reviews/filter?filter=${filter}&product_id=${productId}`
-        );
+        response = await apiService.getProductByProductId(productId);
       }
 
       if (response?.status === 200) {
