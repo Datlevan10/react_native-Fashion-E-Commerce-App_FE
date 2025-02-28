@@ -113,6 +113,7 @@ Route::prefix('')->group(function () {
         Route::put('/{review_id}/reply', [ReviewController::class, 'replyReview']);
         Route::put('/{review_id}/feature', [ReviewController::class, 'featureReview']);
         Route::put('/{review_id}/unfeature', [ReviewController::class, 'unFeatureReview']);
+        Route::get('/filter-by-most-helpful', [ReviewController::class, 'filterReviewByMostHelpful']);
         Route::get('/filter-by-star', [ReviewController::class, 'filterReviewsByStar']);
         Route::get('/filter-by-highest', [ReviewController::class, 'filterReviewByHighest']);
         Route::get('/filter-by-lowest', [ReviewController::class, 'filterReviewByLowest']);
