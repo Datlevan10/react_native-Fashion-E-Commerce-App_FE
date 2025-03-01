@@ -680,4 +680,28 @@ class ReviewController extends Controller
             'data' => ReviewResource::collection($reviews),
         ], 200);
     }
+
+    // method POST helpful count
+    public function postHelpfulCount(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'review_id' => 'required|string|exists:reviews,review_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $review = Review::findOrFail($request->review_id);
+        $review->increment('helpful_count');
+        $review->save();
+
+        return response()->json([
+            'message' => 'Helpful count updated successfully',
+            'helpful_count' => $review->helpful_count,
+        ], 200);
+    }
 }

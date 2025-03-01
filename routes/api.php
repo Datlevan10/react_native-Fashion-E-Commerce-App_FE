@@ -120,6 +120,7 @@ Route::prefix('')->group(function () {
         Route::get('/filter-by-newest', [ReviewController::class, 'filterReviewByNewest']);
         Route::get('/filter-by-oldest', [ReviewController::class, 'filterReviewByOldest']);
         Route::get('/filter-by-media', [ReviewController::class, 'filterReviewByMedia']);
+        Route::post('/post-helpful-count', [ReviewController::class, 'postHelpfulCount']);
     });
     Route::apiResource('reviews', ReviewController::class);
 
