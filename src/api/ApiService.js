@@ -109,6 +109,10 @@ const filterReviewByMedia = async (productId) => {
   return api.get(`/reviews/filter-by-media?product_id=${productId}`);
 };
 
+const filterReviewByMostHelpFul = async (productId) => {
+  return api.get(`/reviews/filter-by-most-helpful?product_id=${productId}`);
+};
+
 const getAllReviews = async () => {
   return api.get("/reviews");
 };
@@ -121,6 +125,10 @@ const getReviewByProductIdLimit = async (productId, limit) => {
   return api.get(
     `/reviews/product/${productId}/limit?limit=${parseInt(limit, 10)}`
   );
+};
+
+const postHelpfulCount = async (reviewId) => {
+  return api.post("/reviews/post-helpful-count", { review_id: reviewId });
 };
 
 // Report Review
@@ -158,6 +166,8 @@ export default {
   filterReviewByNewest,
   filterReviewByOldest,
   filterReviewByMedia,
+  filterReviewByMostHelpFul,
+  postHelpfulCount,
   getAllReviews,
   getReviewByProductId,
   getReviewByProductIdLimit,

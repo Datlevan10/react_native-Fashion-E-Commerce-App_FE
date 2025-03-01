@@ -65,7 +65,7 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
       } else if (filter === "all") {
         response = await apiService.getProductByProductId(productId);
       } else if (filter === "helpful") {
-        // note handel filter by helpful
+        response = await apiService.filterReviewByMostHelpFul(productId);
       } else if (filter === "oldest") {
         response = await apiService.filterReviewByOldest(productId);
       } else if (filter === "newest") {
@@ -91,6 +91,32 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
       setFilteredReviews([]);
     } finally {
       setTimeout(() => setIsLoading(false), 500);
+    }
+  };
+
+  const postHelpfulCount = async (reviewId) => {
+    try {
+      const response = await apiService.postHelpfulCount(reviewId);
+
+      if (response.status === 200) {
+        const updatedCount = response.data.helpful_count;
+
+        setFilteredReviews((prevReviews) =>
+          prevReviews.length > 0
+            ? prevReviews.map((review) =>
+                review.review_id === reviewId
+                  ? { ...review, helpful_count: updatedCount }
+                  : review
+              )
+            : reviews.map((review) =>
+                review.review_id === reviewId
+                  ? { ...review, helpful_count: updatedCount }
+                  : review
+              )
+        );
+      }
+    } catch (error) {
+      console.error("Error updating helpful count", error);
     }
   };
 
@@ -177,9 +203,13 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
         )}
 
         <View style={styles.row}>
-          <TouchableOpacity style={styles.likeButton}>
+          <TouchableOpacity
+            style={styles.likeButton}
+            onPress={() => postHelpfulCount(item.review_id)}
+          >
             <AntDesign name="like1" size={18} color={Colors.darkGray} />
-            <Text style={styles.likeCountText}>(0)</Text>
+            {/* Call api get heplful count */}
+            <Text style={styles.likeCountText}>({item.helpful_count})</Text>
           </TouchableOpacity>
           <View style={styles.verticalDivider} />
           <TouchableOpacity style={styles.reportButton}>
