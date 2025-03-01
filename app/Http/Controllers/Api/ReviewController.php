@@ -117,6 +117,37 @@ class ReviewController extends Controller
         }
     }
 
+    // GET review by product_id with most helpful
+    public function filterReviewByMostHelpful(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required|string|exists:products,product_id',
+            'limit' => 'nullable|integer|min:1|max:100',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $productId = $request->product_id;
+
+        $reviews = Review::where('product_id', $productId)
+            ->where('status', 'approved')
+            ->orderBy('helpful_count', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $count = $reviews->count();
+
+        return response()->json([
+            'message' => "Found {$count} most helpful reviews success",
+            'data' => ReviewResource::collection($reviews),
+        ], 200);
+    }
+
 
     // GET review by product_id with limit
     public function getReviewsByProductIdLimit(Request $request, $product_id)
@@ -506,7 +537,6 @@ class ReviewController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'product_id' => 'required|string|exists:products,product_id',
-            'limit' => 'nullable|integer|min:1|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -517,13 +547,11 @@ class ReviewController extends Controller
         }
 
         $productId = $request->product_id;
-        $limit = $request->input('limit', 3);
 
         $reviews = Review::where('product_id', $productId)
             ->where('status', 'approved')
             ->orderBy('stars_review', 'desc')
             ->orderBy('created_at', 'desc')
-            ->take($limit)
             ->get();
 
         $count = $reviews->count();
@@ -539,7 +567,6 @@ class ReviewController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'product_id' => 'required|string|exists:products,product_id',
-            'limit' => 'nullable|integer|min:1|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -550,13 +577,11 @@ class ReviewController extends Controller
         }
 
         $productId = $request->product_id;
-        $limit = $request->input('limit', 3);
 
         $reviews = Review::where('product_id', $productId)
             ->where('status', 'approved')
             ->orderBy('stars_review', 'asc')
             ->orderBy('created_at', 'desc')
-            ->take($limit)
             ->get();
 
         $count = $reviews->count();
@@ -573,7 +598,6 @@ class ReviewController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'product_id' => 'required|string|exists:products,product_id',
-            'limit' => 'nullable|integer|min:1|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -584,12 +608,10 @@ class ReviewController extends Controller
         }
 
         $productId = $request->product_id;
-        $limit = $request->input('limit', 3);
 
         $reviews = Review::where('product_id', $productId)
             ->where('status', 'approved')
             ->orderBy('created_at', 'desc')
-            ->take($limit)
             ->get();
 
         $count = $reviews->count();
@@ -605,7 +627,6 @@ class ReviewController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'product_id' => 'required|string|exists:products,product_id',
-            'limit' => 'nullable|integer|min:1|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -615,12 +636,10 @@ class ReviewController extends Controller
             ], 422);
         }
         $productId = $request->product_id;
-        $limit = $request->input('limit', 3);
 
         $reviews = Review::where('product_id', $productId)
             ->where('status', 'approved')
             ->orderBy('created_at', 'asc')
-            ->take($limit)
             ->get();
 
         $count = $reviews->count();
@@ -636,7 +655,6 @@ class ReviewController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'product_id' => 'required|string|exists:products,product_id',
-            'limit' => 'nullable|integer|min:1|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -647,14 +665,12 @@ class ReviewController extends Controller
         }
 
         $productId = $request->product_id;
-        $limit = $request->input('limit', 3);
 
         $reviews = Review::where('product_id', $productId)
             ->where('status', 'approved')
             ->whereNotNull('media')
             ->whereRaw("json_array_length(media) > 0")
             ->orderBy('created_at', 'desc')
-            ->take($limit)
             ->get();
 
         $count = $reviews->count();
@@ -662,6 +678,30 @@ class ReviewController extends Controller
         return response()->json([
             'message' => "Found {$count} reviews with media success",
             'data' => ReviewResource::collection($reviews),
+        ], 200);
+    }
+
+    // method POST helpful count
+    public function postHelpfulCount(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'review_id' => 'required|string|exists:reviews,review_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Invalid input provided',
+                'errors' => $validator->messages(),
+            ], 422);
+        }
+
+        $review = Review::findOrFail($request->review_id);
+        $review->increment('helpful_count');
+        $review->save();
+
+        return response()->json([
+            'message' => 'Helpful count updated successfully',
+            'helpful_count' => $review->helpful_count,
         ], 200);
     }
 }
