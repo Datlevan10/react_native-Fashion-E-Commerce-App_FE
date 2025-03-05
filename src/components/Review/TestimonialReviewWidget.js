@@ -5,23 +5,34 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { Entypo, AntDesign, FontAwesome } from "@expo/vector-icons";
 import Colors from "../../styles/Color";
 import ReviewDetailModal from "./ReviewDetailModal";
+import API_BASE_URL from "../../configs/config";
+import {
+  getRandomColor,
+  getContrastColor,
+} from "../../../src/utils/colorUtils";
+import { formatDate, formatDateLong } from "../../../src/utils/dateUtils";
 import WidgetLoading from "../../components/Review/WidgetLoading";
 
 const TestimonialReviewWidget = ({ reviews }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
+  const [expandedReview, setExpandedReview] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
+  const [avatarColor, setAvatarColor] = useState("#FFFFFF");
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => {
         const nextIndex = prevIndex === reviews.length - 1 ? 0 : prevIndex + 1;
+        const randomColor = getRandomColor();
+        setAvatarColor(randomColor);
         if (flatListRef.current) {
           flatListRef.current.scrollToIndex({
             animated: true,
@@ -75,10 +86,14 @@ const TestimonialReviewWidget = ({ reviews }) => {
     });
   };
 
+  const handleProductPress = async (productId) => {};
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Our Customers Love Us</Text>
-      <Text style={styles.subtitle}>Real feedback from our valued customers</Text>
+      <Text style={styles.subtitle}>
+        Real feedback from our valued customers
+      </Text>
       <View style={styles.reviewContainer}>
         <TouchableOpacity
           onPress={previousReview}
@@ -93,21 +108,45 @@ const TestimonialReviewWidget = ({ reviews }) => {
           horizontal
           renderItem={({ item }) => (
             <View style={styles.reviewBox}>
-              <Entypo name="quote" size={24} color={Colors.darkGray} />
-              <TouchableOpacity
-                onPress={() => {
-                  // console.log("Selected Item:", item);
-                  openModal(item);
-                }}
-              >
-                <Text
-                  style={styles.reviewContent}
-                  numberOfLines={4}
-                  ellipsizeMode="tail"
+              <FontAwesome
+                name="quote-left"
+                size={24}
+                color={Colors.darkGray}
+              />
+              <View>
+                <TouchableOpacity
+                  onPress={() => {
+                    openModal(item);
+                  }}
                 >
-                  {item.review_product}
+                  <Text
+                    style={styles.reviewContent}
+                    numberOfLines={4}
+                    ellipsizeMode="tail"
+                  >
+                    {`"${
+                      item.review_product.length > 100
+                        ? item.review_product.slice(0, 100) + '...More"'
+                        : item.review_product + '"'
+                    }`}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={[styles.avatar, { backgroundColor: avatarColor }]}>
+                <Text
+                  style={[
+                    styles.avatarText,
+                    { color: getContrastColor(avatarColor) },
+                  ]}
+                >
+                  {`${item.customer_name.trim().charAt(0)}${item.customer_name
+                    .trim()
+                    .split(" ")
+                    .pop()
+                    .charAt(0)}`}
                 </Text>
-              </TouchableOpacity>
+              </View>
               <Text style={styles.customerName}>{item.customer_name}</Text>
               <View style={styles.rating}>
                 {[...Array(5)].map((_, index) => (
@@ -123,6 +162,33 @@ const TestimonialReviewWidget = ({ reviews }) => {
                   />
                 ))}
               </View>
+              <View style={styles.productInfoContainer}>
+                {item.product_image && item.product_image.length > 0 ? (
+                  <>
+                    <Image
+                      source={{
+                        uri: `${API_BASE_URL}${item.product_image[0].url}`,
+                      }}
+                      style={styles.productImage}
+                      resizeMode="cover"
+                    />
+                  </>
+                ) : (
+                  <Text style={styles.noImageText}>
+                    No product image available
+                  </Text>
+                )}
+                <View style={styles.productInfo}>
+                  <TouchableOpacity
+                    onPress={() => handleProductPress(item.product_id)}
+                  >
+                    <Text style={styles.productName}>{item.product_name}</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <Text style={styles.reviewDate}>
+                Reviewed on {formatDateLong(item.review_date)}
+              </Text>
             </View>
           )}
           showsHorizontalScrollIndicator={false}
@@ -180,33 +246,46 @@ const styles = StyleSheet.create({
   reviewBox: {
     paddingVertical: 20,
     paddingHorizontal: 10,
-    backgroundColor: "#f9f9f9",
+    backgroundColor: Colors.whiteColor,
     justifyContent: "space-between",
-    borderRadius: 10,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: Colors.borderWidgetTestimonial,
     alignItems: "center",
-    marginRight: 10,
-    width: 180,
-    height: 200,
+    marginRight: 20,
+    width: 270,
+    height: 300,
+  },
+  productInfoContainer: {
+    flexDirection: "row",
+    marginVertical: 10,
+    alignItems: "center",
+  },
+  productImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 5,
   },
   customerName: {
     fontSize: 16,
-    fontWeight: "400",
-    marginTop: 30,
+    fontWeight: "500",
+    marginTop: 0,
+    color: Colors.blackWidgetTestimonial,
   },
   reviewContent: {
     fontSize: 16,
     textAlign: "center",
     marginTop: 15,
+    color: Colors.grayWidgetTestimonial,
   },
   rating: {
     flexDirection: "row",
-    marginTop: 5,
+    marginTop: 0,
     gap: 3,
   },
   reviewDate: {
-    fontSize: 12,
-    color: "#888",
-    marginTop: 5,
+    fontSize: 16,
+    color: Colors.grayWidgetTestimonial,
   },
   navigationLeft: {
     backgroundColor: Colors.darkGray,
@@ -225,5 +304,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 5,
     right: -7,
+  },
+  avatarText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  avatar: {
+    width: 40,
+    height: 40,
+    marginTop: 20,
+    borderRadius: 20,
+    backgroundColor: "#007BFF",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  productName: {
+    fontSize: 16,
+    marginLeft: 5,
+    fontWeight: "500",
+    color: Colors.blackWidgetTestimonial,
   },
 });
