@@ -25,6 +25,7 @@ const Colors = {
   textPrimary: "#333",
   textSecondary: "#7d7979",
   textPlaceholder: "#9e9e9e",
+  textTranslationReview: "#005BD3",
   grayWidgetTestimonial: "#74788D",
   blackWidgetTestimonial: "#292A32",
 

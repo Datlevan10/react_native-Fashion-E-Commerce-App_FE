@@ -32,6 +32,7 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
   }, [filteredReviews, reviews, visibleCount]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
+  const [isTranslated, setIsTranslated] = useState(false);
 
   const loadMoreReviews = () => {
     setIsLoading(true);
@@ -136,6 +137,14 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
     setSelectedReview(null);
   };
 
+  const handleTranslationToggle = async () => {
+    if (isTranslated) {
+    } else {
+      // const translatedText = await apiService.translateReview(item.review_product);
+    }
+    setIsTranslated(!isTranslated);
+  };
+
   const renderReview = ({ item }) => {
     const backgroundColor = getRandomColor();
     const textColor = getContrastColor(backgroundColor);
@@ -180,7 +189,11 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
         </View>
         <Text style={styles.reviewTitle}>{item.review_title}</Text>
         <Text style={styles.reviewContent}>{item.review_product}</Text>
-
+        <TouchableOpacity onPress={handleTranslationToggle}>
+        <Text style={styles.translationReview}>
+          {isTranslated ? "Show original" : "See translation"}
+        </Text>
+      </TouchableOpacity>
         {item.media.length > 0 && (
           <View style={styles.mediaContainer}>
             {item.media.map((image, index) => (
@@ -207,8 +220,7 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
             style={styles.likeButton}
             onPress={() => postHelpfulCount(item.review_id)}
           >
-            <AntDesign name="like1" size={18} color={Colors.darkGray} />
-            {/* Call api get heplful count */}
+            <AntDesign name="like1" size={18} color={Colors.blackWidgetTestimonial} />
             <Text style={styles.likeCountText}>({item.helpful_count})</Text>
           </TouchableOpacity>
           <View style={styles.verticalDivider} />
@@ -564,6 +576,12 @@ const styles = StyleSheet.create({
   reviewContent: {
     fontSize: 16,
     marginBottom: 10,
+  },
+  translationReview: {
+    fontSize: 16,
+    marginBottom: 10,
+    color: Colors.textTranslationReview,
+    fontWeight: "500"
   },
   button: {
     backgroundColor: Colors.blackColor,
