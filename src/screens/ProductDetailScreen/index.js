@@ -339,7 +339,6 @@ export default function ProductDetailScreen({ route, navigation }) {
               </TouchableOpacity>
             )}
           </View>
-
           <View style={styles.selectionRow}>
             <View style={styles.column}>
               <ColorSelector

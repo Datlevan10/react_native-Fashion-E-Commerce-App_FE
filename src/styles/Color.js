@@ -9,10 +9,10 @@ const Colors = {
 
   darkBlack: "#000",
   whiteColor: "#FFF",
-  darkGray: "#74788d",
+  darkGray: "#9EA0A9",
   starColorNoRating: "#e7e7e2",
   redColor: "#ed1b41",
-  yellowColor: "#ffc32b",
+  yellowColor: "#FFB400",
 
   indicatorDefaultColor: "#ccc",
   indicatorActiveColor: "#007AFF",
@@ -25,11 +25,14 @@ const Colors = {
   textPrimary: "#333",
   textSecondary: "#7d7979",
   textPlaceholder: "#9e9e9e",
+  grayWidgetTestimonial: "#74788D",
+  blackWidgetTestimonial: "#292A32",
 
   // Border color
   borderColor: "#b5b5b5",
   HMborderColor: "#CED6E2",
   borderDark: "#ddd",
+  borderWidgetTestimonial : "#D3D5E0",
 
 
   // Product color

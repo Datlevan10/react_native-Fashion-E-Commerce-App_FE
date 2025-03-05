@@ -504,7 +504,7 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: "#ccc",
-    marginVertical: 5,
+    marginTop: 5,
   },
   subtitleProduct: {
     fontSize: 16,
