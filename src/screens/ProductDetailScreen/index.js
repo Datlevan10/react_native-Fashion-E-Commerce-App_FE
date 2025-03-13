@@ -161,11 +161,9 @@ export default function ProductDetailScreen({ route, navigation }) {
 
       const response = await apiService.addProductToFavorite(productData);
       if (response.status === 201) {
-        // console.log("Product added to wishlist successfully");
         setIsFavorite(true);
         Alert.alert("Success", "Product added to wishlist.");
       } else {
-        // console.error("Failed to add product to wishlist");
         Alert.alert("Error", "Could not add product to wishlist. Try again.");
       }
     } catch (error) {

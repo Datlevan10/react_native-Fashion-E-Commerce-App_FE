@@ -95,7 +95,6 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
         colors: productDetails.color.map((color) => `${color.color_code}`),
         sizes: productDetails.size.map((size) => `${size.size}`),
       });
-      console.log("Navigated to ProductDetailScreen");
     } catch (error) {
       console.error("Failed to load product details:", error);
     }
@@ -270,8 +269,6 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
                     isVisible={isModalVisible}
                     onClose={() => setModalVisible(false)}
                     storeName="H&M"
-                    // storeName={review.store_name}
-                    // onReportSubmit={(reason) => console.log(reason)}
                     reviewId={review.review_id}
                     reporterId={customerId}
                   />

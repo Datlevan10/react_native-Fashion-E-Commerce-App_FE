@@ -33,14 +33,12 @@ const Colors = {
   borderColor: "#b5b5b5",
   HMborderColor: "#CED6E2",
   borderDark: "#ddd",
-  borderWidgetTestimonial : "#D3D5E0",
-
+  borderWidgetTestimonial: "#D3D5E0",
 
   // Product color
   blackProduct: "#191925",
   blueProduct: "#0763b3",
   lightBlueProduct: "#bad6ec",
-
 
   // Status color
   success: "#4caf50",
