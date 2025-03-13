@@ -47,7 +47,6 @@ const ReportReviewModal = ({
           reporter_id: reporterId,
           report_reason: selectedReason,
         };
-        // console.log("Sending data:", data);
 
         await apiService.reportReview(data);
         // alert("Report submitted successfully.");

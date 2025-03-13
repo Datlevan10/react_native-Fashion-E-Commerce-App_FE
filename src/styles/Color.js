@@ -25,6 +25,7 @@ const Colors = {
   textPrimary: "#333",
   textSecondary: "#7d7979",
   textPlaceholder: "#9e9e9e",
+  textTranslationReview: "#005BD3",
   grayWidgetTestimonial: "#74788D",
   blackWidgetTestimonial: "#292A32",
 
@@ -32,14 +33,12 @@ const Colors = {
   borderColor: "#b5b5b5",
   HMborderColor: "#CED6E2",
   borderDark: "#ddd",
-  borderWidgetTestimonial : "#D3D5E0",
-
+  borderWidgetTestimonial: "#D3D5E0",
 
   // Product color
   blackProduct: "#191925",
   blueProduct: "#0763b3",
   lightBlueProduct: "#bad6ec",
-
 
   // Status color
   success: "#4caf50",
