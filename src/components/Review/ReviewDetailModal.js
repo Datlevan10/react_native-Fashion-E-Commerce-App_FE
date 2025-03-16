@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
@@ -119,6 +120,7 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
             <AntDesign name="close" size={24} color="#000" />
           </TouchableOpacity>
           {isLoading ? (
+            // ActivityIndicator
             <WidgetLoading />
           ) : (
             <View style={styles.contentContainer}>

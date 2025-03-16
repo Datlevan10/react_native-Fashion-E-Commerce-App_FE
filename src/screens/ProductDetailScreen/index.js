@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import apiService from "../../api/ApiService";
@@ -375,6 +376,7 @@ export default function ProductDetailScreen({ route, navigation }) {
           </View>
           <View style={styles.reviewContainer}>
             {isLoading ? (
+              // <ActivityIndicator />
               <WidgetLoading />
             ) : (
               <TestimonialReviewWidget reviews={reviewsTestimonial} />
@@ -382,6 +384,7 @@ export default function ProductDetailScreen({ route, navigation }) {
           </View>
           <View style={styles.reviewContainer}>
             {isLoading ? (
+              // <ActivityIndicator />
               <WidgetLoading />
             ) : reviews === null ? (
               <NoReviewBox
