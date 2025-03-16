@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { FontAwesome, MaterialIcons, AntDesign } from "@expo/vector-icons";
 import Colors from "../../styles/Color";
@@ -351,6 +352,7 @@ const ProductReviewWidget = ({ reviews, onWriteReview }) => {
       </ScrollView>
       <ScrollView>
         {isLoading ? (
+          // <ActivityIndicator />
           <WidgetLoading />
         ) : (
           <>
