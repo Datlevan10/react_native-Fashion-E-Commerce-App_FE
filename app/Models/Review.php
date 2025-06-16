@@ -20,6 +20,7 @@ class Review extends Model
 
     protected $casts = [
         'media' => 'array',
+        'verify_badge' => 'array',
     ];
 
     protected $fillable = [
@@ -38,6 +39,7 @@ class Review extends Model
         'reply',
         'reply_date',
         'is_featured',
+        'verify_badge',
     ];
 
     protected static function boot()
