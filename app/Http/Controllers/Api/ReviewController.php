@@ -41,6 +41,8 @@ class ReviewController extends Controller
             'review_product' => 'required|string',
             'media' => 'nullable|array',
             'media.*' => 'file|mimes:jpeg,png,jpg,gif,svg,mp4,avi|max:20480',
+            'verify_badge' => 'nullable|array',
+            'verify_badge.*' => 'string',
         ]);
 
         if ($validator->fails()) {

@@ -33,6 +33,7 @@ class ReviewResource extends JsonResource
             'total_review' => $this->product ? $this->product->total_review : null,
             'average_review' => $this->product ? $this->product->average_review : null,
             'media' => $this->media,
+            'verify_badge' => $this->verify_badge,
             'status' => $this->status,
             'review_date' => $this->review_date,
             'is_featured' => $this->is_featured,
