@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use Carbon\Carbon;
 use App\Models\Admin;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -238,6 +240,150 @@ class AdminController extends Controller
 
         return response()->json([
             'message' => 'Admin deleted successfully',
+        ], 200);
+    }
+
+    // Admin authentication methods
+    public function authenticateLoginAdmin(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'identifier' => 'required|string',
+            'password' => 'required|string',
+        ], [
+            'identifier.required' => 'The identifier field is required.',
+            'password.required' => 'The password field is required.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $admin = Admin::where('email', $request->identifier)
+            ->orWhere('phone_number', $request->identifier)
+            ->orWhere('user_name', $request->identifier)
+            ->first();
+
+        if (!$admin || !Hash::check($request->password, $admin->password)) {
+            return response()->json([
+                'message' => 'Incorrect username and password',
+                'error_code' => 'AUTH_FAILED',
+            ], 401);
+        }
+
+        if (!$admin->is_active) {
+            return response()->json([
+                'message' => 'Admin account is deactivated',
+                'error_code' => 'ACCOUNT_DEACTIVATED',
+            ], 401);
+        }
+
+        $admin->last_login = now();
+        $admin->save();
+
+        $accessToken = $admin->createToken('admin-access-token', ['*'], now()->addMinutes(120))->plainTextToken;
+
+        $refreshToken = Str::random(64);
+        $expiresAt = now()->addDays(30);
+
+        DB::table('refresh_tokens')
+            ->where('admin_id', $admin->admin_id)
+            ->delete();
+
+        DB::table('refresh_tokens')->insert([
+            'admin_id' => $admin->admin_id,
+            'refresh_token' => $refreshToken,
+            'expires_at' => $expiresAt,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return response()->json([
+            'message' => 'Login successful',
+            'data' => [
+                'id' => $admin->admin_id,
+                'user' => new AdminResource($admin),
+                'access_token' => $accessToken,
+                'refresh_token' => $refreshToken,
+                'expires_in' => 7200, // 120 minutes = 7200 seconds
+                'role' => $admin->role,
+                'permissions' => json_decode($admin->permissions) ?? []
+            ],
+        ], 200);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+
+        DB::table('refresh_tokens')
+            ->where('admin_id', $request->user()->admin_id)
+            ->delete();
+
+        return response()->json([
+            'message' => 'Logged out successfully.',
+        ], 200);
+    }
+
+    public function refreshAccessToken(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'refresh_token' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $refreshToken = $request->refresh_token;
+
+        $tokenRecord = DB::table('refresh_tokens')
+            ->where('refresh_token', $refreshToken)
+            ->first();
+
+        if (!$tokenRecord) {
+            return response()->json([
+                'message' => 'Invalid refresh token.',
+            ], 401);
+        }
+
+        if (Carbon::now()->greaterThan(Carbon::parse($tokenRecord->expires_at))) {
+            DB::table('refresh_tokens')->where('id', $tokenRecord->id)->delete();
+            return response()->json([
+                'message' => 'Refresh token has expired.',
+            ], 401);
+        }
+
+        $admin = Admin::find($tokenRecord->admin_id);
+        if (!$admin || !$admin->is_active) {
+            return response()->json([
+                'message' => 'Admin not found or deactivated.',
+            ], 404);
+        }
+
+        DB::table('refresh_tokens')->where('id', $tokenRecord->id)->delete();
+
+        $newAccessToken = $admin->createToken('admin-access-token', ['*'], now()->addMinutes(120))->plainTextToken;
+        $newRefreshToken = Str::random(64);
+
+        DB::table('refresh_tokens')->insert([
+            'admin_id' => $admin->admin_id,
+            'refresh_token' => $newRefreshToken,
+            'expires_at' => now()->addDays(30),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return response()->json([
+            'message' => 'Access token refreshed successfully.',
+            'access_token' => $newAccessToken,
+            'refresh_token' => $newRefreshToken,
+            'expires_in' => 7200,
         ], 200);
     }
 }
