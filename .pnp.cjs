@@ -46,7 +46,7 @@ const RAW_RUNTIME_STATE =
           ["expo-image-picker", "virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:16.0.6"],\
           ["expo-linear-gradient", "virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:14.0.2"],\
           ["expo-module-scripts", "npm:3.5.4"],\
-          ["expo-secure-store", "virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:14.0.1"],\
+          ["expo-secure-store", "virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:14.2.4"],\
           ["expo-status-bar", "virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:2.0.1"],\
           ["fashion-e-commerce-app_fe", "workspace:."],\
           ["metro", "npm:0.83.1"],\
@@ -9530,17 +9530,17 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["expo-secure-store", [\
-      ["npm:14.0.1", {\
-        "packageLocation": "../../../../C:/Users/levan/AppData/Local/Yarn/Berry/cache/expo-secure-store-npm-14.0.1-1a089b7399-10c0.zip/node_modules/expo-secure-store/",\
+      ["npm:14.2.4", {\
+        "packageLocation": "./.yarn/unplugged/expo-secure-store-virtual-5030c9f5c0/node_modules/expo-secure-store/",\
         "packageDependencies": [\
-          ["expo-secure-store", "npm:14.0.1"]\
+          ["expo-secure-store", "npm:14.2.4"]\
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:14.0.1", {\
-        "packageLocation": "./.yarn/__virtual__/expo-secure-store-virtual-dd9f0f2c3f/5/C:/Users/levan/AppData/Local/Yarn/Berry/cache/expo-secure-store-npm-14.0.1-1a089b7399-10c0.zip/node_modules/expo-secure-store/",\
+      ["virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:14.2.4", {\
+        "packageLocation": "./.yarn/unplugged/expo-secure-store-virtual-5030c9f5c0/node_modules/expo-secure-store/",\
         "packageDependencies": [\
-          ["expo-secure-store", "virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:14.0.1"],\
+          ["expo-secure-store", "virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:14.2.4"],\
           ["@types/expo", null],\
           ["expo", "virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:53.0.22"]\
         ],\
@@ -9634,7 +9634,7 @@ const RAW_RUNTIME_STATE =
           ["expo-image-picker", "virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:16.0.6"],\
           ["expo-linear-gradient", "virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:14.0.2"],\
           ["expo-module-scripts", "npm:3.5.4"],\
-          ["expo-secure-store", "virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:14.0.1"],\
+          ["expo-secure-store", "virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:14.2.4"],\
           ["expo-status-bar", "virtual:cd4fbdec26629037718b5cc012414e07ab7c1611ad8371c1f7cc43c1ac6bc5c01de4e36d4d2ac9d32122df140fad23802bf89909f8965cf0fdf30ea1b726c3c3#npm:2.0.1"],\
           ["fashion-e-commerce-app_fe", "workspace:."],\
           ["metro", "npm:0.83.1"],\

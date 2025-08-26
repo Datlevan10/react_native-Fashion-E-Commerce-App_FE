@@ -18,6 +18,57 @@ const logout = async () => {
   return api.post("customers/auth/logout");
 };
 
+// Staff Authentication APIs
+const staffLogin = async (credentials) => {
+  return api.post("/staffs/auth/login", credentials);
+};
+
+const staffLogout = async () => {
+  return api.post("/staffs/logout");
+};
+
+const staffRefreshToken = async (refreshToken) => {
+  return api.post("/staffs/auth/refresh", { refresh_token: refreshToken });
+};
+
+// Admin Authentication APIs
+const adminLogin = async (credentials) => {
+  return api.post("/admin/login", credentials);
+};
+
+const adminLogout = async () => {
+  return api.post("/admin/logout");
+};
+
+const adminRefreshToken = async (refreshToken) => {
+  return api.post("/admin/refresh", { refresh_token: refreshToken });
+};
+
+const getAdminProfile = async () => {
+  return api.get("/admin/profile");
+};
+
+// Admin Management APIs
+const getAllStaffs = async () => {
+  return api.get("/admin/staffs");
+};
+
+const toggleStaffStatus = async (staffId) => {
+  return api.put(`/admin/staffs/${staffId}/toggle-status`);
+};
+
+const banCustomer = async (customerId, reason) => {
+  return api.put(`/admin/customers/${customerId}/ban`, { reason });
+};
+
+const getSalesReports = async (filters) => {
+  return api.get("/admin/reports/sales", { params: filters });
+};
+
+const getOrdersReports = async (filters) => {
+  return api.get("/admin/reports/orders", { params: filters });
+};
+
 // Event
 const getEventImageActive = async () => {
   return api.get("/events/is-active/active");
@@ -145,10 +196,140 @@ const hideNotification = async (notificationId, data) => {
   return api.post(`/notifications/hide/${notificationId}`, data);
 };
 
+// Admin Dashboard APIs
+const getTotalCustomers = async () => {
+  return api.get("/admin/dashboard/customers/total");
+};
+
+const getTotalStaff = async () => {
+  return api.get("/admin/dashboard/staff/total");
+};
+
+const getTotalProducts = async () => {
+  return api.get("/admin/dashboard/products/total");
+};
+
+const getTotalCategories = async () => {
+  return api.get("/admin/dashboard/categories/total");
+};
+
+const getOrderStatistics = async () => {
+  return api.get("/admin/dashboard/orders/statistics");
+};
+
+const getRecentOrders = async (limit = 10) => {
+  return api.get(`/admin/orders/recent?limit=${limit}`);
+};
+
+const getTopProducts = async (limit = 5) => {
+  return api.get(`/admin/products/top-selling?limit=${limit}`);
+};
+
+// Staff Management APIs
+const getAllStaff = async () => {
+  return api.get("/admin/staff");
+};
+
+const getStaffById = async (staffId) => {
+  return api.get(`/admin/staff/${staffId}`);
+};
+
+const createStaff = async (staffData) => {
+  return api.post("/admin/staff", staffData);
+};
+
+const updateStaff = async (staffId, staffData) => {
+  return api.put(`/admin/staff/${staffId}`, staffData);
+};
+
+const deleteStaff = async (staffId) => {
+  return api.delete(`/admin/staff/${staffId}`);
+};
+
+// Customer Management APIs
+const getAllCustomers = async (page = 1, limit = 20) => {
+  return api.get(`/admin/customers?page=${page}&limit=${limit}`);
+};
+
+const getCustomerById = async (customerId) => {
+  return api.get(`/admin/customers/${customerId}`);
+};
+
+const updateCustomerStatus = async (customerId, status) => {
+  return api.put(`/admin/customers/${customerId}/status`, { status });
+};
+
+// Order Management APIs
+const getAllOrders = async (page = 1, limit = 20, filters = {}) => {
+  const queryParams = new URLSearchParams({
+    page,
+    limit,
+    ...filters,
+  });
+  return api.get(`/admin/orders?${queryParams}`);
+};
+
+const getOrderById = async (orderId) => {
+  return api.get(`/admin/orders/${orderId}`);
+};
+
+const updateOrderStatus = async (orderId, status) => {
+  return api.put(`/admin/orders/${orderId}/status`, { status });
+};
+
+// Product Management APIs
+const getAllProductsAdmin = async (page = 1, limit = 20) => {
+  return api.get(`/admin/products?page=${page}&limit=${limit}`);
+};
+
+const createProduct = async (productData) => {
+  return api.post("/admin/products", productData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
+const updateProduct = async (productId, productData) => {
+  return api.put(`/admin/products/${productId}`, productData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
+const deleteProduct = async (productId) => {
+  return api.delete(`/admin/products/${productId}`);
+};
+
+// Reports APIs
+const getSalesReport = async (startDate, endDate) => {
+  return api.get(`/admin/reports/sales?start_date=${startDate}&end_date=${endDate}`);
+};
+
+const getCustomerReport = async (startDate, endDate) => {
+  return api.get(`/admin/reports/customers?start_date=${startDate}&end_date=${endDate}`);
+};
+
+const getProductReport = async (startDate, endDate) => {
+  return api.get(`/admin/reports/products?start_date=${startDate}&end_date=${endDate}`);
+};
+
 export default {
   registerCustomer,
   authenticateLoginCustomer,
   logout,
+  // Staff Authentication
+  staffLogin,
+  staffLogout,
+  staffRefreshToken,
+  // Admin Authentication
+  adminLogin,
+  adminLogout,
+  adminRefreshToken,
+  getAdminProfile,
+  // Admin Management
+  getAllStaffs,
+  toggleStaffStatus,
+  banCustomer,
+  getSalesReports,
+  getOrdersReports,
   getCategories,
   getStores,
   getListAllProducts,
@@ -178,4 +359,30 @@ export default {
   getNotification,
   hideNotification,
   reportReview,
+  // Admin APIs
+  getTotalCustomers,
+  getTotalStaff,
+  getTotalProducts,
+  getTotalCategories,
+  getOrderStatistics,
+  getRecentOrders,
+  getTopProducts,
+  getAllStaff,
+  getStaffById,
+  createStaff,
+  updateStaff,
+  deleteStaff,
+  getAllCustomers,
+  getCustomerById,
+  updateCustomerStatus,
+  getAllOrders,
+  getOrderById,
+  updateOrderStatus,
+  getAllProductsAdmin,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  getSalesReport,
+  getCustomerReport,
+  getProductReport,
 };
