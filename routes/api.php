@@ -19,7 +19,10 @@ use App\Http\Controllers\Api\{
     StaffController,
     StoreController,
     StoreSettingController,
-    WidgetNoReviewSettingController
+    WidgetNoReviewSettingController,
+    ProductStatisticController,
+    RevenueStatisticController,
+    CustomerStatisticController
 };
 
 Route::prefix('')->group(function () {
@@ -90,6 +93,16 @@ Route::prefix('')->group(function () {
 
 
     // Order and Order Detail Routes
+    Route::prefix('orders')->group(function () {
+        Route::put('/{order_id}/status', [OrderController::class, 'updateStatus']);
+        Route::put('/{order_id}/cancel', [OrderController::class, 'cancel']);
+        Route::get('/customer/{customer_id}', [OrderController::class, 'getOrdersByCustomer']);
+        Route::get('/status/{status}', [OrderController::class, 'getOrdersByStatus']);
+        Route::get('/history', [OrderController::class, 'getOrderHistory']);
+        Route::put('/{order_id}/shipping-address', [OrderController::class, 'updateShippingAddress']);
+        Route::put('/{order_id}/tracking', [OrderController::class, 'addTracking']);
+        Route::post('/{order_id}/refund', [OrderController::class, 'processRefund']);
+    });
     Route::apiResource('orders', OrderController::class);
 
     Route::apiResource('order_details', OrderDetailController::class);
@@ -135,6 +148,33 @@ Route::prefix('')->group(function () {
         Route::post('/{no_review_setting_id}/reset', [WidgetNoReviewSettingController::class, 'resetDefaultSettings']);
     });
     Route::apiResource('widget_no_reviews_settings', WidgetNoReviewSettingController::class);
+
+    // Statistics Routes
+    
+    // Product Statistics Routes
+    Route::prefix('product-statistics')->group(function () {
+        Route::get('/product/{product_id}', [ProductStatisticController::class, 'getByProductId']);
+        Route::get('/top-selling/{limit?}', [ProductStatisticController::class, 'getTopSellingProducts']);
+        Route::get('/top-revenue/{limit?}', [ProductStatisticController::class, 'getTopRevenueProducts']);
+        Route::put('/{product_statistic_id}', [ProductStatisticController::class, 'updateStatistic']);
+    });
+    Route::apiResource('product-statistics', ProductStatisticController::class);
+
+    // Revenue Statistics Routes
+    Route::prefix('revenue-statistics')->group(function () {
+        Route::get('/period', [RevenueStatisticController::class, 'getByPeriod']);
+        Route::get('/total', [RevenueStatisticController::class, 'getTotalRevenue']);
+    });
+    Route::apiResource('revenue-statistics', RevenueStatisticController::class);
+
+    // Customer Statistics Routes
+    Route::prefix('customer-statistics')->group(function () {
+        Route::get('/customer/{customer_id}', [CustomerStatisticController::class, 'getByCustomerId']);
+        Route::get('/top-spenders/{limit?}', [CustomerStatisticController::class, 'getTopSpenders']);
+        Route::get('/loyalty-tier/{loyalty_tier}', [CustomerStatisticController::class, 'getByLoyaltyTier']);
+        Route::put('/{customer_statistic_id}', [CustomerStatisticController::class, 'updateStatistic']);
+    });
+    Route::apiResource('customer-statistics', CustomerStatisticController::class);
 
     // Authenticated User Route
     Route::get('/user', function (Request $request) {
