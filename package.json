@@ -45,7 +45,10 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@expo/ngrok": "^2.4.3",
-    "expo-module-scripts": "^3.5.2"
+    "expo-module-scripts": "^3.5.2",
+    "metro": "^0.83.1",
+    "metro-config": "^0.83.1",
+    "metro-core": "^0.80.6"
   },
   "private": true
 }
