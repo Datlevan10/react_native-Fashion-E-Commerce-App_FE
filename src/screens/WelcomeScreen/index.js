@@ -24,7 +24,7 @@ export default function WelcomeScreen({ navigation }) {
     loadStoreLogo();
 
     const timer = setTimeout(() => {
-      navigation.replace("LoginScreen");
+      navigation.replace("UserTypeSelectionScreen");
     }, 5000);
 
     return () => clearTimeout(timer);
