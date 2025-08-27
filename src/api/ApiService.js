@@ -24,24 +24,24 @@ const staffLogin = async (credentials) => {
 };
 
 const staffLogout = async () => {
-  return api.post("/staffs/logout");
+  return api.post("/staffs/auth/logout");
 };
 
 const staffRefreshToken = async (refreshToken) => {
-  return api.post("/staffs/auth/refresh", { refresh_token: refreshToken });
+  return api.post("/staffs/auth/refresh-token", { refresh_token: refreshToken });
 };
 
-// Admin Authentication APIs
+// Admin Authentication APIs  
 const adminLogin = async (credentials) => {
-  return api.post("/admin/login", credentials);
+  return api.post("/admin/auth/login", credentials);
 };
 
 const adminLogout = async () => {
-  return api.post("/admin/logout");
+  return api.post("/admin/auth/logout");
 };
 
 const adminRefreshToken = async (refreshToken) => {
-  return api.post("/admin/refresh", { refresh_token: refreshToken });
+  return api.post("/admin/auth/refresh-token", { refresh_token: refreshToken });
 };
 
 const getAdminProfile = async () => {
