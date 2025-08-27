@@ -7,45 +7,24 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import { useTranslation } from 'react-i18next';
 import { Feather } from 'react-native-vector-icons';
 import Colors from '../../styles/Color';
-import LanguageSelector from '../../components/Language/LanguageSelector';
-import { LANGUAGES, getLanguageFlag, getLanguageCode } from '../../i18n';
 
 const SettingsScreen = ({ navigation }) => {
-  const { t, i18n } = useTranslation();
-  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
-
-  const currentLanguage = LANGUAGES[i18n.language];
-
   const settingSections = [
     {
-      title: t('settings:sections.language.title'),
-      items: [
-        {
-          id: 'language',
-          title: t('settings:sections.language.current_language'),
-          value: currentLanguage?.label || 'English',
-          icon: 'globe',
-          onPress: () => setShowLanguageSelector(true),
-          showArrow: true,
-        },
-      ],
-    },
-    {
-      title: t('settings:sections.account.title'),
+      title: 'Account Settings',
       items: [
         {
           id: 'profile',
-          title: t('settings:sections.account.edit_profile'),
+          title: 'Edit Profile',
           icon: 'user',
           onPress: () => navigation.navigate('DetailProfileScreen'),
           showArrow: true,
         },
         {
           id: 'privacy',
-          title: t('settings:sections.account.privacy'),
+          title: 'Privacy & Security',
           icon: 'shield',
           onPress: () => console.log('Privacy pressed'),
           showArrow: true,
@@ -53,11 +32,11 @@ const SettingsScreen = ({ navigation }) => {
       ],
     },
     {
-      title: t('settings:sections.notifications.title'),
+      title: 'Notifications',
       items: [
         {
           id: 'push',
-          title: t('settings:sections.notifications.push'),
+          title: 'Push Notifications',
           icon: 'bell',
           onPress: () => console.log('Notifications pressed'),
           showArrow: true,
@@ -65,18 +44,18 @@ const SettingsScreen = ({ navigation }) => {
       ],
     },
     {
-      title: t('settings:sections.support.title'),
+      title: 'Support',
       items: [
         {
           id: 'help',
-          title: t('settings:sections.support.help'),
+          title: 'Help & FAQ',
           icon: 'help-circle',
           onPress: () => console.log('Help pressed'),
           showArrow: true,
         },
         {
           id: 'contact',
-          title: t('settings:sections.support.contact'),
+          title: 'Contact Us',
           icon: 'mail',
           onPress: () => console.log('Contact pressed'),
           showArrow: true,
@@ -127,35 +106,11 @@ const SettingsScreen = ({ navigation }) => {
         >
           <Feather name="arrow-left" size={24} color={Colors.blackColor} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('settings:title')}</Text>
+        <Text style={styles.headerTitle}>Settings</Text>
         <View style={styles.placeholder} />
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Current Language Display */}
-        <View style={styles.currentLanguageContainer}>
-          <View style={styles.languageDisplay}>
-            <Text style={styles.languageFlag}>
-              {getLanguageFlag(i18n.language)}
-            </Text>
-            <View style={styles.languageInfo}>
-              <Text style={styles.languageName}>
-                {currentLanguage?.label || 'English'}
-              </Text>
-              <Text style={styles.languageCode}>
-                {getLanguageCode(i18n.language)}
-              </Text>
-            </View>
-          </View>
-          <TouchableOpacity
-            style={styles.changeLanguageButton}
-            onPress={() => setShowLanguageSelector(true)}
-          >
-            <Text style={styles.changeLanguageText}>{t('settings:sections.language.change')}</Text>
-            <Feather name="chevron-right" size={16} color={Colors.primary} />
-          </TouchableOpacity>
-        </View>
-
         {/* Settings Sections */}
         {settingSections.map(renderSection)}
 
@@ -165,15 +120,6 @@ const SettingsScreen = ({ navigation }) => {
           <Text style={styles.appVersion}>Version 1.0.0</Text>
         </View>
       </ScrollView>
-
-      {/* Language Selector Modal */}
-      <LanguageSelector
-        visible={showLanguageSelector}
-        onClose={() => setShowLanguageSelector(false)}
-        onLanguageSelect={(language) => {
-          console.log('Language changed to:', language);
-        }}
-      />
     </SafeAreaView>
   );
 };
@@ -208,62 +154,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
   },
-  currentLanguageContainer: {
-    backgroundColor: Colors.whiteColor,
-    borderRadius: 12,
-    padding: 16,
-    marginVertical: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    shadowColor: Colors.blackColor,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  languageDisplay: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  languageFlag: {
-    fontSize: 32,
-    marginRight: 12,
-  },
-  languageInfo: {
-    flex: 1,
-  },
-  languageName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.textPrimary,
-    marginBottom: 2,
-  },
-  languageCode: {
-    fontSize: 12,
-    color: Colors.textSecondary,
-    fontWeight: '500',
-  },
-  changeLanguageButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    backgroundColor: Colors.primary + '15',
-  },
-  changeLanguageText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: Colors.primary,
-    marginRight: 4,
-  },
   section: {
     marginBottom: 24,
+    marginTop: 20,
   },
   sectionTitle: {
     fontSize: 16,

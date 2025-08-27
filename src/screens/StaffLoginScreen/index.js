@@ -10,7 +10,6 @@ import {
   Platform,
   SafeAreaView,
 } from "react-native";
-import { useTranslation } from "react-i18next";
 import * as SecureStore from "expo-secure-store";
 import { LinearGradient } from "expo-linear-gradient";
 import { Feather, FontAwesome5 } from "@expo/vector-icons";
@@ -18,21 +17,17 @@ import CustomTextInput from "../../components/TextField/CustomTextInput";
 import PasswordTextInput from "../../components/TextField/PasswordTextInput";
 import CustomHandleButton from "../../components/Button/CustomHandleButton";
 import CustomLinkText from "../../components/Other/CustomLinkText";
-import LanguageIndicator from "../../components/Language/LanguageIndicator";
-import LanguageSelector from "../../components/Language/LanguageSelector";
 import Checkbox from "expo-checkbox";
 import Colors from "../../styles/Color";
 import ShowAlertWithTitleContentAndOneActions from "../../components/Alert/ShowAlertWithTitleContentAndOneActions ";
 import apiService from "../../api/ApiService";
 
 export default function StaffLoginScreen({ navigation }) {
-  const { t } = useTranslation();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [isRemember, setIsRemember] = useState(false);
   const [identifierError, setIdentifierError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useFocusEffect(
