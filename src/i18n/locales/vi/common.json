@@ -1,0 +1,59 @@
+{
+  "welcome": {
+    "title": "Chào mừng đến với Fashion E-Commerce",
+    "subtitle": "Phong cách của bạn, đam mê của chúng tôi"
+  },
+  "language": {
+    "select": "Chọn Ngôn ngữ",
+    "english": "Tiếng Anh",
+    "vietnamese": "Tiếng Việt",
+    "current": "VI"
+  },
+  "navigation": {
+    "home": "Trang chủ",
+    "explore": "Khám phá",
+    "cart": "Giỏ hàng",
+    "wishlist": "Yêu thích",
+    "profile": "Hồ sơ",
+    "notification": "Thông báo"
+  },
+  "buttons": {
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "logout": "Đăng xuất",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "continue": "Tiếp tục",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "confirm": "Xác nhận",
+    "search": "Tìm kiếm",
+    "filter": "Lọc",
+    "clear": "Xóa tất cả",
+    "add_to_cart": "Thêm vào giỏ",
+    "buy_now": "Mua ngay"
+  },
+  "placeholders": {
+    "search": "Tìm kiếm sản phẩm...",
+    "email": "Nhập email của bạn",
+    "password": "Nhập mật khẩu",
+    "confirm_password": "Xác nhận mật khẩu",
+    "username": "Nhập tên đăng nhập",
+    "phone": "Nhập số điện thoại",
+    "full_name": "Nhập họ và tên"
+  },
+  "validation": {
+    "required": "Trường này là bắt buộc",
+    "invalid_email": "Vui lòng nhập email hợp lệ",
+    "password_too_short": "Mật khẩu phải có ít nhất 6 ký tự",
+    "passwords_dont_match": "Mật khẩu không khớp",
+    "invalid_phone": "Vui lòng nhập số điện thoại hợp lệ"
+  },
+  "messages": {
+    "loading": "Đang tải...",
+    "no_data": "Không có dữ liệu",
+    "error": "Đã xảy ra lỗi",
+    "success": "Thành công",
+    "network_error": "Lỗi mạng. Vui lòng kiểm tra kết nối."
+  }
+}

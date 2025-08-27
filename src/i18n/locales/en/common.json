@@ -1,0 +1,59 @@
+{
+  "welcome": {
+    "title": "Welcome to Fashion E-Commerce",
+    "subtitle": "Your style, our passion"
+  },
+  "language": {
+    "select": "Select Language",
+    "english": "English",
+    "vietnamese": "Vietnamese",
+    "current": "EN"
+  },
+  "navigation": {
+    "home": "Home",
+    "explore": "Explore",
+    "cart": "Cart",
+    "wishlist": "Wishlist",
+    "profile": "Profile",
+    "notification": "Notification"
+  },
+  "buttons": {
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "save": "Save",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next",
+    "confirm": "Confirm",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear All",
+    "add_to_cart": "Add to Cart",
+    "buy_now": "Buy Now"
+  },
+  "placeholders": {
+    "search": "Search products...",
+    "email": "Enter your email",
+    "password": "Enter your password",
+    "confirm_password": "Confirm your password",
+    "username": "Enter username",
+    "phone": "Enter phone number",
+    "full_name": "Enter full name"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalid_email": "Please enter a valid email",
+    "password_too_short": "Password must be at least 6 characters",
+    "passwords_dont_match": "Passwords don't match",
+    "invalid_phone": "Please enter a valid phone number"
+  },
+  "messages": {
+    "loading": "Loading...",
+    "no_data": "No data available",
+    "error": "An error occurred",
+    "success": "Success",
+    "network_error": "Network error. Please check your connection."
+  }
+}
