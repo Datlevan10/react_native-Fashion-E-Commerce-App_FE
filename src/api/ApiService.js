@@ -33,11 +33,11 @@ const staffRefreshToken = async (refreshToken) => {
 
 // Admin Authentication APIs  
 const adminLogin = async (credentials) => {
-  return api.post("/admin/auth/login", credentials);
+  return api.post("/admins/auth/login", credentials);
 };
 
 const adminLogout = async () => {
-  return api.post("/admin/auth/logout");
+  return api.post("/admins/auth/logout");
 };
 
 const adminRefreshToken = async (refreshToken) => {
