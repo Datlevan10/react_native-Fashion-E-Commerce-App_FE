@@ -95,6 +95,35 @@ const getFeatureProducts = async (categoryId) => {
   return api.get(`/products/category/${categoryId}`);
 };
 
+// Product filtering APIs based on Laravel ProductController
+const getProductsByCategoryId = async (categoryId) => {
+  return api.get(`/products/category/${categoryId}`);
+};
+
+const getLimitedProductsByCategoryId = async (categoryId, limit) => {
+  return api.get(`/products/category/${categoryId}/limit/${limit}`);
+};
+
+const getLimitedProducts = async (limit) => {
+  return api.get(`/products/limit/${limit}`);
+};
+
+const filterProductsByStars = async (stars) => {
+  return api.get(`/products/filter/stars?stars=${stars}`);
+};
+
+const filterProductsBySizes = async (size) => {
+  return api.get(`/products/filter/sizes?size=${size}`);
+};
+
+const filterProductsByTotalReviews = async (filter) => {
+  return api.get(`/products/filter/total-reviews?filter=${filter}`);
+};
+
+const filterProductsByAverageReviews = async (filter) => {
+  return api.get(`/products/filter/average-reviews?filter=${filter}`);
+};
+
 const addProductToFavorite = async (productData) => {
   return api.post("/product_favorites", productData);
 };
@@ -337,6 +366,14 @@ export default {
   searchProducts,
   getEventImageActive,
   getFeatureProducts,
+  // New filtering APIs
+  getProductsByCategoryId,
+  getLimitedProductsByCategoryId,
+  getLimitedProducts,
+  filterProductsByStars,
+  filterProductsBySizes,
+  filterProductsByTotalReviews,
+  filterProductsByAverageReviews,
   addProductToCart,
   getProductInCartDetailByCustomerId,
   deleteItemInCart,

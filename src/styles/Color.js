@@ -48,6 +48,7 @@ const Colors = {
   // Other color
   disabled: "#e0e0e0",
   overlay: "rgba(0, 0, 0, 0.5)",
+  lightGrayColor: "#e0e0e0",
 };
 
 export default Colors;

@@ -1,3 +1,12 @@
-import App from "./src";
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
+import App from './src/index';
 
-export default App;
+export default function AppEntry() {
+  return (
+    <>
+      <App />
+      <StatusBar style="auto" />
+    </>
+  );
+}

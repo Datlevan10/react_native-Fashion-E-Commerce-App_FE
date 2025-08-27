@@ -6,7 +6,15 @@
       "Bash(npm install:*)",
       "Bash(npx expo:*)",
       "Bash(npm cache clean:*)",
-      "Bash(npm run ios:*)"
+      "Bash(npm run ios:*)",
+      "Bash(find:*)",
+      "Bash(rg:*)",
+      "Bash(mkdir:*)",
+      "Bash(git add:*)",
+      "Bash(git rebase:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }

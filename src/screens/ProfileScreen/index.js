@@ -66,6 +66,27 @@ export default function ProfileScreen({ navigation }) {
 
   const handleRowPress = (title) => {
     console.log("Navigating to:", title);
+    
+    switch (title) {
+      case "Settings":
+        navigation.navigate("SettingsScreen");
+        break;
+      case "My Order":
+        navigation.navigate("MyOrderScreen");
+        break;
+      case "Notifications":
+        navigation.navigate("NotificationScreen");
+        break;
+      case "Language":
+        // Could navigate to a language selector or settings
+        console.log("Language settings pressed");
+        break;
+      case "Payment & Payout":
+        console.log("Payment settings pressed");
+        break;
+      default:
+        console.log("Unknown navigation:", title);
+    }
   };
 
   const performLogout = async (navigation) => {

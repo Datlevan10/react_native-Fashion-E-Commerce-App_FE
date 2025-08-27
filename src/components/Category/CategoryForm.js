@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import CategoryItem from './CategoryItem';
 
-const CategoryForm = ({ categories = [], containerStyle }) => {
+const CategoryForm = ({ categories = [], containerStyle, onCategoryPress }) => {
   return (
     <View style={[styles.container, containerStyle]}>
       {categories.map((category) => (
@@ -10,6 +10,7 @@ const CategoryForm = ({ categories = [], containerStyle }) => {
           key={category.categoryId}
           imageSource={category.imageCategory}
           categoryName={category.categoryName}
+          onPress={() => onCategoryPress && onCategoryPress(category.categoryId)}
         />
       ))}
     </View>

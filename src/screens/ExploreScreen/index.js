@@ -7,10 +7,13 @@ import {
   SafeAreaView,
   ScrollView,
   Dimensions,
+  ActivityIndicator,
+  Text,
 } from "react-native";
 import ProductCard from "../../components/Product/ProductCard";
 import { Feather, MaterialIcons } from "react-native-vector-icons";
 import FilterBox from "../../components/Other/FilterBox";
+import FilterModal from "../../components/Filter/FilterModal";
 import CategoryForm from "../../components/Category/CategoryForm";
 import Colors from "../../styles/Color";
 import apiService from "../../api/ApiService";
@@ -20,6 +23,32 @@ const ExploreScreen = ({ navigation }) => {
   const [storeName, setStoreName] = useState("");
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeFilters, setActiveFilters] = useState({
+    rating: null,
+    size: null,
+    price: null,
+  });
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [filterType, setFilterType] = useState(null);
+
+  const ratingOptions = [
+    { value: 5, label: "5 Stars" },
+    { value: 4, label: "4 Stars" },
+    { value: 3, label: "3 Stars" },
+    { value: 2, label: "2 Stars" },
+    { value: 1, label: "1 Star" },
+  ];
+
+  const sizeOptions = [
+    { value: "XS", label: "XS" },
+    { value: "S", label: "S" },
+    { value: "M", label: "M" },
+    { value: "L", label: "L" },
+    { value: "XL", label: "XL" },
+    { value: "XXL", label: "XXL" },
+  ];
 
   useEffect(() => {
     // load data
@@ -58,8 +87,8 @@ const ExploreScreen = ({ navigation }) => {
 
   const loadListAllProducts = async () => {
     try {
+      setIsLoading(true);
       const response = await apiService.getListAllProducts();
-      // console.log("API Response:", response);
       const productsArray = response.data.data;
 
       if (!Array.isArray(productsArray)) {
@@ -86,6 +115,162 @@ const ExploreScreen = ({ navigation }) => {
       );
     } catch (error) {
       console.error("Failed to load products:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSearch = async (keyword) => {
+    if (!keyword.trim()) {
+      loadListAllProducts();
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await apiService.searchProducts(keyword);
+      const productsArray = response.data.data;
+
+      if (!Array.isArray(productsArray)) {
+        setProducts([]);
+        return;
+      }
+
+      setProducts(
+        productsArray.map((item) => ({
+          productId: item.product_id,
+          productImage: {
+            uri: `${API_BASE_URL}${item.image[0].url}`,
+          },
+          imageArr: item.image.map((img) => `${API_BASE_URL}${img.url}`),
+          categoryName: item.category_name,
+          averageReview: item.average_review,
+          totalReview: item.total_review,
+          productName: item.product_name,
+          description: item.description,
+          oldPrice: item.old_price,
+          newPrice: item.new_price,
+          colorArr: item.color.map((color) => `${color.color_code}`),
+          sizeArr: item.size.map((size) => `${size.size}`),
+        }))
+      );
+    } catch (error) {
+      console.error("Failed to search products:", error);
+      setProducts([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFilterByRating = async (rating) => {
+    try {
+      setIsLoading(true);
+      setActiveFilters({ ...activeFilters, rating });
+      const response = await apiService.filterProductsByStars(rating);
+      const productsArray = response.data.data;
+
+      if (!Array.isArray(productsArray)) {
+        setProducts([]);
+        return;
+      }
+
+      setProducts(
+        productsArray.map((item) => ({
+          productId: item.product_id,
+          productImage: {
+            uri: `${API_BASE_URL}${item.image[0].url}`,
+          },
+          imageArr: item.image.map((img) => `${API_BASE_URL}${img.url}`),
+          categoryName: item.category_name,
+          averageReview: item.average_review,
+          totalReview: item.total_review,
+          productName: item.product_name,
+          description: item.description,
+          oldPrice: item.old_price,
+          newPrice: item.new_price,
+          colorArr: item.color.map((color) => `${color.color_code}`),
+          sizeArr: item.size.map((size) => `${size.size}`),
+        }))
+      );
+    } catch (error) {
+      console.error("Failed to filter by rating:", error);
+      setProducts([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFilterBySize = async (size) => {
+    try {
+      setIsLoading(true);
+      setActiveFilters({ ...activeFilters, size });
+      const response = await apiService.filterProductsBySizes(size);
+      const productsArray = response.data.data;
+
+      if (!Array.isArray(productsArray)) {
+        setProducts([]);
+        return;
+      }
+
+      setProducts(
+        productsArray.map((item) => ({
+          productId: item.product_id,
+          productImage: {
+            uri: `${API_BASE_URL}${item.image[0].url}`,
+          },
+          imageArr: item.image.map((img) => `${API_BASE_URL}${img.url}`),
+          categoryName: item.category_name,
+          averageReview: item.average_review,
+          totalReview: item.total_review,
+          productName: item.product_name,
+          description: item.description,
+          oldPrice: item.old_price,
+          newPrice: item.new_price,
+          colorArr: item.color.map((color) => `${color.color_code}`),
+          sizeArr: item.size.map((size) => `${size.size}`),
+        }))
+      );
+    } catch (error) {
+      console.error("Failed to filter by size:", error);
+      setProducts([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCategoryPress = (categoryId) => {
+    navigation.navigate("CategoryProductsScreen", { 
+      categoryId,
+      categoryName: categories.find(cat => cat.categoryId === categoryId)?.categoryName 
+    });
+  };
+
+  const clearFilters = () => {
+    setActiveFilters({ rating: null, size: null, price: null });
+    setSearchKeyword("");
+    loadListAllProducts();
+  };
+
+  const openFilterModal = (type) => {
+    setFilterType(type);
+    setShowFilterModal(true);
+  };
+
+  const handleFilterSelect = (value) => {
+    if (filterType === 'rating') {
+      setActiveFilters({ ...activeFilters, rating: value });
+      if (value) {
+        handleFilterByRating(value);
+      } else {
+        loadListAllProducts();
+      }
+    } else if (filterType === 'size') {
+      setActiveFilters({ ...activeFilters, size: value });
+      if (value) {
+        handleFilterBySize(value);
+      } else {
+        loadListAllProducts();
+      }
     }
   };
 
@@ -108,8 +293,12 @@ const ExploreScreen = ({ navigation }) => {
             />
             <TextInput
               style={styles.searchInput}
-              placeholder="Search H&M"
+              placeholder="Search products..."
               placeholderTextColor="#999"
+              value={searchKeyword}
+              onChangeText={setSearchKeyword}
+              onSubmitEditing={() => handleSearch(searchKeyword)}
+              returnKeyType="search"
             />
           </View>
           <TouchableOpacity>
@@ -129,9 +318,24 @@ const ExploreScreen = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.filterList}
           >
-            <FilterBox text="Filter" icon="filter-list" />
-            <FilterBox text="Ratings" icon="keyboard-arrow-down" />
-            <FilterBox text="Size" icon="keyboard-arrow-down" />
+            <FilterBox 
+              text="Clear All" 
+              icon="clear" 
+              onPress={clearFilters}
+              isActive={activeFilters.rating || activeFilters.size || activeFilters.price}
+            />
+            <FilterBox 
+              text={activeFilters.rating ? `${activeFilters.rating} Stars` : "Ratings"} 
+              icon="keyboard-arrow-down" 
+              onPress={() => openFilterModal('rating')}
+              isActive={activeFilters.rating !== null}
+            />
+            <FilterBox 
+              text={activeFilters.size ? activeFilters.size : "Size"} 
+              icon="keyboard-arrow-down" 
+              onPress={() => openFilterModal('size')}
+              isActive={activeFilters.size !== null}
+            />
             <FilterBox text="Color" icon="keyboard-arrow-down" />
             <FilterBox text="Price" icon="keyboard-arrow-down" />
           </ScrollView>
@@ -143,14 +347,25 @@ const ExploreScreen = ({ navigation }) => {
             <CategoryForm
               categories={categories}
               containerStyle={styles.customContainer}
+              onCategoryPress={handleCategoryPress}
             />
           </ScrollView>
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.productList}
           >
-            <View style={styles.productContainer}>
-              {products.map((product, index) => (
+            {isLoading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={Colors.primary} />
+                <Text style={styles.loadingText}>Loading products...</Text>
+              </View>
+            ) : products.length === 0 ? (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>No products found</Text>
+              </View>
+            ) : (
+              <View style={styles.productContainer}>
+                {products.map((product, index) => (
                 <ProductCard
                   key={product.productId}
                   imageSource={product.productImage}
@@ -176,10 +391,20 @@ const ExploreScreen = ({ navigation }) => {
                   imageWidth={"125%"}
                   imageHeight={"125%"}
                 />
-              ))}
-            </View>
+                ))}
+              </View>
+            )}
           </ScrollView>
         </View>
+        
+        <FilterModal
+          visible={showFilterModal}
+          onClose={() => setShowFilterModal(false)}
+          title={filterType === 'rating' ? 'Ratings' : 'Sizes'}
+          options={filterType === 'rating' ? ratingOptions : sizeOptions}
+          selectedValue={filterType === 'rating' ? activeFilters.rating : activeFilters.size}
+          onSelect={handleFilterSelect}
+        />
       </View>
     </SafeAreaView>
   );
@@ -246,6 +471,28 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 50,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: Colors.textSecondary,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 50,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: Colors.textSecondary,
+    textAlign: "center",
   },
 });
 

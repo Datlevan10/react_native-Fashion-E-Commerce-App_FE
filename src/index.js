@@ -2,20 +2,17 @@ import React, { useEffect, useState, useRef } from "react";
 import { AppState } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import CategoryScreen from "./screens/ExploreScreen";
-import ProductDetailScreen from "./screens/ProductDetailScreen";
-import CartScreen from "./screens/CartScreen";
-import LoginScreen from "./screens/LoginScreen";
-import RegisterScreen from "./screens/RegisterScreen";
-import WelcomeScreen from "./screens/WelcomeScreen";
-import ForgotPasswordScreen from "./screens/ForgotPasswordScreen/ForgotPasswordScreen";
-import CheckoutScreen from "./screens/CheckoutScreen";
-import TrackingDetailScreen from "./screens/CheckoutScreen/TrackingDetailScreen";
+
+// Initialize i18n
+import './i18n';
+
+// Import only existing screens for the features you requested
+import ExploreScreen from "./screens/ExploreScreen";
+import LoginScreen from "./screens/LoginScreen";  
+import StaffLoginScreen from "./screens/StaffLoginScreen";
 import ProfileScreen from "./screens/ProfileScreen";
-import ManagerProfileScreen from "./screens/ProfileScreen/ManagerProfileScreen";
-import DetailProfileScreen from "./screens/ProfileScreen/DetailProfileScreen";
-import HomeScreen from "./screens/HomeScreen";
-import WishlistScreen from "./screens/WishlistScreen";
+import SettingsScreen from "./screens/ProfileScreen/SettingsScreen";
+import CategoryProductsScreen from "./screens/CategoryProductsScreen";
 
 import UserInactivity from "react-native-user-inactivity";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -180,6 +177,11 @@ export default function App() {
               options={{ headerShown: false }}
             />
             <Stack.Screen
+              name="CategoryProductsScreen"
+              component={CategoryProductsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
               name="ProductDetailScreen"
               component={ProductDetailScreen}
               options={{ headerShown: false }}
@@ -232,6 +234,11 @@ export default function App() {
             <Stack.Screen
               name="DetailProfileScreen"
               component={DetailProfileScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="SettingsScreen"
+              component={SettingsScreen}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

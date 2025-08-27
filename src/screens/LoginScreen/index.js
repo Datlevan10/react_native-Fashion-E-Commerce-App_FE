@@ -9,12 +9,15 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 import * as SecureStore from "expo-secure-store";
 import CustomTextInput from "../../components/TextField/CustomTextInput";
 import PasswordTextInput from "../../components/TextField/PasswordTextInput";
 import CustomHandleButton from "../../components/Button/CustomHandleButton";
 import SocialLoginButton from "../../components/Button/SocialLoginButton";
 import CustomLinkText from "../../components/Other/CustomLinkText";
+import LanguageIndicator from "../../components/Language/LanguageIndicator";
+import LanguageSelector from "../../components/Language/LanguageSelector";
 import Checkbox from "expo-checkbox";
 import Colors from "../../styles/Color";
 import { LinearGradient } from "expo-linear-gradient";
@@ -22,11 +25,13 @@ import ShowAlertWithTitleContentAndOneActions from "../../components/Alert/ShowA
 import apiService from "../../api/ApiService";
 
 export default function LoginScreen({ navigation }) {
+  const { t } = useTranslation();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [isRemember, setIsRemember] = useState(false);
   const [identifierError, setIdentifierError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -178,9 +183,18 @@ export default function LoginScreen({ navigation }) {
         start={{ x: 0.25, y: 0 }}
         end={{ x: 0.25, y: 0.25 }}
       >
+        {/* Language Selector */}
+        <View style={styles.languageContainer}>
+          <LanguageIndicator 
+            onPress={() => setShowLanguageSelector(true)} 
+            style={styles.languageIndicator}
+          />
+        </View>
+
         <View style={styles.container}>
           <View>
-            <Text style={styles.loginText}>Welcome Back</Text>
+            <Text style={styles.loginText}>{t('auth:login.title')}</Text>
+            <Text style={styles.subtitleText}>{t('auth:login.subtitle')}</Text>
           </View>
           <CustomTextInput
             value={identifier}
@@ -188,7 +202,7 @@ export default function LoginScreen({ navigation }) {
               setIdentifier(text);
               setIdentifierError("");
             }}
-            placeholder="Enter your username, email, phone number"
+            placeholder={t('auth:login.email_or_username')}
             prefixIcon="person"
           />
           {identifierError ? (
@@ -200,7 +214,7 @@ export default function LoginScreen({ navigation }) {
               setPassword(text);
               setPasswordError("");
             }}
-            placeholder="Enter your password"
+            placeholder={t('auth:login.password')}
           />
           {passwordError ? (
             <Text style={styles.errorText}>{passwordError}</Text>
@@ -213,22 +227,22 @@ export default function LoginScreen({ navigation }) {
                 color={isRemember ? "#0098fd" : undefined}
                 style={styles.checkbox}
               />
-              <Text style={styles.rememberText}>Remember Password</Text>
+              <Text style={styles.rememberText}>{t('auth:login.remember_me')}</Text>
             </View>
             <TouchableOpacity
               onPress={() => navigation.navigate("ForgotPasswordScreen")}
             >
-              <Text style={styles.forgotText}>Forgot Password?</Text>
+              <Text style={styles.forgotText}>{t('auth:login.forgot_password')}</Text>
             </TouchableOpacity>
           </View>
           <CustomHandleButton
-            buttonText="Login"
+            buttonText={t('auth:login.login_button')}
             buttonColor="#179e7a"
             onPress={handleLogin}
           />
           <View style={styles.dividerContainer}>
             <View style={styles.divider} />
-            <Text style={styles.orText}>Or</Text>
+            <Text style={styles.orText}>{t('auth:login.login_with')}</Text>
             <View style={styles.divider} />
           </View>
           <View style={styles.socialLoginContainer}>
@@ -237,14 +251,14 @@ export default function LoginScreen({ navigation }) {
               iconName="facebook"
               iconLibrary="FontAwesome"
               buttonColor="#3b5998"
-              buttonText="Login with Facebook"
+              buttonText={`${t('common:buttons.login')} ${t('auth:login.facebook')}`}
             />
             <SocialLoginButton
               onPress={handleGoogleLogin}
               iconName="google"
               iconLibrary="FontAwesome"
               buttonColor="#db4437"
-              buttonText="Login with Google"
+              buttonText={`${t('common:buttons.login')} ${t('auth:login.google')}`}
             />
             <SocialLoginButton
               onPress={handleAppleLogin}
@@ -254,12 +268,21 @@ export default function LoginScreen({ navigation }) {
               buttonText="Login with Apple"
             />
             <CustomLinkText
-              text="Don't have an account?"
-              highlightText="Register"
+              text={t('auth:login.no_account')}
+              highlightText={t('auth:login.register_link')}
               onPress={() => navigation.navigate("RegisterScreen")}
             />
           </View>
         </View>
+
+        {/* Language Selector Modal */}
+        <LanguageSelector
+          visible={showLanguageSelector}
+          onClose={() => setShowLanguageSelector(false)}
+          onLanguageSelect={(language) => {
+            console.log('Language changed to:', language);
+          }}
+        />
       </LinearGradient>
     </KeyboardAvoidingView>
   );
@@ -272,6 +295,15 @@ const styles = StyleSheet.create({
   gradientBackground: {
     flex: 1,
   },
+  languageContainer: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+    zIndex: 10,
+  },
+  languageIndicator: {
+    // Custom styles can be added here if needed
+  },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -281,7 +313,13 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontWeight: "bold",
     color: "#fff",
-    marginBottom: 80,
+    marginBottom: 20,
+  },
+  subtitleText: {
+    fontSize: 18,
+    color: "#fff",
+    opacity: 0.8,
+    marginBottom: 60,
   },
   rememberForgotContainer: {
     flexDirection: "row",
