@@ -379,22 +379,9 @@ const updateCustomerStatus = async (customerId, status) => {
   return api.put(`/admin/customers/${customerId}/status`, { status });
 };
 
-// Order Management APIs
-const getAllOrders = async (page = 1, limit = 20, filters = {}) => {
-  const queryParams = new URLSearchParams({
-    page,
-    limit,
-    ...filters,
-  });
-  return api.get(`/admin/orders?${queryParams}`);
-};
 
 const getOrderById = async (orderId) => {
   return api.get(`/admin/orders/${orderId}`);
-};
-
-const updateOrderStatus = async (orderId, status) => {
-  return api.put(`/admin/orders/${orderId}/status`, { status });
 };
 
 // Product Management APIs
@@ -525,7 +512,6 @@ export default {
   updateCustomerStatus,
   getAllOrders,
   getOrderById,
-  updateOrderStatus,
   getAllProductsAdmin,
   createProduct,
   updateProduct,
