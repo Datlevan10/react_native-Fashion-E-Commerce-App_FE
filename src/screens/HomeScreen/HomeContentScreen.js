@@ -7,6 +7,7 @@ import {
   ScrollView,
   Dimensions,
   RefreshControl,
+  TouchableOpacity,
 } from "react-native";
 import ProductCard from "../../components/Product/ProductCard";
 import CategoryForm from "../../components/Category/CategoryForm";
@@ -119,6 +120,21 @@ export default function HomeContentScreen({ navigation }) {
     }
   };
 
+  const handleCategoryPress = (categoryId) => {
+    navigation.navigate("CategoryProductsScreen", { 
+      categoryId,
+      categoryName: categories.find(cat => cat.categoryId === categoryId)?.categoryName 
+    });
+  };
+
+  const handleSeeAllCategories = () => {
+    navigation.navigate("Explore");
+  };
+
+  const handleSeeAllProducts = () => {
+    navigation.navigate("Explore");
+  };
+
   useEffect(() => {
     // load data
     loadCategories();
@@ -142,7 +158,9 @@ export default function HomeContentScreen({ navigation }) {
         )}
         <View style={styles.itemBar}>
           <Text style={styles.titleText}>Shop By Category</Text>
-          <Text style={styles.moreText}>See All</Text>
+          <TouchableOpacity onPress={handleSeeAllCategories}>
+            <Text style={styles.moreText}>See All</Text>
+          </TouchableOpacity>
         </View>
         <ScrollView
           horizontal
@@ -152,11 +170,14 @@ export default function HomeContentScreen({ navigation }) {
           <CategoryForm
             categories={categories}
             containerStyle={styles.customContainer}
+            onCategoryPress={handleCategoryPress}
           />
         </ScrollView>
         <View style={styles.itemBar}>
           <Text style={styles.titleText}>Curated For You</Text>
-          <Text style={styles.moreText}>See All</Text>
+          <TouchableOpacity onPress={handleSeeAllProducts}>
+            <Text style={styles.moreText}>See All</Text>
+          </TouchableOpacity>
         </View>
         <ScrollView
           horizontal

@@ -116,6 +116,14 @@ const filterProductsBySizes = async (size) => {
   return api.get(`/products/filter-by-sizes?size=${size}`);
 };
 
+const filterProductsByPrice = async (minPrice, maxPrice, sort = 'asc') => {
+  const params = new URLSearchParams();
+  if (minPrice !== null && minPrice !== undefined) params.append('min_price', minPrice);
+  if (maxPrice !== null && maxPrice !== undefined) params.append('max_price', maxPrice);
+  if (sort) params.append('sort', sort);
+  return api.get(`/products/filter-by-price?${params.toString()}`);
+};
+
 const filterProductsByTotalReviews = async (filter) => {
   return api.get(`/products/filter/total-reviews?filter=${filter}`);
 };
@@ -372,6 +380,7 @@ export default {
   getLimitedProducts,
   filterProductsByStars,
   filterProductsBySizes,
+  filterProductsByPrice,
   filterProductsByTotalReviews,
   filterProductsByAverageReviews,
   addProductToCart,

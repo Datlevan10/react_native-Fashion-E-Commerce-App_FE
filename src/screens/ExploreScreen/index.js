@@ -50,6 +50,14 @@ const ExploreScreen = ({ navigation }) => {
     { value: "XXL", label: "XXL" },
   ];
 
+  const priceOptions = [
+    { value: { max: 50 }, label: "Under $50" },
+    { value: { min: 50, max: 100 }, label: "$50 - $100" },
+    { value: { min: 100, max: 200 }, label: "$100 - $200" },
+    { value: { min: 200, max: 500 }, label: "$200 - $500" },
+    { value: { min: 500 }, label: "Over $500" },
+  ];
+
   useEffect(() => {
     // load data
     loadStoreName();
@@ -238,11 +246,56 @@ const ExploreScreen = ({ navigation }) => {
     }
   };
 
+  const handleFilterByPrice = async (priceRange) => {
+    try {
+      setIsLoading(true);
+      setActiveFilters({ ...activeFilters, price: priceRange });
+      const response = await apiService.filterProductsByPrice(priceRange.min, priceRange.max);
+      const productsArray = response.data.data;
+
+      if (!Array.isArray(productsArray)) {
+        setProducts([]);
+        return;
+      }
+
+      setProducts(
+        productsArray.map((item) => ({
+          productId: item.product_id,
+          productImage: {
+            uri: `${API_BASE_URL}${item.image[0].url}`,
+          },
+          imageArr: item.image.map((img) => `${API_BASE_URL}${img.url}`),
+          categoryName: item.category_name,
+          averageReview: item.average_review,
+          totalReview: item.total_review,
+          productName: item.product_name,
+          description: item.description,
+          oldPrice: item.old_price,
+          newPrice: item.new_price,
+          colorArr: item.color.map((color) => `${color.color_code}`),
+          sizeArr: item.size.map((size) => `${size.size}`),
+        }))
+      );
+    } catch (error) {
+      console.error("Failed to filter by price:", error);
+      setProducts([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleCategoryPress = (categoryId) => {
     navigation.navigate("CategoryProductsScreen", { 
       categoryId,
       categoryName: categories.find(cat => cat.categoryId === categoryId)?.categoryName 
     });
+  };
+
+  const getPriceRangeLabel = (priceRange) => {
+    if (priceRange.max && !priceRange.min) return `Under $${priceRange.max}`;
+    if (priceRange.min && !priceRange.max) return `Over $${priceRange.min}`;
+    if (priceRange.min && priceRange.max) return `$${priceRange.min} - $${priceRange.max}`;
+    return "Price";
   };
 
   const clearFilters = () => {
@@ -268,6 +321,13 @@ const ExploreScreen = ({ navigation }) => {
       setActiveFilters({ ...activeFilters, size: value });
       if (value) {
         handleFilterBySize(value);
+      } else {
+        loadListAllProducts();
+      }
+    } else if (filterType === 'price') {
+      setActiveFilters({ ...activeFilters, price: value });
+      if (value) {
+        handleFilterByPrice(value);
       } else {
         loadListAllProducts();
       }
@@ -336,8 +396,12 @@ const ExploreScreen = ({ navigation }) => {
               onPress={() => openFilterModal('size')}
               isActive={activeFilters.size !== null}
             />
-            {/* <FilterBox text="Color" icon="keyboard-arrow-down" /> */}
-            <FilterBox text="Price" icon="keyboard-arrow-down" />
+            <FilterBox 
+              text={activeFilters.price ? getPriceRangeLabel(activeFilters.price) : "Price"} 
+              icon="keyboard-arrow-down" 
+              onPress={() => openFilterModal('price')}
+              isActive={activeFilters.price !== null}
+            />
           </ScrollView>
           <ScrollView
             horizontal
@@ -400,9 +464,17 @@ const ExploreScreen = ({ navigation }) => {
         <FilterModal
           visible={showFilterModal}
           onClose={() => setShowFilterModal(false)}
-          title={filterType === 'rating' ? 'Ratings' : 'Sizes'}
-          options={filterType === 'rating' ? ratingOptions : sizeOptions}
-          selectedValue={filterType === 'rating' ? activeFilters.rating : activeFilters.size}
+          title={filterType === 'rating' ? 'Ratings' : filterType === 'size' ? 'Sizes' : 'Price Range'}
+          options={
+            filterType === 'rating' ? ratingOptions : 
+            filterType === 'size' ? sizeOptions : 
+            priceOptions
+          }
+          selectedValue={
+            filterType === 'rating' ? activeFilters.rating : 
+            filterType === 'size' ? activeFilters.size :
+            activeFilters.price
+          }
           onSelect={handleFilterSelect}
         />
       </View>
