@@ -84,13 +84,13 @@ const CategoryProductsScreen = ({ navigation, route }) => {
           >
             <Feather name="arrow-left" size={24} color={Colors.blackColor} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{categoryName}</Text>
+          <Text style={styles.headerTitle}> Categoty {categoryName}</Text>
           <View style={styles.placeholder} />
         </View>
 
         <View style={styles.content}>
           <Text style={styles.resultCount}>
-            {products.length} {products.length === 1 ? 'product' : 'products'} found
+           Total {products.length} {products.length === 1 ? 'product' : 'products'}
           </Text>
           
           <ScrollView

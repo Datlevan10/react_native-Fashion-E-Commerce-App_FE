@@ -109,11 +109,11 @@ const getLimitedProducts = async (limit) => {
 };
 
 const filterProductsByStars = async (stars) => {
-  return api.get(`/products/filter/stars?stars=${stars}`);
+  return api.get(`/products/filter-by-stars?stars=${stars}`);
 };
 
 const filterProductsBySizes = async (size) => {
-  return api.get(`/products/filter/sizes?size=${size}`);
+  return api.get(`/products/filter-by-sizes?size=${size}`);
 };
 
 const filterProductsByTotalReviews = async (filter) => {
