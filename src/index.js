@@ -3,9 +3,6 @@ import { AppState } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-// Initialize i18n
-import './i18n';
-
 // Import only existing screens for the features you requested
 import ExploreScreen from "./screens/ExploreScreen";
 import LoginScreen from "./screens/LoginScreen";  

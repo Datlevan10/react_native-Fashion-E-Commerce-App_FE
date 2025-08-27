@@ -9,15 +9,12 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import { useTranslation } from "react-i18next";
 import * as SecureStore from "expo-secure-store";
 import CustomTextInput from "../../components/TextField/CustomTextInput";
 import PasswordTextInput from "../../components/TextField/PasswordTextInput";
 import CustomHandleButton from "../../components/Button/CustomHandleButton";
 import SocialLoginButton from "../../components/Button/SocialLoginButton";
 import CustomLinkText from "../../components/Other/CustomLinkText";
-import LanguageIndicator from "../../components/Language/LanguageIndicator";
-import LanguageSelector from "../../components/Language/LanguageSelector";
 import Checkbox from "expo-checkbox";
 import Colors from "../../styles/Color";
 import { LinearGradient } from "expo-linear-gradient";
@@ -25,13 +22,11 @@ import ShowAlertWithTitleContentAndOneActions from "../../components/Alert/ShowA
 import apiService from "../../api/ApiService";
 
 export default function LoginScreen({ navigation }) {
-  const { t } = useTranslation();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [isRemember, setIsRemember] = useState(false);
   const [identifierError, setIdentifierError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -183,18 +178,10 @@ export default function LoginScreen({ navigation }) {
         start={{ x: 0.25, y: 0 }}
         end={{ x: 0.25, y: 0.25 }}
       >
-        {/* Language Selector */}
-        <View style={styles.languageContainer}>
-          <LanguageIndicator 
-            onPress={() => setShowLanguageSelector(true)} 
-            style={styles.languageIndicator}
-          />
-        </View>
-
         <View style={styles.container}>
           <View>
-            <Text style={styles.loginText}>{t('auth:login.title')}</Text>
-            <Text style={styles.subtitleText}>{t('auth:login.subtitle')}</Text>
+            <Text style={styles.loginText}>Login</Text>
+            <Text style={styles.subtitleText}>Welcome back to H&M Fashion</Text>
           </View>
           <CustomTextInput
             value={identifier}
@@ -202,7 +189,7 @@ export default function LoginScreen({ navigation }) {
               setIdentifier(text);
               setIdentifierError("");
             }}
-            placeholder={t('auth:login.email_or_username')}
+            placeholder="Email or Username"
             prefixIcon="person"
           />
           {identifierError ? (
@@ -214,7 +201,7 @@ export default function LoginScreen({ navigation }) {
               setPassword(text);
               setPasswordError("");
             }}
-            placeholder={t('auth:login.password')}
+            placeholder="Password"
           />
           {passwordError ? (
             <Text style={styles.errorText}>{passwordError}</Text>
@@ -227,22 +214,22 @@ export default function LoginScreen({ navigation }) {
                 color={isRemember ? "#0098fd" : undefined}
                 style={styles.checkbox}
               />
-              <Text style={styles.rememberText}>{t('auth:login.remember_me')}</Text>
+              <Text style={styles.rememberText}>Remember me</Text>
             </View>
             <TouchableOpacity
               onPress={() => navigation.navigate("ForgotPasswordScreen")}
             >
-              <Text style={styles.forgotText}>{t('auth:login.forgot_password')}</Text>
+              <Text style={styles.forgotText}>Forgot Password?</Text>
             </TouchableOpacity>
           </View>
           <CustomHandleButton
-            buttonText={t('auth:login.login_button')}
+            buttonText="Login"
             buttonColor="#179e7a"
             onPress={handleLogin}
           />
           <View style={styles.dividerContainer}>
             <View style={styles.divider} />
-            <Text style={styles.orText}>{t('auth:login.login_with')}</Text>
+            <Text style={styles.orText}>Or login with</Text>
             <View style={styles.divider} />
           </View>
           <View style={styles.socialLoginContainer}>
@@ -251,14 +238,14 @@ export default function LoginScreen({ navigation }) {
               iconName="facebook"
               iconLibrary="FontAwesome"
               buttonColor="#3b5998"
-              buttonText={`${t('common:buttons.login')} ${t('auth:login.facebook')}`}
+              buttonText="Login with Facebook"
             />
             <SocialLoginButton
               onPress={handleGoogleLogin}
               iconName="google"
               iconLibrary="FontAwesome"
               buttonColor="#db4437"
-              buttonText={`${t('common:buttons.login')} ${t('auth:login.google')}`}
+              buttonText="Login with Google"
             />
             <SocialLoginButton
               onPress={handleAppleLogin}
@@ -268,21 +255,13 @@ export default function LoginScreen({ navigation }) {
               buttonText="Login with Apple"
             />
             <CustomLinkText
-              text={t('auth:login.no_account')}
-              highlightText={t('auth:login.register_link')}
+              text="Don't have an account?"
+              highlightText="Sign up"
               onPress={() => navigation.navigate("RegisterScreen")}
             />
           </View>
         </View>
 
-        {/* Language Selector Modal */}
-        <LanguageSelector
-          visible={showLanguageSelector}
-          onClose={() => setShowLanguageSelector(false)}
-          onLanguageSelect={(language) => {
-            console.log('Language changed to:', language);
-          }}
-        />
       </LinearGradient>
     </KeyboardAvoidingView>
   );
@@ -294,15 +273,6 @@ const styles = StyleSheet.create({
   },
   gradientBackground: {
     flex: 1,
-  },
-  languageContainer: {
-    position: 'absolute',
-    top: 50,
-    right: 20,
-    zIndex: 10,
-  },
-  languageIndicator: {
-    // Custom styles can be added here if needed
   },
   container: {
     flex: 1,
