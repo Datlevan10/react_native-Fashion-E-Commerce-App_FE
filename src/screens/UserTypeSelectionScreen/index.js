@@ -108,7 +108,7 @@ export default function UserTypeSelectionScreen({ navigation }) {
           </View>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Fashion E-Commerce App</text>
+            <Text style={styles.footerText}>Fashion E-Commerce App</Text>
             <Text style={styles.versionText}>Version 1.0.0</Text>
           </View>
         </View>

@@ -178,7 +178,7 @@ export default function StaffLoginScreen({ navigation }) {
             </View>
 
             <CustomHandleButton
-              title={isLoading ? "Logging in..." : "Login"}
+              buttonText={isLoading ? "Logging in..." : "Login"}
               onPress={handleLogin}
               disabled={isLoading}
               style={styles.loginButton}

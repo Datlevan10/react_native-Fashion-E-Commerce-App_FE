@@ -14,6 +14,8 @@ import CategoryProductsScreen from "./screens/CategoryProductsScreen";
 import ProductDetailScreen from "./screens/ProductDetailScreen";
 import CartScreen from "./screens/CartScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import ManagerProfileScreen from "./screens/ProfileScreen/ManagerProfileScreen";
+import DetailProfileScreen from "./screens/ProfileScreen/DetailProfileScreen";
 import SettingsScreen from "./screens/ProfileScreen/SettingsScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen/ForgotPasswordScreen";
