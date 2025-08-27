@@ -84,7 +84,7 @@ const CategoryProductsScreen = ({ navigation, route }) => {
           >
             <Feather name="arrow-left" size={24} color={Colors.blackColor} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}> Categoty {categoryName}</Text>
+          <Text style={styles.headerTitle}> Danh mục {categoryName}</Text>
           <View style={styles.placeholder} />
         </View>
 

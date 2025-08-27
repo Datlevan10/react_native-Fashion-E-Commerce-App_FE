@@ -76,7 +76,7 @@ export default function HomeContentScreen({ navigation }) {
   const loadFeatureProducts = async () => {
     try {
       // Xu ly lai cho nay dang truyen truc tiep category5
-      const response = await apiService.getFeatureProducts("category5");
+      const response = await apiService.getFeatureProducts("aG1wCVwT");
       // console.log("API Response:", response);
       const productsArray = response.data.data;
 
@@ -157,9 +157,9 @@ export default function HomeContentScreen({ navigation }) {
           <Text style={styles.loadingText}>Loading image Event...</Text>
         )}
         <View style={styles.itemBar}>
-          <Text style={styles.titleText}>Shop By Category</Text>
+          <Text style={styles.titleText}>Danh mục sản phẩm</Text>
           <TouchableOpacity onPress={handleSeeAllCategories}>
-            <Text style={styles.moreText}>See All</Text>
+            <Text style={styles.moreText}>Xem tất cả</Text>
           </TouchableOpacity>
         </View>
         <ScrollView
@@ -174,9 +174,9 @@ export default function HomeContentScreen({ navigation }) {
           />
         </ScrollView>
         <View style={styles.itemBar}>
-          <Text style={styles.titleText}>Curated For You</Text>
+          <Text style={styles.titleText}>Đề xuất cho bạn</Text>
           <TouchableOpacity onPress={handleSeeAllProducts}>
-            <Text style={styles.moreText}>See All</Text>
+            <Text style={styles.moreText}>Xem tất cả</Text>
           </TouchableOpacity>
         </View>
         <ScrollView

@@ -178,7 +178,7 @@ export default function AdminLoginScreen({ navigation }) {
             </View>
 
             <CustomHandleButton
-              title={isLoading ? "Authenticating..." : "Admin Login"}
+              buttonText={isLoading ? "Logging in..." : "Login"}
               onPress={handleLogin}
               disabled={isLoading}
               style={styles.loginButton}
