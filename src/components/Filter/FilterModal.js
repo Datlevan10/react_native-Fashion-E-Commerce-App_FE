@@ -53,9 +53,9 @@ const FilterModal = ({
               )}
             </TouchableOpacity>
             
-            {options.map((option) => (
+            {options.map((option, index) => (
               <TouchableOpacity
-                key={option.value}
+                key={typeof option.value === 'object' ? `option-${index}` : option.value}
                 style={styles.option}
                 onPress={() => {
                   onSelect(option.value);
@@ -64,11 +64,17 @@ const FilterModal = ({
               >
                 <Text style={[
                   styles.optionText,
-                  selectedValue === option.value && styles.selectedText
+                  (typeof option.value === 'object' 
+                    ? JSON.stringify(selectedValue) === JSON.stringify(option.value)
+                    : selectedValue === option.value
+                  ) && styles.selectedText
                 ]}>
                   {option.label}
                 </Text>
-                {selectedValue === option.value && (
+                {(typeof option.value === 'object' 
+                  ? JSON.stringify(selectedValue) === JSON.stringify(option.value)
+                  : selectedValue === option.value
+                ) && (
                   <Feather name="check" size={20} color={Colors.primary} />
                 )}
               </TouchableOpacity>

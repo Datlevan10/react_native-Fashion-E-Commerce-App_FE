@@ -27,10 +27,15 @@ const TestimonialReviewWidget = ({ reviews }) => {
   const [avatarColor, setAvatarColor] = useState("#FFFFFF");
   const [isLoading, setIsLoading] = useState(false);
 
+  // Add null check for reviews
+  const reviewsData = reviews || [];
+
   useEffect(() => {
+    if (reviewsData.length === 0) return;
+    
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => {
-        const nextIndex = prevIndex === reviews.length - 1 ? 0 : prevIndex + 1;
+        const nextIndex = prevIndex === reviewsData.length - 1 ? 0 : prevIndex + 1;
         const randomColor = getRandomColor();
         setAvatarColor(randomColor);
         if (flatListRef.current) {
@@ -44,7 +49,7 @@ const TestimonialReviewWidget = ({ reviews }) => {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [reviews.length]);
+  }, [reviewsData.length]);
 
   const openModal = (item) => {
     setIsLoading(true);
@@ -62,7 +67,7 @@ const TestimonialReviewWidget = ({ reviews }) => {
 
   const previousReview = () => {
     setCurrentIndex((prevIndex) => {
-      const newIndex = prevIndex === 0 ? reviews.length - 1 : prevIndex - 1;
+      const newIndex = prevIndex === 0 ? reviewsData.length - 1 : prevIndex - 1;
       if (flatListRef.current) {
         flatListRef.current.scrollToIndex({
           animated: true,
@@ -75,7 +80,7 @@ const TestimonialReviewWidget = ({ reviews }) => {
 
   const nextReview = () => {
     setCurrentIndex((prevIndex) => {
-      const newIndex = prevIndex === reviews.length - 1 ? 0 : prevIndex + 1;
+      const newIndex = prevIndex === reviewsData.length - 1 ? 0 : prevIndex + 1;
       if (flatListRef.current) {
         flatListRef.current.scrollToIndex({
           animated: true,
@@ -87,6 +92,16 @@ const TestimonialReviewWidget = ({ reviews }) => {
   };
 
   const handleProductPress = async (productId) => {};
+
+  // Return early if no reviews
+  if (reviewsData.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Our Customers Love Us</Text>
+        <Text style={styles.subtitle}>No reviews available yet</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -103,7 +118,7 @@ const TestimonialReviewWidget = ({ reviews }) => {
         </TouchableOpacity>
         <FlatList
           ref={flatListRef}
-          data={reviews}
+          data={reviewsData}
           keyExtractor={(item) => item.review_id.toString()}
           horizontal
           renderItem={({ item }) => (

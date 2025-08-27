@@ -23,8 +23,8 @@ const ProductInfoInDetail = ({
       </View>
       <Text style={styles.productName}>{productName}</Text>
       <View style={styles.priceRow}>
-        <Text style={styles.newPrice}>${newPrice}</Text>
-        <Text style={styles.oldPrice}>${oldPrice}</Text>
+        <Text style={styles.newPrice}>{new Intl.NumberFormat('vi-VN').format(newPrice)} VND</Text>
+        <Text style={styles.oldPrice}>{new Intl.NumberFormat('vi-VN').format(oldPrice)} VND</Text>
       </View>
     </View>
   );
