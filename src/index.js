@@ -3,13 +3,23 @@ import { AppState } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-// Import only existing screens for the features you requested
-import ExploreScreen from "./screens/ExploreScreen";
-import LoginScreen from "./screens/LoginScreen";  
+// Import screens for core e-commerce functionality
+import WelcomeScreen from "./screens/WelcomeScreen";
+import UserTypeSelectionScreen from "./screens/UserTypeSelectionScreen";
+import LoginScreen from "./screens/LoginScreen";
 import StaffLoginScreen from "./screens/StaffLoginScreen";
+import HomeScreen from "./screens/HomeScreen";
+import ExploreScreen from "./screens/ExploreScreen";
+import CategoryProductsScreen from "./screens/CategoryProductsScreen";
+import ProductDetailScreen from "./screens/ProductDetailScreen";
+import CartScreen from "./screens/CartScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SettingsScreen from "./screens/ProfileScreen/SettingsScreen";
-import CategoryProductsScreen from "./screens/CategoryProductsScreen";
+import RegisterScreen from "./screens/RegisterScreen";
+import ForgotPasswordScreen from "./screens/ForgotPasswordScreen/ForgotPasswordScreen";
+import CheckoutScreen from "./screens/CheckoutScreen";
+import TrackingDetailScreen from "./screens/CheckoutScreen/TrackingDetailScreen";
+import WishlistScreen from "./screens/WishlistScreen";
 
 import UserInactivity from "react-native-user-inactivity";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -114,12 +124,9 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      {showWelcome ? (
-        <WelcomeScreen />
-      ) : (
-        <UserInactivity
-          timeForInactivity={1 * 60 * 1000}
-          onAction={async (isActive) => {
+      <UserInactivity
+        timeForInactivity={1 * 60 * 1000}
+        onAction={async (isActive) => {
             if (isActive) {
               const token = await SecureStore.getItemAsync("access_token");
               const expiryTime = await SecureStore.getItemAsync(
@@ -161,16 +168,53 @@ export default function App() {
           }}
         >
           <Stack.Navigator
-            initialRouteName={isLoggedIn ? "HomeScreen" : "LoginScreen"}
+            initialRouteName={
+              showWelcome ? "WelcomeScreen" : 
+              isLoggedIn ? "HomeScreen" : 
+              "UserTypeSelectionScreen"
+            }
           >
+            {/* Welcome & Auth Screens */}
+            <Stack.Screen
+              name="WelcomeScreen"
+              component={WelcomeScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="UserTypeSelectionScreen"
+              component={UserTypeSelectionScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="LoginScreen"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="StaffLoginScreen"
+              component={StaffLoginScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="RegisterScreen"
+              component={RegisterScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ForgotPasswordScreen"
+              component={ForgotPasswordScreen}
+              options={{ headerShown: false }}
+            />
+            
+            {/* Main App Screens */}
             <Stack.Screen
               name="HomeScreen"
               component={HomeScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="Category"
-              component={CategoryScreen}
+              name="ExploreScreen"
+              component={ExploreScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -186,21 +230,6 @@ export default function App() {
             <Stack.Screen
               name="CartScreen"
               component={CartScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="LoginScreen"
-              component={LoginScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="RegisterScreen"
-              component={RegisterScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ForgotPasswordScreen"
-              component={ForgotPasswordScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
@@ -240,7 +269,6 @@ export default function App() {
             />
           </Stack.Navigator>
         </UserInactivity>
-      )}
     </NavigationContainer>
   );
 }
