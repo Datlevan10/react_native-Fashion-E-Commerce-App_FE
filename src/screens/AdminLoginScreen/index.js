@@ -81,13 +81,13 @@ export default function AdminLoginScreen({ navigation }) {
         const response = await apiService.adminLogin(loginData);
 
         if (response.status === 200) {
-          const { access_token, refresh_token, admin_id, expires_in } = response.data.data;
+          const { access_token, refresh_token, id, expires_in } = response.data.data;
           const expiryTime = Date.now() + expires_in * 1000;
 
           // Store admin tokens and data
           await SecureStore.setItemAsync("admin_access_token", access_token);
           await SecureStore.setItemAsync("admin_refresh_token", refresh_token);
-          await SecureStore.setItemAsync("admin_id", admin_id.toString());
+          await SecureStore.setItemAsync("admin_id", id);
           await SecureStore.setItemAsync("admin_token_expiry", expiryTime.toString());
           await SecureStore.setItemAsync("user_type", "admin");
 
@@ -95,7 +95,7 @@ export default function AdminLoginScreen({ navigation }) {
             "Login Successful",
             "Welcome to Admin Dashboard",
             () => {
-              navigation.replace("AdminDashboardScreen");
+              navigation.replace("AdminDrawer");
             }
           );
         }

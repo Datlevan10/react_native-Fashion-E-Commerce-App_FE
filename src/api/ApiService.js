@@ -41,7 +41,7 @@ const adminLogout = async () => {
 };
 
 const adminRefreshToken = async (refreshToken) => {
-  return api.post("/admin/auth/refresh-token", { refresh_token: refreshToken });
+  return api.post("/admins/auth/refresh-token", { refresh_token: refreshToken });
 };
 
 const getAdminProfile = async () => {
@@ -262,6 +262,89 @@ const getTopProducts = async (limit = 5) => {
   return api.get(`/admin/products/top-selling?limit=${limit}`);
 };
 
+// Cart and Order Statistics for Admin Dashboard
+const getTotalCarts = async () => {
+  return api.get("/admin/dashboard/carts/total");
+};
+
+const getActiveCarts = async () => {
+  return api.get("/admin/dashboard/carts/active");
+};
+
+const getCartStatistics = async () => {
+  return api.get("/admin/dashboard/carts/statistics");
+};
+
+const getTotalOrders = async () => {
+  return api.get("/admin/dashboard/orders/total");
+};
+
+const getOrdersByStatus = async (status) => {
+  return api.get(`/admin/dashboard/orders/status/${status}`);
+};
+
+const getAllCarts = async (page = 1, limit = 20) => {
+  return api.get(`/admin/carts?page=${page}&limit=${limit}`);
+};
+
+const getAllOrders = async (page = 1, limit = 20) => {
+  return api.get(`/admin/orders?page=${page}&limit=${limit}`);
+};
+
+// ============ CART MANAGEMENT APIs ============
+
+// Get customer's active cart (not ordered)
+const getCustomerCart = async (customerId) => {
+  return api.get(`/carts/not-ordered-carts/customer/${customerId}`);
+};
+
+// Create new cart for customer
+const createCart = async (customerId) => {
+  return api.post("/carts", { customer_id: customerId });
+};
+
+// Add item to cart
+const addToCart = async (cartData) => {
+  return api.post("/cart_details", cartData);
+};
+
+// Get cart items
+const getCartItems = async (cartId) => {
+  return api.get(`/cart_details/cart/${cartId}`);
+};
+
+// Update cart item quantity
+const updateCartItem = async (cartDetailId, quantity) => {
+  return api.put(`/cart_details/${cartDetailId}`, { quantity });
+};
+
+// Remove item from cart
+const removeFromCart = async (cartDetailId) => {
+  return api.delete(`/cart_details/${cartDetailId}/delete-item-in-cart`);
+};
+
+// ============ ORDER MANAGEMENT APIs ============
+
+// Create order from cart
+const createOrder = async (orderData) => {
+  return api.post("/orders", orderData);
+};
+
+// Get customer orders
+const getCustomerOrders = async (customerId) => {
+  return api.get(`/orders/customer/${customerId}`);
+};
+
+// Update order status
+const updateOrderStatus = async (orderId, status) => {
+  return api.put(`/orders/${orderId}/status`, { status });
+};
+
+// Get order details
+const getOrderDetails = async (orderId) => {
+  return api.get(`/orders/${orderId}`);
+};
+
 // Staff Management APIs
 const getAllStaff = async () => {
   return api.get("/admin/staff");
@@ -413,6 +496,25 @@ export default {
   getOrderStatistics,
   getRecentOrders,
   getTopProducts,
+  // Cart and Order Statistics
+  getTotalCarts,
+  getActiveCarts,
+  getCartStatistics,
+  getTotalOrders,
+  getOrdersByStatus,
+  getAllCarts,
+  // Cart Management
+  getCustomerCart,
+  createCart,
+  addToCart,
+  getCartItems,
+  updateCartItem,
+  removeFromCart,
+  // Order Management
+  createOrder,
+  getCustomerOrders,
+  updateOrderStatus,
+  getOrderDetails,
   getAllStaff,
   getStaffById,
   createStaff,

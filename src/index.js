@@ -9,6 +9,7 @@ import UserTypeSelectionScreen from "./screens/UserTypeSelectionScreen";
 import LoginScreen from "./screens/LoginScreen";
 import StaffLoginScreen from "./screens/StaffLoginScreen";
 import AdminLoginScreen from "./screens/AdminLoginScreen";
+import AdminDrawerNavigator from "./navigation/AdminDrawerNavigator";
 import HomeScreen from "./screens/HomeScreen";
 import ExploreScreen from "./screens/ExploreScreen";
 import CategoryProductsScreen from "./screens/CategoryProductsScreen";
@@ -21,6 +22,7 @@ import SettingsScreen from "./screens/ProfileScreen/SettingsScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen/ForgotPasswordScreen";
 import CheckoutScreen from "./screens/CheckoutScreen";
+import OrderScreen from "./screens/OrderScreen";
 import TrackingDetailScreen from "./screens/CheckoutScreen/TrackingDetailScreen";
 import WishlistScreen from "./screens/WishlistScreen";
 
@@ -204,6 +206,11 @@ export default function App() {
               options={{ headerShown: false }}
             />
             <Stack.Screen
+              name="AdminDrawer"
+              component={AdminDrawerNavigator}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
               name="RegisterScreen"
               component={RegisterScreen}
               options={{ headerShown: false }}
@@ -243,6 +250,11 @@ export default function App() {
             <Stack.Screen
               name="CheckoutScreen"
               component={CheckoutScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="OrderScreen"
+              component={OrderScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen

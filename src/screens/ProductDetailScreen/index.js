@@ -204,18 +204,39 @@ export default function ProductDetailScreen({ route, navigation }) {
     }
 
     try {
-      const productData = {
-        customer_id: customerId,
+      // First, get or create customer's cart
+      let cartResponse;
+      try {
+        cartResponse = await apiService.getCustomerCart(customerId);
+      } catch (error) {
+        if (error.response?.status === 404) {
+          // No cart exists, create one
+          cartResponse = await apiService.createCart(customerId);
+        } else {
+          throw error;
+        }
+      }
+
+      const cartId = cartResponse.data.data?.cart_id || cartResponse.data.cart_id;
+      
+      if (!cartId) {
+        throw new Error("Unable to get or create cart");
+      }
+
+      // Add item to cart
+      const cartItemData = {
+        cart_id: cartId,
         product_id: product.productId,
         quantity: 1,
         color: selectedColor,
         size: selectedSize,
+        price: product.newPrice
       };
 
-      const response = await apiService.addProductToCart(productData);
+      const addResponse = await apiService.addToCart(cartItemData);
 
-      if (response.status === 201) {
-        Alert.alert("Success", "Product added to cart successfully.");
+      if (addResponse.status === 201 || addResponse.status === 200) {
+        Alert.alert("Success", "Product added to cart successfully!");
       } else {
         Alert.alert(
           "Error",
@@ -224,7 +245,10 @@ export default function ProductDetailScreen({ route, navigation }) {
       }
     } catch (error) {
       console.error("Error adding product to cart:", error);
-      Alert.alert("Error", "An unexpected error occurred. Please try again.");
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.error || 
+                          "An unexpected error occurred. Please try again.";
+      Alert.alert("Error", errorMessage);
     }
   };
   const mockReviews = [
@@ -371,7 +395,28 @@ export default function ProductDetailScreen({ route, navigation }) {
             <CustomButton
               title="BUY NOW"
               backgroundColor={Colors.blackColor}
-              onPress={() => console.log("BUY NOW Clicked")}
+              onPress={() => {
+                if (!selectedColor || !selectedSize) {
+                  Alert.alert("Error", "Please select color and size first");
+                  return;
+                }
+                
+                // Navigate to OrderScreen with product data
+                const orderItem = {
+                  product_id: product.productId,
+                  product_name: product.productName,
+                  image_url: images[0],
+                  new_price: product.newPrice,
+                  quantity: 1,
+                  color: selectedColor,
+                  size: selectedSize
+                };
+                
+                navigation.navigate('OrderScreen', { 
+                  cartItems: [orderItem],
+                  cartId: null // Direct buy, no cart needed
+                });
+              }}
             />
           </View>
           <View style={styles.reviewContainer}>

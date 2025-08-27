@@ -26,6 +26,8 @@ export default function AdminDashboardScreen({ navigation }) {
     totalStaff: 0,
     totalProducts: 0,
     totalCategories: 0,
+    totalCarts: 0,
+    activeCarts: 0,
     todayOrders: 0,
     weekOrders: 0,
     monthOrders: 0,
@@ -50,6 +52,8 @@ export default function AdminDashboardScreen({ navigation }) {
         staffRes,
         productsRes,
         categoriesRes,
+        cartsRes,
+        activeCartsRes,
         ordersRes,
         recentOrdersRes,
         topProductsRes,
@@ -58,6 +62,8 @@ export default function AdminDashboardScreen({ navigation }) {
         apiService.getTotalStaff(),
         apiService.getTotalProducts(),
         apiService.getTotalCategories(),
+        apiService.getTotalCarts(),
+        apiService.getActiveCarts(),
         apiService.getOrderStatistics(),
         apiService.getRecentOrders(10),
         apiService.getTopProducts(5),
@@ -68,6 +74,8 @@ export default function AdminDashboardScreen({ navigation }) {
         totalStaff: staffRes.data.total || 0,
         totalProducts: productsRes.data.total || 0,
         totalCategories: categoriesRes.data.total || 0,
+        totalCarts: cartsRes.data.total || 0,
+        activeCarts: activeCartsRes.data.active || 0,
         todayOrders: ordersRes.data.today || 0,
         weekOrders: ordersRes.data.week || 0,
         monthOrders: ordersRes.data.month || 0,
@@ -80,6 +88,21 @@ export default function AdminDashboardScreen({ navigation }) {
       setTopProducts(topProductsRes.data.products || []);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
+      // Set default values if API calls fail
+      setDashboardData({
+        totalCustomers: 0,
+        totalStaff: 0,
+        totalProducts: 0,
+        totalCategories: 0,
+        totalCarts: 0,
+        activeCarts: 0,
+        todayOrders: 0,
+        weekOrders: 0,
+        monthOrders: 0,
+        todayRevenue: 0,
+        weekRevenue: 0,
+        monthRevenue: 0,
+      });
     } finally {
       setLoading(false);
     }
@@ -191,6 +214,24 @@ export default function AdminDashboardScreen({ navigation }) {
                 icon="grid"
                 iconType="Feather"
                 color={Colors.blueProduct}
+                style={styles.metricCard}
+              />
+            </View>
+            <View style={styles.metricsRow}>
+              <DashboardMetricCard
+                title="Total Carts"
+                value={dashboardData.totalCarts}
+                icon="shopping-cart"
+                iconType="Feather"
+                color={Colors.info}
+                style={styles.metricCard}
+              />
+              <DashboardMetricCard
+                title="Active Carts"
+                value={dashboardData.activeCarts}
+                icon="shopping-bag"
+                iconType="Feather"
+                color={Colors.warning}
                 style={styles.metricCard}
               />
             </View>
