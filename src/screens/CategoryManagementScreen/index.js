@@ -76,7 +76,7 @@ const CategoryManagementScreen = () => {
       }
 
       const pickerResult = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ImagePicker.MediaType.Images,
         allowsEditing: true,
         quality: 0.7,
         aspect: [1, 1],
@@ -122,6 +122,12 @@ const CategoryManagementScreen = () => {
       Alert.alert('Validation Error', 'Category name is required');
       return false;
     }
+    // For creating new category, image is required
+    // For editing, image is optional if category already has one
+    if (!editingCategory && !selectedImage) {
+      Alert.alert('Validation Error', 'Category image is required');
+      return false;
+    }
     return true;
   };
 
@@ -145,19 +151,17 @@ const CategoryManagementScreen = () => {
 
       // Append image if selected
       if (selectedImage) {
-        formDataToSend.append('category_image', {
+        formDataToSend.append('image_category', {
           uri: selectedImage.uri,
           type: selectedImage.type || 'image/jpeg',
-          name: 'category_image.jpg',
+          name: 'image_category.jpg',
         });
       }
 
       let response;
       if (editingCategory) {
-        // For editing, we'd need an update category API
-        // response = await apiService.updateCategory(editingCategory.category_id, formDataToSend);
-        Alert.alert('Info', 'Category update API not implemented yet');
-        return;
+        // Update existing category
+        response = await apiService.updateCategory(editingCategory.category_id, formDataToSend);
       } else {
         // Create new category
         response = await apiService.createCategory(formDataToSend);
@@ -175,7 +179,20 @@ const CategoryManagementScreen = () => {
       }
     } catch (error) {
       console.error('Error submitting category:', error);
-      const errorMessage = error.response?.data?.message || 'Failed to save category';
+      console.log('Error details:', error.response?.data);
+      
+      let errorMessage = 'Failed to save category';
+      if (error.response?.data?.error) {
+        // Handle validation errors
+        const errors = error.response.data.error;
+        const errorFields = Object.keys(errors);
+        if (errorFields.length > 0) {
+          errorMessage = errors[errorFields[0]][0]; // Get first error message
+        }
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+      
       Alert.alert('Error', errorMessage);
     } finally {
       setLoading(false);
@@ -194,12 +211,28 @@ const CategoryManagementScreen = () => {
           onPress: async () => {
             try {
               setLoading(true);
-              // await apiService.deleteCategory(category.category_id);
-              Alert.alert('Info', 'Category deletion API not implemented yet');
-              // handleRefresh();
+              const response = await apiService.deleteCategory(category.category_id);
+              
+              if (response.status === 200) {
+                Alert.alert(
+                  'Success',
+                  'Category deleted successfully',
+                  [{ 
+                    text: 'OK', 
+                    onPress: () => handleRefresh()
+                  }]
+                );
+              }
             } catch (error) {
               console.error('Error deleting category:', error);
-              Alert.alert('Error', 'Failed to delete category');
+              console.log('Error details:', error.response?.data);
+              
+              let errorMessage = 'Failed to delete category';
+              if (error.response?.data?.message) {
+                errorMessage = error.response.data.message;
+              }
+              
+              Alert.alert('Error', errorMessage);
             } finally {
               setLoading(false);
             }

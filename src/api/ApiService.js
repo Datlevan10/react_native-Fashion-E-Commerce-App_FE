@@ -85,6 +85,20 @@ const createCategory = async (categoryData) => {
   });
 };
 
+const updateCategory = async (categoryId, categoryData) => {
+  return api.put(`/categories/${categoryId}`, categoryData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
+const deleteCategory = async (categoryId) => {
+  return api.delete(`/categories/${categoryId}`);
+};
+
+const getCategoryById = async (categoryId) => {
+  return api.get(`/categories/${categoryId}`);
+};
+
 const getListAllProducts = async () => {
   return api.get("/products");
 };
@@ -445,6 +459,9 @@ export default {
   getOrdersReports,
   getCategories,
   createCategory,
+  updateCategory,
+  deleteCategory,
+  getCategoryById,
   getStores,
   getListAllProducts,
   getProductByProductId,
