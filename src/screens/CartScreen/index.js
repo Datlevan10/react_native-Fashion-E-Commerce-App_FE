@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import FilterBox from "../../components/Other/FilterBox";
 import CartForm from "../../components/Cart/CartForm";
@@ -20,39 +21,10 @@ import imageTest3 from "../../../assets/image/kid-5.jpg";
 import imageTest4 from "../../../assets/image/kid-6.jpg";
 import imageTest5 from "../../../assets/image/kid-7.jpg";
 import ApiService from "../../api/ApiService";
+import * as SecureStore from "expo-secure-store";
+import { ActivityIndicator } from "react-native";
 
-const products = [
-  {
-    id: 1,
-    productImage: imageTest,
-    categoryName: "Dresses",
-    productName: "Crinkled bow-detail dress",
-    initialColor: "Blue",
-    initialSize: "M",
-    price: 299.99,
-    initialQuantity: 1,
-  },
-  {
-    id: 2,
-    productImage: imageTest5,
-    categoryName: "Dresses",
-    productName: "Tulle dress",
-    initialColor: "Red",
-    initialSize: "L",
-    price: 399.99,
-    initialQuantity: 1,
-  },
-  {
-    id: 3,
-    productImage: imageTest2,
-    categoryName: "Dresses",
-    productName: "Polo dress",
-    initialColor: "Green",
-    initialSize: "S",
-    price: 599.99,
-    initialQuantity: 1,
-  },
-];
+// Hardcoded products removed - now using real API data
 
 const handleLearnMore = () => {
   Linking.openURL("https://yourwebsite.com/learn-more");
@@ -61,19 +33,129 @@ const handleLearnMore = () => {
 export default function CartScreen({ navigation }) {
   const [selectedItemsCount, setSelectedItemsCount] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
+  const [customerId, setCustomerId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const handleSelectItem = (itemCount, itemPrice) => {
     setSelectedItemsCount(itemCount);
     setTotalAmount(itemCount * itemPrice);
   };
 
+  useEffect(() => {
+    fetchCartData();
+  }, []);
+
+  const fetchCartData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Get customer ID from secure store
+      const storedCustomerId = await SecureStore.getItemAsync("customer_id");
+      if (!storedCustomerId) {
+        setError("Please login to view your cart");
+        setLoading(false);
+        return;
+      }
+      
+      setCustomerId(storedCustomerId);
+      
+      // Fetch cart items from API
+      const response = await ApiService.getCustomerNotOrderedCartDetails(storedCustomerId);
+      
+      if (response.status === 200 && response.data?.data) {
+        const items = response.data.data.map(item => ({
+          id: item.cart_detail_id,
+          cartDetailId: item.cart_detail_id,
+          productImage: item.product?.images?.[0]?.image_url || imageTest,
+          categoryName: item.product?.category?.category_name || "Category",
+          productName: item.product?.product_name || "Product",
+          initialColor: item.color,
+          initialSize: item.size,
+          price: parseFloat(item.product?.new_price || 0),
+          initialQuantity: item.quantity,
+          productId: item.product_id
+        }));
+        setCartItems(items);
+      } else {
+        setCartItems([]);
+      }
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+      setError("Failed to load cart items");
+      setCartItems([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleCheckout = () => {
-    // console.log(
-    //   "Checking out with",
-    //   selectedItemsCount,
-    //   "items for $",
-    //   totalAmount
-    // );
+    if (cartItems.length === 0) {
+      Alert.alert("Cart Empty", "Please add items to cart before checkout");
+      return;
+    }
+    
+    // Navigate to OrderScreen with cart items
+    navigation.navigate('OrderScreen', { 
+      cartItems: cartItems.map(item => ({
+        product_id: item.productId,
+        product_name: item.productName,
+        image_url: item.productImage,
+        new_price: item.price,
+        quantity: item.initialQuantity,
+        color: item.initialColor,
+        size: item.initialSize,
+        cart_detail_id: item.cartDetailId
+      })),
+      cartId: null
+    });
+  };
+
+  const handleRemoveItem = async (cartDetailId) => {
+    try {
+      Alert.alert(
+        "Remove Item",
+        "Are you sure you want to remove this item from cart?",
+        [
+          {
+            text: "Cancel",
+            style: "cancel"
+          },
+          {
+            text: "Remove",
+            style: "destructive",
+            onPress: async () => {
+              const response = await ApiService.removeFromCart(cartDetailId);
+              if (response.status === 200) {
+                Alert.alert("Success", "Item removed from cart");
+                fetchCartData(); // Refresh cart data
+              } else {
+                Alert.alert("Error", "Failed to remove item");
+              }
+            }
+          }
+        ]
+      );
+    } catch (error) {
+      console.error("Error removing item:", error);
+      Alert.alert("Error", "Failed to remove item from cart");
+    }
+  };
+
+  const handleUpdateQuantity = async (cartDetailId, quantity) => {
+    try {
+      const response = await ApiService.updateCartItem(cartDetailId, quantity);
+      if (response.status === 200) {
+        fetchCartData(); // Refresh cart data
+      } else {
+        Alert.alert("Error", "Failed to update quantity");
+      }
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+      Alert.alert("Error", "Failed to update quantity");
+    }
   };
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -108,22 +190,49 @@ export default function CartScreen({ navigation }) {
           </ScrollView>
           <View style={styles.divider} />
           <ScrollView showsVerticalScrollIndicator={false}>
-            {products.map((product, index) => (
-              <View key={product.id}>
-                <CartForm
-                  productImage={product.productImage}
-                  categoryName={product.categoryName}
-                  productName={product.productName}
-                  initialColor={product.initialColor}
-                  initialSize={product.initialSize}
-                  price={product.price}
-                  initialQuantity={product.initialQuantity}
-                />
-                {index !== products.length - 1 && (
-                  <View style={styles.divider} />
-                )}
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color={Colors.blackColor} />
+                <Text style={styles.loadingText}>Loading cart items...</Text>
               </View>
-            ))}
+            ) : error ? (
+              <View style={styles.errorContainer}>
+                <Text style={styles.errorText}>{error}</Text>
+                <TouchableOpacity onPress={fetchCartData} style={styles.retryButton}>
+                  <Text style={styles.retryText}>Retry</Text>
+                </TouchableOpacity>
+              </View>
+            ) : cartItems.length === 0 ? (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyText}>Your cart is empty</Text>
+                <TouchableOpacity 
+                  onPress={() => navigation.navigate('Home')} 
+                  style={styles.shopButton}
+                >
+                  <Text style={styles.shopButtonText}>Start Shopping</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              cartItems.map((product, index) => (
+                <View key={product.id}>
+                  <CartForm
+                    productImage={product.productImage}
+                    categoryName={product.categoryName}
+                    productName={product.productName}
+                    initialColor={product.initialColor}
+                    initialSize={product.initialSize}
+                    price={product.price}
+                    initialQuantity={product.initialQuantity}
+                    cartDetailId={product.cartDetailId}
+                    onRemove={() => handleRemoveItem(product.cartDetailId)}
+                    onUpdateQuantity={(quantity) => handleUpdateQuantity(product.cartDetailId, quantity)}
+                  />
+                  {index !== cartItems.length - 1 && (
+                    <View style={styles.divider} />
+                  )}
+                </View>
+              ))
+            )}
           </ScrollView>
           <View style={styles.divider} />
           <View style={styles.freeShippingContainer}>
@@ -269,6 +378,63 @@ const styles = StyleSheet.create({
   checkoutText: {
     color: Colors.whiteColor,
     fontSize: 18,
+    fontWeight: "bold",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 50,
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
+    color: Colors.blackColor,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 50,
+  },
+  errorText: {
+    fontSize: 16,
+    color: Colors.blackColor,
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  retryButton: {
+    backgroundColor: Colors.blackColor,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  retryText: {
+    color: Colors.whiteColor,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 50,
+  },
+  emptyText: {
+    fontSize: 18,
+    color: Colors.blackColor,
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  shopButton: {
+    backgroundColor: Colors.blackColor,
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 5,
+  },
+  shopButtonText: {
+    color: Colors.whiteColor,
+    fontSize: 16,
     fontWeight: "bold",
   },
 });

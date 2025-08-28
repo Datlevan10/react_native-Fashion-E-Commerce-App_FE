@@ -303,9 +303,19 @@ const createCart = async (customerId) => {
   return api.post("/carts", { customer_id: customerId });
 };
 
-// Add item to cart
+// Add item to cart - matches backend CartController requirements
 const addToCart = async (cartData) => {
   return api.post("/cart_details", cartData);
+};
+
+// Get all customer carts
+const getAllCustomerCarts = async (customerId) => {
+  return api.get(`/carts/all-carts/customer/${customerId}`);
+};
+
+// Get customer's not-ordered cart details
+const getCustomerNotOrderedCartDetails = async (customerId) => {
+  return api.get(`/cart_details/customer/${customerId}/not-ordered-cart_details`);
 };
 
 // Get cart items
@@ -497,6 +507,8 @@ export default {
   getCartItems,
   updateCartItem,
   removeFromCart,
+  getAllCustomerCarts,
+  getCustomerNotOrderedCartDetails,
   // Order Management
   createOrder,
   getCustomerOrders,

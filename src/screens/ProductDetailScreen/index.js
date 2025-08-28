@@ -203,34 +203,22 @@ export default function ProductDetailScreen({ route, navigation }) {
       return;
     }
 
+    if (!customerId) {
+      Alert.alert(
+        "Error",
+        "Please login to add products to cart."
+      );
+      return;
+    }
+
     try {
-      // First, get or create customer's cart
-      let cartResponse;
-      try {
-        cartResponse = await apiService.getCustomerCart(customerId);
-      } catch (error) {
-        if (error.response?.status === 404) {
-          // No cart exists, create one
-          cartResponse = await apiService.createCart(customerId);
-        } else {
-          throw error;
-        }
-      }
-
-      const cartId = cartResponse.data.data?.cart_id || cartResponse.data.cart_id;
-      
-      if (!cartId) {
-        throw new Error("Unable to get or create cart");
-      }
-
-      // Add item to cart
+      // Prepare data matching backend CartController requirements
       const cartItemData = {
-        cart_id: cartId,
+        customer_id: customerId,
         product_id: product.productId,
-        quantity: 1,
+        quantity: 1, // Default quantity is 1
         color: selectedColor,
-        size: selectedSize,
-        price: product.newPrice
+        size: selectedSize
       };
 
       const addResponse = await apiService.addToCart(cartItemData);
