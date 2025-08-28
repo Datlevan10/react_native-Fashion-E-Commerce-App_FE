@@ -195,10 +195,10 @@ export default function ProductDetailScreen({ route, navigation }) {
     selectedColor,
     selectedSize
   ) => {
-    if (!selectedColor || !selectedSize) {
+    if (!selectedSize) {
       Alert.alert(
         "Error",
-        "Please select a color and size before adding to cart."
+        "Please select a size before adding to cart."
       );
       return;
     }

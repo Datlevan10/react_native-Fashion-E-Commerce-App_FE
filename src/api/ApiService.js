@@ -305,7 +305,7 @@ const createCart = async (customerId) => {
 
 // Add item to cart - matches backend CartController requirements
 const addToCart = async (cartData) => {
-  return api.post("/cart_details", cartData);
+  return api.post("/carts", cartData);
 };
 
 // Get all customer carts
