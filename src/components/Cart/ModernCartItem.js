@@ -67,7 +67,7 @@ export default function ModernCartItem({
 
   const imageSource = item.image ? 
     { uri: `http://192.168.1.58:8080${item.image}` } : 
-    require("../../../assets/image/placeholder.png");
+    require("../../../assets/image/default_image.jpg");
 
   return (
     <View style={styles.container}>
@@ -82,7 +82,7 @@ export default function ModernCartItem({
               {item.product_name}
             </Text>
             <View style={styles.detailsRow}>
-              <Text style={styles.detailText}>Size: {item.size}</Text>
+              <Text style={styles.detailText}>Khối lượng: {item.size} gam</Text>
               {item.color && item.color !== "N/A" && (
                 <>
                   <Text style={styles.separator}>•</Text>

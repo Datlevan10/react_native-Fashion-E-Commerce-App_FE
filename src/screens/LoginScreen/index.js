@@ -180,8 +180,8 @@ export default function LoginScreen({ navigation }) {
       >
         <View style={styles.container}>
           <View>
-            <Text style={styles.loginText}>Login</Text>
-            <Text style={styles.subtitleText}>Welcome back to H&M Fashion</Text>
+            <Text style={styles.loginText}>Đăng nhập</Text>
+            <Text style={styles.subtitleText}>Chào mừng trở lại với Happy Fiedl</Text>
           </View>
           <CustomTextInput
             value={identifier}
@@ -214,22 +214,22 @@ export default function LoginScreen({ navigation }) {
                 color={isRemember ? "#0098fd" : undefined}
                 style={styles.checkbox}
               />
-              <Text style={styles.rememberText}>Remember me</Text>
+              <Text style={styles.rememberText}>Nhớ mật khẩu</Text>
             </View>
             <TouchableOpacity
               onPress={() => navigation.navigate("ForgotPasswordScreen")}
             >
-              <Text style={styles.forgotText}>Forgot Password?</Text>
+              <Text style={styles.forgotText}>Quên mật khẩu?</Text>
             </TouchableOpacity>
           </View>
           <CustomHandleButton
-            buttonText="Login"
+            buttonText="Đăng nhập"
             buttonColor="#179e7a"
             onPress={handleLogin}
           />
           <View style={styles.dividerContainer}>
             <View style={styles.divider} />
-            <Text style={styles.orText}>Or login with</Text>
+            <Text style={styles.orText}>Hoặc đăng nhập bằng</Text>
             <View style={styles.divider} />
           </View>
           <View style={styles.socialLoginContainer}>
@@ -238,25 +238,25 @@ export default function LoginScreen({ navigation }) {
               iconName="facebook"
               iconLibrary="FontAwesome"
               buttonColor="#3b5998"
-              buttonText="Login with Facebook"
+              buttonText="Đăng nhập bằng Facebook"
             />
             <SocialLoginButton
               onPress={handleGoogleLogin}
               iconName="google"
               iconLibrary="FontAwesome"
               buttonColor="#db4437"
-              buttonText="Login with Google"
+              buttonText="Đăng nhập bằng Google"
             />
             <SocialLoginButton
               onPress={handleAppleLogin}
               iconName="apple"
               iconLibrary="FontAwesome5"
               buttonColor="#000"
-              buttonText="Login with Apple"
+              buttonText="Đăng nhập bằng Apple"
             />
             <CustomLinkText
-              text="Don't have an account?"
-              highlightText="Sign up"
+              text="Bạn chưa có tài khoản?"
+              highlightText="Đăng ký"
               onPress={() => navigation.navigate("RegisterScreen")}
             />
           </View>

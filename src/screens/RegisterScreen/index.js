@@ -214,7 +214,7 @@ export default function RegisterScreen({ navigation }) {
         end={{ x: 0.25, y: 0.25 }}
       >
         <View style={styles.container}>
-          <Text style={styles.registerText}>Create an Account</Text>
+          <Text style={styles.registerText}>Tạo tài khoản</Text>
 
           <CustomTextInput
             value={username}
@@ -306,8 +306,8 @@ export default function RegisterScreen({ navigation }) {
               style={styles.checkbox}
             />
             <Text style={styles.acceptText}>
-              I accept the{" "}
-              <Text style={styles.privacyText}>Privacy Policy</Text>{" "}
+            Tôi chấp nhận{" "}
+              <Text style={styles.privacyText}>Chính sách bảo mật</Text>{" "}
             </Text>
           </View>
           {errorMessages.acceptPolicy ? (
@@ -315,13 +315,13 @@ export default function RegisterScreen({ navigation }) {
           ) : null}
 
           <CustomHandleButton
-            buttonText="Register"
+            buttonText="Đăng ký"
             buttonColor="#0288d1"
             onPress={handleRegister}
           />
           <CustomLinkText
-            text="Already have an account?"
-            highlightText="Login"
+            text="Bạn đã có tài khoản?"
+            highlightText="Đăng nhập"
             onPress={() => navigation.navigate("LoginScreen")}
             highlightColor="#179e7a"
           />

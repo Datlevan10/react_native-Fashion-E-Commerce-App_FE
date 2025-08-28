@@ -66,7 +66,7 @@ const OrderScreen = ({ navigation, route }) => {
 
   const calculateTotal = () => {
     const total = orderItems.reduce((sum, item) => {
-      return sum + (item.new_price * item.quantity);
+      return sum + (item.unit_price * item.quantity);
     }, 0);
     setTotalAmount(total);
   };
@@ -169,13 +169,16 @@ const OrderScreen = ({ navigation, route }) => {
           {item.product_name}
         </Text>
         <Text style={styles.itemPrice}>
-          {new Intl.NumberFormat('vi-VN').format(item.new_price)} VND
+          {item.unit_price} VND
+          {
+            console.log("DATA ITEM: ", item)
+          }
         </Text>
         <Text style={styles.itemQuantity}>Quantity: {item.quantity}</Text>
       </View>
       <View style={styles.itemTotal}>
         <Text style={styles.itemTotalText}>
-          {new Intl.NumberFormat('vi-VN').format(item.new_price * item.quantity)} VND
+        {item.unit_price * item.quantity} VND
         </Text>
       </View>
     </View>
@@ -200,53 +203,53 @@ const OrderScreen = ({ navigation, route }) => {
           >
             <Feather name="arrow-left" size={24} color={Colors.blackColor} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Confirm Order</Text>
+          <Text style={styles.headerTitle}>Xác nhận đơn hàng</Text>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Order Items</Text>
+          <Text style={styles.sectionTitle}>Các mặt hàng</Text>
           {orderItems.map((item, index) => renderOrderItem({ item, index }))}
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Shipping Information</Text>
+          <Text style={styles.sectionTitle}>Thông tin vận chuyển</Text>
           
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Shipping Address *</Text>
+            <Text style={styles.inputLabel}>Địa chỉ giao hàng *</Text>
             <TextInput
               style={styles.textInput}
               value={orderData.shipping_address}
               onChangeText={(value) => handleInputChange('shipping_address', value)}
-              placeholder="Enter your full address"
+              placeholder="Nhập địa chỉ đầy đủ của bạn"
               multiline={true}
               numberOfLines={2}
             />
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>City *</Text>
+            <Text style={styles.inputLabel}>Thành phố *</Text>
             <TextInput
               style={styles.textInput}
               value={orderData.shipping_city}
               onChangeText={(value) => handleInputChange('shipping_city', value)}
-              placeholder="Enter your city"
+              placeholder="Nhập thành phố của bạn"
             />
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Phone Number *</Text>
+            <Text style={styles.inputLabel}>Số điện thoại *</Text>
             <TextInput
               style={styles.textInput}
               value={orderData.shipping_phone}
               onChangeText={(value) => handleInputChange('shipping_phone', value)}
-              placeholder="Enter your phone number"
+              placeholder="Nhập số điện thoại của bạn"
               keyboardType="phone-pad"
             />
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Shipping Method</Text>
+          <Text style={styles.sectionTitle}>Phương thức vận chuyển</Text>
           
           <TouchableOpacity
             style={[
@@ -258,8 +261,8 @@ const OrderScreen = ({ navigation, route }) => {
             <View style={styles.shippingInfo}>
               <MaterialIcons name="local-shipping" size={24} color={Colors.primary} />
               <View style={styles.shippingDetails}>
-                <Text style={styles.shippingName}>Standard Delivery</Text>
-                <Text style={styles.shippingTime}>3-5 business days</Text>
+                <Text style={styles.shippingName}>Giao hàng tiêu chuẩn</Text>
+                <Text style={styles.shippingTime}>3-5 ngày làm việc</Text>
               </View>
             </View>
             <View style={styles.shippingRight}>
@@ -282,8 +285,8 @@ const OrderScreen = ({ navigation, route }) => {
             <View style={styles.shippingInfo}>
               <MaterialIcons name="flash-on" size={24} color={Colors.warning} />
               <View style={styles.shippingDetails}>
-                <Text style={styles.shippingName}>Express Delivery</Text>
-                <Text style={styles.shippingTime}>1-2 business days</Text>
+                <Text style={styles.shippingName}>Giao hàng nhanh</Text>
+                <Text style={styles.shippingTime}>1-2 ngày làm việc</Text>
               </View>
             </View>
             <View style={styles.shippingRight}>
@@ -306,8 +309,8 @@ const OrderScreen = ({ navigation, route }) => {
             <View style={styles.shippingInfo}>
               <MaterialIcons name="flight-takeoff" size={24} color={Colors.error} />
               <View style={styles.shippingDetails}>
-                <Text style={styles.shippingName}>Overnight Delivery</Text>
-                <Text style={styles.shippingTime}>Next business day</Text>
+                <Text style={styles.shippingName}>Giao hàng qua đêm</Text>
+                <Text style={styles.shippingTime}>Ngày làm việc tiếp theo</Text>
               </View>
             </View>
             <View style={styles.shippingRight}>
@@ -322,7 +325,7 @@ const OrderScreen = ({ navigation, route }) => {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Payment Method</Text>
+          <Text style={styles.sectionTitle}>Phương thức thanh toán</Text>
           
           <TouchableOpacity
             style={[
@@ -333,8 +336,8 @@ const OrderScreen = ({ navigation, route }) => {
           >
             <AntDesign name="qrcode" size={24} color={Colors.primary} />
             <View style={styles.paymentDetails}>
-              <Text style={styles.paymentText}>Scan QR Code to Pay</Text>
-              <Text style={styles.paymentSubtext}>Quick and secure payment</Text>
+              <Text style={styles.paymentText}>Quét mã QR để thanh toán</Text>
+              <Text style={styles.paymentSubtext}>Thanh toán nhanh chóng và an toàn</Text>
             </View>
             {orderData.payment_method === 'qr_code' && (
               <Feather name="check-circle" size={20} color={Colors.success} />
@@ -350,8 +353,8 @@ const OrderScreen = ({ navigation, route }) => {
           >
             <FontAwesome5 name="mobile-alt" size={24} color="#0068FF" />
             <View style={styles.paymentDetails}>
-              <Text style={styles.paymentText}>Pay with ZaloPay</Text>
-              <Text style={styles.paymentSubtext}>Secure digital wallet</Text>
+              <Text style={styles.paymentText}>Thanh toán bằng ZaloPay</Text>
+              <Text style={styles.paymentSubtext}>Ví kỹ thuật số an toàn</Text>
             </View>
             {orderData.payment_method === 'zalo_pay' && (
               <Feather name="check-circle" size={20} color={Colors.success} />
@@ -367,8 +370,8 @@ const OrderScreen = ({ navigation, route }) => {
           >
             <MaterialIcons name="money" size={24} color={Colors.success} />
             <View style={styles.paymentDetails}>
-              <Text style={styles.paymentText}>Pay upon Receipt</Text>
-              <Text style={styles.paymentSubtext}>Cash on delivery</Text>
+              <Text style={styles.paymentText}>Thanh toán khi nhận hàng</Text>
+              <Text style={styles.paymentSubtext}>Thanh toán khi nhận hàng</Text>
             </View>
             {orderData.payment_method === 'cash_on_delivery' && (
               <Feather name="check-circle" size={20} color={Colors.success} />
@@ -377,33 +380,33 @@ const OrderScreen = ({ navigation, route }) => {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Order Notes (Optional)</Text>
+          <Text style={styles.sectionTitle}>Ghi chú đơn hàng (Tùy chọn)</Text>
           <TextInput
             style={[styles.textInput, styles.notesInput]}
             value={orderData.notes}
             onChangeText={(value) => handleInputChange('notes', value)}
-            placeholder="Any special instructions for your order..."
+            placeholder="Có bất kỳ hướng dẫn đặc biệt nào cho đơn hàng của bạn không..."
             multiline={true}
             numberOfLines={3}
           />
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Order Summary</Text>
+          <Text style={styles.sectionTitle}>Tóm tắt đơn hàng</Text>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Items ({orderItems.length})</Text>
+            <Text style={styles.summaryLabel}>Mặt hàng ({orderItems.length})</Text>
             <Text style={styles.summaryValue}>
               {new Intl.NumberFormat('vi-VN').format(totalAmount)} VND
             </Text>
           </View>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>Shipping Fee</Text>
+            <Text style={styles.summaryLabel}>Phí vận chuyển</Text>
             <Text style={styles.summaryValue}>
               {new Intl.NumberFormat('vi-VN').format(shippingFee)} VND
             </Text>
           </View>
           <View style={[styles.summaryRow, styles.totalRow]}>
-            <Text style={styles.totalLabel}>Total</Text>
+            <Text style={styles.totalLabel}>Tổng cộng</Text>
             <Text style={styles.totalValue}>
               {new Intl.NumberFormat('vi-VN').format(totalAmount + shippingFee)} VND
             </Text>
@@ -418,7 +421,7 @@ const OrderScreen = ({ navigation, route }) => {
           disabled={loading}
         >
           <Text style={styles.placeOrderText}>
-            Place Order - {new Intl.NumberFormat('vi-VN').format(totalAmount + shippingFee)} VND
+          Đặt hàng - {new Intl.NumberFormat('vi-VN').format(totalAmount + shippingFee)} VND
           </Text>
         </TouchableOpacity>
       </View>

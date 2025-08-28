@@ -212,7 +212,7 @@ export default function CartScreen({ navigation }) {
           >
             <Feather name="arrow-left" size={24} color={Colors.blackColor} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Shopping Cart</Text>
+          <Text style={styles.headerTitle}>Giỏ hàng</Text>
           <TouchableOpacity onPress={handleRefresh} disabled={loading}>
             <Feather 
               name="refresh-cw" 
@@ -235,7 +235,7 @@ export default function CartScreen({ navigation }) {
               >
                 <View style={styles.itemsHeader}>
                   <Text style={styles.itemsCount}>
-                    {cartItems.length} item{cartItems.length !== 1 ? 's' : ''} in your cart
+                    {cartItems.length} sản phẩm{cartItems.length !== 1 ? 's' : ''} trong giỏ hàng
                   </Text>
                 </View>
                 
@@ -260,15 +260,15 @@ export default function CartScreen({ navigation }) {
                 {/* Price Summary */}
                 <View style={styles.priceSection}>
                   <View style={styles.priceRow}>
-                    <Text style={styles.priceLabel}>Subtotal:</Text>
+                    <Text style={styles.priceLabel}>Tổng phụ:</Text>
                     <Text style={styles.priceValue}>{formatPrice(totalPrice)}</Text>
                   </View>
                   <View style={styles.priceRow}>
-                    <Text style={styles.priceLabel}>Shipping:</Text>
-                    <Text style={styles.freeShipping}>FREE</Text>
+                    <Text style={styles.priceLabel}>Vận chuyển:</Text>
+                    <Text style={styles.freeShipping}>MIỄN PHÍ</Text>
                   </View>
                   <View style={[styles.priceRow, styles.totalRow]}>
-                    <Text style={styles.totalLabel}>Total:</Text>
+                    <Text style={styles.totalLabel}>Tổng cộng:</Text>
                     <Text style={styles.totalValue}>{formatPrice(totalPrice)}</Text>
                   </View>
                 </View>
@@ -279,7 +279,7 @@ export default function CartScreen({ navigation }) {
                   onPress={handleCheckout}
                 >
                   <Text style={styles.checkoutText}>
-                    Proceed to Checkout
+                  Tiến hành thanh toán
                   </Text>
                   <MaterialIcons 
                     name="arrow-forward" 

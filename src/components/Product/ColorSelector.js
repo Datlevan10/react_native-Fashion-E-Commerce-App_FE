@@ -13,7 +13,7 @@ export default function ColorSelector({ colors, onColorSelect }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.labelText}>Colors</Text>
+      <Text style={styles.labelText}>Màu sắc</Text>
       <View style={styles.colorRow}>
         {colors.map((color, index) => (
           <TouchableOpacity

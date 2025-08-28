@@ -181,7 +181,7 @@ export default function ProductDetailScreen({ route, navigation }) {
   const loadStoreName = async () => {
     try {
       const response = await apiService.getStores();
-      if (response && response.data.data && response.data.data[11]) {
+      if (response && response.data.data && response.data.data[1]) {
         setStoreName(response.data.data[1].store_name);
       }
     } catch (error) {
@@ -276,7 +276,7 @@ export default function ProductDetailScreen({ route, navigation }) {
           >
             <Feather name="arrow-left" size={22} color={Colors.blackColor} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Detail Product</Text>
+          <Text style={styles.headerTitle}>Chi tiết</Text>
           <TouchableOpacity onPress={() => navigation.navigate("CartScreen")}>
             <IconWithBadge
               name="shopping-bag"
@@ -340,13 +340,13 @@ export default function ProductDetailScreen({ route, navigation }) {
                   style={styles.toggleText}
                   onPress={() => setIsExpanded(true)}
                 >
-                  ...See more
+                  ...Xem thêm
                 </Text>
               )}
             </Text>
             {isExpanded && (
               <TouchableOpacity onPress={() => setIsExpanded(false)}>
-                <Text style={styles.toggleText}>Less</Text>
+                <Text style={styles.toggleText}>Thu gọn</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -367,7 +367,7 @@ export default function ProductDetailScreen({ route, navigation }) {
           <View style={styles.buttonContainer}>
             <AddToCartButton
               iconName="shopping-bag"
-              title="ADD TO CART"
+              title="THÊM VÀO GIỎ"
               backgroundColor={Colors.whiteColor}
               color={Colors.blackColor}
               borderColor={Colors.blackColor}
@@ -381,7 +381,7 @@ export default function ProductDetailScreen({ route, navigation }) {
               }
             />
             <CustomButton
-              title="BUY NOW"
+              title="MUA NGAY"
               backgroundColor={Colors.blackColor}
               onPress={() => {
                 if (!selectedColor || !selectedSize) {

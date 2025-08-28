@@ -15,8 +15,8 @@ export default function UserTypeSelectionScreen({ navigation }) {
   const userTypes = [
     {
       id: "customer",
-      title: "Customer",
-      subtitle: "Shop your favorite products",
+      title: "Khách hàng",
+      subtitle: "Mua sản phẩm yêu thích của bạn",
       icon: "shopping-bag",
       iconType: "Feather",
       colors: [Colors.primary, "#ff8a95"],
@@ -24,8 +24,8 @@ export default function UserTypeSelectionScreen({ navigation }) {
     },
     {
       id: "staff",
-      title: "Staff",
-      subtitle: "Manage store operations",
+      title: "Nhân viên",
+      subtitle: "Quản lý hoạt động cửa hàng",
       icon: "user-tie",
       iconType: "FontAwesome5",
       colors: [Colors.secondary, "#66bb6a"],
@@ -33,8 +33,8 @@ export default function UserTypeSelectionScreen({ navigation }) {
     },
     {
       id: "admin",
-      title: "Administrator",
-      subtitle: "Full system management",
+      title: "Quản trị viên",
+      subtitle: "Quản lý toàn bộ hệ thống",
       icon: "shield-account",
       iconType: "MaterialIcons",
       colors: ["#1a73e8", "#4285f4"],
@@ -74,8 +74,8 @@ export default function UserTypeSelectionScreen({ navigation }) {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text style={styles.title}>Welcome</Text>
-            <Text style={styles.subtitle}>Please select your account type to continue</Text>
+            <Text style={styles.title}>Chào mừng</Text>
+            <Text style={styles.subtitle}>Vui lòng chọn loại tài khoản của bạn để tiếp tục</Text>
           </View>
 
           <View style={styles.cardsContainer}>
@@ -108,7 +108,7 @@ export default function UserTypeSelectionScreen({ navigation }) {
           </View>
 
           <View style={styles.footer}>
-            <Text style={styles.footerText}>Fashion E-Commerce App</Text>
+            <Text style={styles.footerText}>Happy-Field App</Text>
             <Text style={styles.versionText}>Version 1.0.0</Text>
           </View>
         </View>

@@ -34,11 +34,11 @@ const ExploreScreen = ({ navigation }) => {
   const [filterType, setFilterType] = useState(null);
 
   const ratingOptions = [
-    { value: 5, label: "5 Stars ⭐" },
-    { value: 4, label: "4 Stars ⭐" },
-    { value: 3, label: "3 Stars ⭐" },
-    { value: 2, label: "2 Stars ⭐" },
-    { value: 1, label: "1 Star ⭐" },
+    { value: 5, label: "5 sao ⭐" },
+    { value: 4, label: "4 sao ⭐" },
+    { value: 3, label: "3 sao ⭐" },
+    { value: 2, label: "2 sao ⭐" },
+    { value: 1, label: "1 sao ⭐" },
   ];
 
   const sizeOptions = [
@@ -51,11 +51,11 @@ const ExploreScreen = ({ navigation }) => {
   ];
 
   const priceOptions = [
-    { value: { max: 50 }, label: "Under $50" },
-    { value: { min: 50, max: 100 }, label: "$50 - $100" },
-    { value: { min: 100, max: 200 }, label: "$100 - $200" },
-    { value: { min: 200, max: 500 }, label: "$200 - $500" },
-    { value: { min: 500 }, label: "Over $500" },
+    { value: { max: 50 }, label: "Dưới 50.000 VND" },
+    { value: { min: 50, max: 100 }, label: "VND50 - VND100" },
+    { value: { min: 100, max: 200 }, label: "VND100 - VND200" },
+    { value: { min: 200, max: 500 }, label: "VND200 - VND500" },
+    { value: { min: 500 }, label: "Over VND500" },
   ];
 
   useEffect(() => {
@@ -353,7 +353,7 @@ const ExploreScreen = ({ navigation }) => {
             />
             <TextInput
               style={styles.searchInput}
-              placeholder="Search products..."
+              placeholder="Tìm kiếm sản phẩm..."
               placeholderTextColor="#999"
               value={searchKeyword}
               onChangeText={setSearchKeyword}
@@ -379,25 +379,25 @@ const ExploreScreen = ({ navigation }) => {
             contentContainerStyle={styles.filterList}
           >
             <FilterBox 
-              text="Clear All" 
+              text="Xóa tất cả" 
               icon="clear" 
               onPress={clearFilters}
               isActive={activeFilters.rating || activeFilters.size || activeFilters.price}
             />
             <FilterBox 
-              text={activeFilters.rating ? `${activeFilters.rating} Stars` : "Ratings"} 
+              text={activeFilters.rating ? `${activeFilters.rating} Stars` : "Xếp hạnghạng"} 
               icon="keyboard-arrow-down" 
               onPress={() => openFilterModal('rating')}
               isActive={activeFilters.rating !== null}
             />
             <FilterBox 
-              text={activeFilters.size ? activeFilters.size : "Size"} 
+              text={activeFilters.size ? activeFilters.size : "Khối lượng"} 
               icon="keyboard-arrow-down" 
               onPress={() => openFilterModal('size')}
               isActive={activeFilters.size !== null}
             />
             <FilterBox 
-              text={activeFilters.price ? getPriceRangeLabel(activeFilters.price) : "Price"} 
+              text={activeFilters.price ? getPriceRangeLabel(activeFilters.price) : "Giá"} 
               icon="keyboard-arrow-down" 
               onPress={() => openFilterModal('price')}
               isActive={activeFilters.price !== null}
@@ -464,7 +464,7 @@ const ExploreScreen = ({ navigation }) => {
         <FilterModal
           visible={showFilterModal}
           onClose={() => setShowFilterModal(false)}
-          title={filterType === 'rating' ? 'Ratings' : filterType === 'size' ? 'Sizes' : 'Price Range'}
+          title={filterType === 'rating' ? 'Xếp hạng' : filterType === 'size' ? 'Khối lượng' : 'Price Range'}
           options={
             filterType === 'rating' ? ratingOptions : 
             filterType === 'size' ? sizeOptions : 
