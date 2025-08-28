@@ -112,25 +112,26 @@ const OrderScreen = ({ navigation, route }) => {
     try {
       setLoading(true);
 
+      // Use the simplified backend API format based on your test
       const orderPayload = {
-        customer_id: customerId,
         cart_id: cartId,
-        shipping_address: orderData.shipping_address,
-        shipping_city: orderData.shipping_city,
-        shipping_phone: orderData.shipping_phone,
-        shipping_method: orderData.shipping_method,
+        customer_id: customerId,
         payment_method: orderData.payment_method,
-        notes: orderData.notes,
-        shipping_fee: shippingFee,
-        total_amount: totalAmount + shippingFee,
-        order_items: orderItems.map(item => ({
-          product_id: item.product_id,
-          quantity: item.quantity,
-          price: item.new_price
-        }))
+        shipping_address: `${orderData.shipping_address}, ${orderData.shipping_city}`,
+        discount: 0 // Default discount
       };
+      
+      // Add optional fields if provided
+      if (orderData.notes && orderData.notes.trim()) {
+        orderPayload.notes = orderData.notes;
+      }
+      if (orderData.shipping_phone && orderData.shipping_phone.trim()) {
+        orderPayload.shipping_phone = orderData.shipping_phone;
+      }
 
       console.log('Creating order with payload:', orderPayload);
+      console.log('Cart ID being used:', cartId);
+      console.log('Customer ID being used:', customerId);
 
       const response = await apiService.createOrder(orderPayload);
 
@@ -148,6 +149,7 @@ const OrderScreen = ({ navigation, route }) => {
       }
     } catch (error) {
       console.error('Order creation error:', error);
+      console.log('Error details:', error.response?.data);
       const errorMessage = error.response?.data?.message || 
                           error.response?.data?.error || 
                           'Failed to create order. Please try again.';

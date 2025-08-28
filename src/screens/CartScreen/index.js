@@ -21,6 +21,7 @@ const { width, height } = Dimensions.get("window");
 export default function CartScreen({ navigation }) {
   const [cartItems, setCartItems] = useState([]);
   const [customerId, setCustomerId] = useState(null);
+  const [cartId, setCartId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -49,11 +50,31 @@ export default function CartScreen({ navigation }) {
       
       setCustomerId(storedCustomerId);
       
+      // First get the customer's cart to get cart_id
+      let customerCartId = null;
+      try {
+        const cartResponse = await ApiService.getCustomerCart(storedCustomerId);
+        if (cartResponse.status === 200 && cartResponse.data?.data) {
+          customerCartId = cartResponse.data.data.cart_id;
+          setCartId(customerCartId);
+        }
+      } catch (cartError) {
+        console.log('No active cart found for customer');
+      }
+      
       // Fetch cart items using the correct API
       const response = await ApiService.getProductInCartDetailByCustomerId(storedCustomerId);
       
       if (response.status === 200 && response.data?.data) {
-        setCartItems(response.data.data);
+        const itemsWithCartId = response.data.data.map(item => ({
+          ...item,
+          cart_id: customerCartId || item.cart_id // Use fetched cart_id or item's cart_id if available
+        }));
+        setCartItems(itemsWithCartId);
+        // If we don't have cartId yet, try to get it from first item
+        if (!customerCartId && itemsWithCartId.length > 0 && itemsWithCartId[0].cart_id) {
+          setCartId(itemsWithCartId[0].cart_id);
+        }
       } else {
         setCartItems([]);
       }
@@ -140,12 +161,18 @@ export default function CartScreen({ navigation }) {
       return;
     }
     
+    if (!cartId) {
+      Alert.alert("Error", "Unable to find cart information. Please try again.");
+      return;
+    }
+    
     // Navigate to OrderScreen with cart items
     const orderItems = cartItems.map(item => ({
       cart_detail_id: item.cart_detail_id,
       product_id: item.product_id,
       product_name: item.product_name,
       image_url: item.image,
+      new_price: parseFloat(item.unit_price), // Fix: OrderScreen expects new_price
       unit_price: parseFloat(item.unit_price),
       quantity: item.quantity,
       total_price: parseFloat(item.total_price),
@@ -154,6 +181,7 @@ export default function CartScreen({ navigation }) {
     }));
     
     navigation.navigate('OrderScreen', { 
+      cartId: cartId, // Fix: Pass cart_id
       cartItems: orderItems,
       totalAmount: totalPrice,
       fromCart: true
