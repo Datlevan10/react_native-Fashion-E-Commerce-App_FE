@@ -497,6 +497,8 @@ export default {
   getCartItems,
   updateCartItem,
   removeFromCart,
+  getAllCustomerCarts,
+  getCustomerNotOrderedCartDetails,
   // Order Management
   createOrder,
   getCustomerOrders,
@@ -534,4 +536,12 @@ export default {
   getAllOrders,
   getOrderById,
   updateOrderStatus,
+  // Product Management APIs
+  getAllProductsAdmin,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  getSalesReport,
+  getCustomerReport,
+  getProductReport,
 }

@@ -23,29 +23,56 @@ import imageDefault from "../../../assets/image/men.jpg";
 
 export default function ProfileScreen({ navigation }) {
   const [customer, setCustomer] = useState(null);
+  const [orderStats, setOrderStats] = useState({
+    totalOrders: 0,
+    totalIncome: 0,
+    totalViews: 0 // Keep this for now, or can be replaced with another metric
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCustomerInfo = async () => {
+    const fetchData = async () => {
       try {
         const customer_id = await SecureStore.getItemAsync("customer_id");
-        // console.log("Customer ID:", customer_id);
         if (customer_id) {
-          const response = await apiService.getInfoCustomerByCustomerId(
-            customer_id
-          );
-          setCustomer(response.data.data);
+          // Fetch customer info and order statistics in parallel
+          const [customerResponse, ordersResponse] = await Promise.allSettled([
+            apiService.getInfoCustomerByCustomerId(customer_id),
+            apiService.getCustomerOrders(customer_id)
+          ]);
+
+          // Set customer data
+          if (customerResponse.status === 'fulfilled') {
+            setCustomer(customerResponse.value.data.data);
+          }
+
+          // Calculate order statistics
+          if (ordersResponse.status === 'fulfilled' && ordersResponse.value.data?.data) {
+            const orders = ordersResponse.value.data.data;
+            const totalOrders = orders.length;
+            
+            // Calculate total income from completed orders
+            const totalIncome = orders
+              .filter(order => order.order_status === 'completed' || order.order_status === 'delivered')
+              .reduce((sum, order) => sum + parseFloat(order.total_price || 0), 0);
+            
+            setOrderStats({
+              totalOrders,
+              totalIncome,
+              totalViews: totalOrders * 2 // Simple calculation, can be replaced with real metrics
+            });
+          }
         } else {
           console.warn("No customer ID found in SecureStore.");
         }
       } catch (error) {
-        console.error("Error fetching customer info:", error);
+        console.error("Error fetching profile data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCustomerInfo();
+    fetchData();
   }, []);
 
   const itemOtherInformation = [
@@ -72,7 +99,7 @@ export default function ProfileScreen({ navigation }) {
         navigation.navigate("SettingsScreen");
         break;
       case "My Order":
-        navigation.navigate("MyOrderScreen");
+        navigation.navigate("MyOrdersScreen");
         break;
       case "Notifications":
         navigation.navigate("NotificationScreen");
@@ -141,9 +168,9 @@ export default function ProfileScreen({ navigation }) {
           </View>
           <View style={styles.profileStats}>
             <ProfileStats
-              totalOrders={823}
-              totalIncome="1,400k"
-              totalViews={150}
+              totalOrders={orderStats.totalOrders}
+              totalIncome={orderStats.totalIncome.toLocaleString('vi-VN')}
+              totalViews={orderStats.totalViews}
             />
           </View>
           <View style={styles.otherInformation}>

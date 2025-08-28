@@ -81,7 +81,9 @@ export default function CartScreen({ navigation }) {
     } catch (error) {
       console.error("Error fetching cart data:", error);
       if (error.response?.status === 404) {
+        // Handle 404 gracefully - show empty cart instead of error
         setCartItems([]);
+        setCartId(null);
         setError(null);
       } else {
         setError("Failed to load cart items");
