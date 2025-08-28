@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../styles/Color";
@@ -19,21 +20,24 @@ export default function ModernCartItem({
   onSizeChange,
   onRemove,
 }) {
-  const [quantity, setQuantity] = useState(item.quantity);
-  const [selectedSize, setSelectedSize] = useState(item.size);
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const handleQuantityIncrease = () => {
-    const newQuantity = quantity + 1;
-    setQuantity(newQuantity);
-    onQuantityChange(item.cart_detail_id, newQuantity);
+  const handleQuantityIncrease = async () => {
+    if (isUpdating) return;
+    
+    setIsUpdating(true);
+    const newQuantity = item.quantity + 1;
+    await onQuantityChange(item.cart_detail_id, newQuantity);
+    setIsUpdating(false);
   };
 
-  const handleQuantityDecrease = () => {
-    if (quantity > 1) {
-      const newQuantity = quantity - 1;
-      setQuantity(newQuantity);
-      onQuantityChange(item.cart_detail_id, newQuantity);
-    }
+  const handleQuantityDecrease = async () => {
+    if (isUpdating || item.quantity <= 1) return;
+    
+    setIsUpdating(true);
+    const newQuantity = item.quantity - 1;
+    await onQuantityChange(item.cart_detail_id, newQuantity);
+    setIsUpdating(false);
   };
 
   const handleRemove = () => {
@@ -101,26 +105,35 @@ export default function ModernCartItem({
           
           <View style={styles.quantityContainer}>
             <TouchableOpacity
-              style={[styles.quantityButton, quantity <= 1 && styles.disabledButton]}
+              style={[styles.quantityButton, (item.quantity <= 1 || isUpdating) && styles.disabledButton]}
               onPress={handleQuantityDecrease}
-              disabled={quantity <= 1}
+              disabled={item.quantity <= 1 || isUpdating}
             >
-              <Feather 
-                name="minus" 
-                size={18} 
-                color={quantity <= 1 ? Colors.lightGray : Colors.blackColor} 
-              />
+              {isUpdating && item.quantity > 1 ? (
+                <ActivityIndicator size="small" color={Colors.blackColor} />
+              ) : (
+                <Feather 
+                  name="minus" 
+                  size={18} 
+                  color={item.quantity <= 1 ? Colors.lightGray : Colors.blackColor} 
+                />
+              )}
             </TouchableOpacity>
             
             <View style={styles.quantityDisplay}>
-              <Text style={styles.quantityText}>{quantity}</Text>
+              <Text style={styles.quantityText}>{item.quantity}</Text>
             </View>
             
             <TouchableOpacity
-              style={styles.quantityButton}
+              style={[styles.quantityButton, isUpdating && styles.disabledButton]}
               onPress={handleQuantityIncrease}
+              disabled={isUpdating}
             >
-              <Feather name="plus" size={18} color={Colors.blackColor} />
+              {isUpdating && item.quantity >= 1 ? (
+                <ActivityIndicator size="small" color={Colors.blackColor} />
+              ) : (
+                <Feather name="plus" size={18} color={Colors.blackColor} />
+              )}
             </TouchableOpacity>
           </View>
         </View>

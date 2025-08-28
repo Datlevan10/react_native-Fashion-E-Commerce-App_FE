@@ -81,26 +81,33 @@ export default function CartScreen({ navigation }) {
   const handleQuantityChange = async (cartDetailId, newQuantity) => {
     try {
       const response = await ApiService.updateCartItem(cartDetailId, newQuantity);
-      if (response.status === 200) {
-        // Update local state
+      if (response.status === 200 && response.data) {
+        // Update local state with backend response data
+        const updatedItem = response.data.data;
+        const cartTotal = parseFloat(response.data.cart_total);
+        
         setCartItems(prevItems =>
           prevItems.map(item =>
             item.cart_detail_id === cartDetailId
               ? {
                   ...item,
-                  quantity: newQuantity,
-                  total_price: (parseFloat(item.unit_price) * newQuantity).toString()
+                  quantity: updatedItem.quantity,
+                  total_price: updatedItem.total_price.toString(),
+                  unit_price: updatedItem.unit_price
                 }
               : item
           )
         );
+        
+        // Success feedback
+        console.log(`Cart item updated: Quantity ${updatedItem.quantity}, Total: ${cartTotal}`);
       } else {
         Alert.alert("Error", "Failed to update quantity");
         fetchCartData(); // Refresh to get correct data
       }
     } catch (error) {
       console.error("Error updating quantity:", error);
-      Alert.alert("Error", "Failed to update quantity");
+      Alert.alert("Error", "Failed to update quantity. Please try again.");
       fetchCartData(); // Refresh to get correct data
     }
   };
@@ -238,6 +245,10 @@ export default function CartScreen({ navigation }) {
                     item={item}
                     onQuantityChange={handleQuantityChange}
                     onRemove={handleRemoveItem}
+                    onSizeChange={(cartDetailId, newSize) => {
+                      // Size change functionality - can be implemented later
+                      console.log('Size change requested:', cartDetailId, newSize);
+                    }}
                   />
                 ))}
                 
