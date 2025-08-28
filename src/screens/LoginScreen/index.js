@@ -96,8 +96,8 @@ export default function LoginScreen({ navigation }) {
           // await checkStoredData();
 
           ShowAlertWithTitleContentAndOneActions(
-            "Login successful",
-            "Welcome back H&M store"
+            "Đăng nhập thành côngcông",
+            "Chào mừng đến với HappyField"
           );
           navigation.replace("HomeScreen");
         } else if (response.status === 401) {

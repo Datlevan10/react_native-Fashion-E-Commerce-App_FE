@@ -181,8 +181,8 @@ export default function ProductDetailScreen({ route, navigation }) {
   const loadStoreName = async () => {
     try {
       const response = await apiService.getStores();
-      if (response && response.data.data && response.data.data[0]) {
-        setStoreName(response.data.data[0].store_name);
+      if (response && response.data.data && response.data.data[11]) {
+        setStoreName(response.data.data[1].store_name);
       }
     } catch (error) {
       console.error("Failed to load store name:", error);
@@ -197,8 +197,8 @@ export default function ProductDetailScreen({ route, navigation }) {
   ) => {
     if (!selectedSize) {
       Alert.alert(
-        "Error",
-        "Please select a size before adding to cart."
+        "Lỗi",
+        "Vui lòng chọn size và thử lại"
       );
       return;
     }
@@ -224,7 +224,7 @@ export default function ProductDetailScreen({ route, navigation }) {
       const addResponse = await apiService.addToCart(cartItemData);
 
       if (addResponse.status === 201 || addResponse.status === 200) {
-        Alert.alert("Success", "Product added to cart successfully!");
+        Alert.alert("Thành côngcông", "Sản phẩm đã được thêm vào giỏ hànghàng");
       } else {
         Alert.alert(
           "Error",

@@ -308,16 +308,6 @@ const addToCart = async (cartData) => {
   return api.post("/carts", cartData);
 };
 
-// Get all customer carts
-const getAllCustomerCarts = async (customerId) => {
-  return api.get(`/carts/all-carts/customer/${customerId}`);
-};
-
-// Get customer's not-ordered cart details
-const getCustomerNotOrderedCartDetails = async (customerId) => {
-  return api.get(`/cart_details/customer/${customerId}/not-ordered-cart_details`);
-};
-
 // Get cart items
 const getCartItems = async (cartId) => {
   return api.get(`/cart_details/cart/${cartId}`);
@@ -507,8 +497,6 @@ export default {
   getCartItems,
   updateCartItem,
   removeFromCart,
-  getAllCustomerCarts,
-  getCustomerNotOrderedCartDetails,
   // Order Management
   createOrder,
   getCustomerOrders,
@@ -524,11 +512,26 @@ export default {
   updateCustomerStatus,
   getAllOrders,
   getOrderById,
-  getAllProductsAdmin,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-  getSalesReport,
-  getCustomerReport,
-  getProductReport,
-};
+
+  hideNotification,
+  reportReview,
+  // Admin APIs
+  getTotalCustomers,
+  getTotalStaff,
+  getTotalProducts,
+  getTotalCategories,
+  getOrderStatistics,
+  getRecentOrders,
+  getTopProducts,
+  getAllStaff,
+  getStaffById,
+  createStaff,
+  updateStaff,
+  deleteStaff,
+  getAllCustomers,
+  getCustomerById,
+  updateCustomerStatus,
+  getAllOrders,
+  getOrderById,
+  updateOrderStatus,
+}

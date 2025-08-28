@@ -112,8 +112,8 @@ export default function HomeContentScreen({ navigation }) {
   const loadStoreName = async () => {
     try {
       const response = await apiService.getStores();
-      if (response && response.data.data && response.data.data[0]) {
-        setStoreName(response.data.data[0].store_name);
+      if (response && response.data.data && response.data.data[1]) {
+        setStoreName(response.data.data[1].store_name);
       }
     } catch (error) {
       console.error("Failed to load store name:", error);

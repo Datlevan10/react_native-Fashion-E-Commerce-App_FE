@@ -29,9 +29,9 @@ const CustomTabNavigator = ({
     const loadStoreLogo = async () => {
       try {
         const response = await apiService.getStores();
-        if (response && response.data.data && response.data.data[0]) {
+        if (response && response.data.data && response.data.data[1]) {
           setLogoSource({
-            uri: `${API_BASE_URL}${response.data.data[0].logo_url}`,
+            uri: `${API_BASE_URL}${response.data.data[1].logo_url}`,
           });
         }
       } catch (error) {

@@ -63,7 +63,7 @@ export default function CartScreen({ navigation }) {
       setCustomerId(storedCustomerId);
       
       // Fetch cart items from API
-      const response = await ApiService.getCustomerNotOrderedCartDetails(storedCustomerId);
+      const response = await ApiService.getCustomerCart(storedCustomerId);
       
       if (response.status === 200 && response.data?.data) {
         const items = response.data.data.map(item => ({
