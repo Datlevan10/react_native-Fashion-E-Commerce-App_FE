@@ -135,14 +135,14 @@ export default function AdminLoginScreen({ navigation }) {
             <View style={styles.iconContainer}>
               <MaterialIcons name="shield-account" size={72} color={Colors.whiteColor} />
             </View>
-            <Text style={styles.title}>Administrator</Text>
-            <Text style={styles.subtitle}>System Management Portal</Text>
+            <Text style={styles.title}>Quản trị viên</Text>
+            <Text style={styles.subtitle}>Cổng thông tin quản lý hệ thống</Text>
           </View>
 
           <View style={styles.formContainer}>
             <View style={styles.securityNotice}>
               <Feather name="lock" size={16} color={Colors.warning} />
-              <Text style={styles.securityText}>Secure Admin Access</Text>
+              <Text style={styles.securityText}>Truy cập quản trị an toàn</Text>
             </View>
 
             <CustomTextInput
@@ -170,15 +170,15 @@ export default function AdminLoginScreen({ navigation }) {
                   color={isRemember ? "#1a73e8" : undefined}
                   style={styles.checkbox}
                 />
-                <Text style={styles.rememberText}>Remember me</Text>
+                <Text style={styles.rememberText}>Nhớ mật khẩu</Text>
               </View>
               <TouchableOpacity onPress={() => navigation.navigate("ForgotPasswordScreen", { userType: "admin" })}>
-                <Text style={styles.forgotText}>Forgot Password?</Text>
+                <Text style={styles.forgotText}>Quên mật khẩu?</Text>
               </TouchableOpacity>
             </View>
 
             <CustomHandleButton
-              buttonText={isLoading ? "Logging in..." : "Login"}
+              buttonText={isLoading ? "Đang đăng nhập...": "Đăng nhập"}
               onPress={handleLogin}
               disabled={isLoading}
               style={styles.loginButton}
@@ -186,15 +186,15 @@ export default function AdminLoginScreen({ navigation }) {
 
             <View style={styles.divider}>
               <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>Security Notice</Text>
+              <Text style={styles.dividerText}>Thông báo bảo mật</Text>
               <View style={styles.dividerLine} />
             </View>
 
             <View style={styles.securityWarning}>
               <MaterialIcons name="info-outline" size={20} color={Colors.warning} />
               <Text style={styles.warningText}>
-                This is a restricted area. All login attempts are monitored and logged. 
-                Unauthorized access attempts will be reported.
+              Đây là khu vực bị hạn chế. Mọi nỗ lực đăng nhập đều được theo dõi và ghi lại.
+              Mọi nỗ lực truy cập trái phép sẽ bị báo cáo.
               </Text>
             </View>
 

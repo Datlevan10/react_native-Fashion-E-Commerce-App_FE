@@ -135,8 +135,8 @@ export default function StaffLoginScreen({ navigation }) {
             <View style={styles.iconContainer}>
               <FontAwesome5 name="user-tie" size={64} color={Colors.whiteColor} />
             </View>
-            <Text style={styles.title}>Staff Login</Text>
-            <Text style={styles.subtitle}>Access your staff account</Text>
+            <Text style={styles.title}>Đăng nhập nhân viên</Text>
+            <Text style={styles.subtitle}>Truy cập tài khoản nhân viên của bạn</Text>
           </View>
 
           <View style={styles.formContainer}>
@@ -165,32 +165,32 @@ export default function StaffLoginScreen({ navigation }) {
                   color={isRemember ? Colors.secondary : undefined}
                   style={styles.checkbox}
                 />
-                <Text style={styles.rememberText}>Remember me</Text>
+                <Text style={styles.rememberText}>Nhớ mật khẩu</Text>
               </View>
               <TouchableOpacity onPress={() => navigation.navigate("ForgotPasswordScreen", { userType: "staff" })}>
-                <Text style={styles.forgotText}>Forgot Password?</Text>
+                <Text style={styles.forgotText}>Quên mật khẩu?</Text>
               </TouchableOpacity>
             </View>
 
             <CustomHandleButton
-              buttonText={isLoading ? "Logging in..." : "Login"}
+              buttonText={isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
               onPress={handleLogin}
               disabled={isLoading}
               style={styles.loginButton}
             />
 
             <View style={styles.linkContainer}>
-              <Text style={styles.linkText}>Don't have a staff account? </Text>
+              <Text style={styles.linkText}>Bạn không có tài khoản nhân viên?</Text>
               <CustomLinkText
-                text="Contact Admin"
-                onPress={() => Alert.alert("Contact Admin", "Please contact your administrator to create a staff account.")}
+                text="Liên hệ Quản trị viên"
+                onPress={() => Alert.alert("Liên hệ với quản trị viên", "Vui lòng liên hệ với quản trị viên của bạn để tạo tài khoản nhân viên.")}
                 style={styles.linkButton}
               />
             </View>
 
             <View style={styles.divider}>
               <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>Other Login Options</Text>
+              <Text style={styles.dividerText}>Các tùy chọn đăng nhập khác</Text>
               <View style={styles.dividerLine} />
             </View>
 

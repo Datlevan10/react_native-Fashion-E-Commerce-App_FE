@@ -137,11 +137,11 @@ const OrderScreen = ({ navigation, route }) => {
 
       if (response.status === 201 || response.status === 200) {
         Alert.alert(
-          'Order Placed Successfully!',
-          `Your order has been created. Order ID: ${response.data.order_id || 'N/A'}`,
+          'Đã đặt hàng thành công!',
+          `Đơn hàng của bạn đã được tạo. Mã đơn hàng: ${response.data.order_id || 'N/A'}`,
           [
             {
-              text: 'Continue Shopping',
+              text: 'Tiếp tục mua sắm',
               onPress: () => navigation.navigate('HomeScreen')
             }
           ]
