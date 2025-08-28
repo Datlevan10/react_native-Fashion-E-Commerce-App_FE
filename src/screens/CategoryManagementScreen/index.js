@@ -76,7 +76,7 @@ const CategoryManagementScreen = () => {
       }
 
       const pickerResult = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaType.Images,
+        mediaTypes: ImagePicker.MediaType?.Images || 'images', // Safe access with fallback
         allowsEditing: true,
         quality: 0.7,
         aspect: [1, 1],

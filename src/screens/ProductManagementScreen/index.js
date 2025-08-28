@@ -103,7 +103,7 @@ const ProductManagementScreen = () => {
       }
 
       const pickerResult = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ImagePicker.MediaType?.Images || 'images', // Safe access with fallback
         allowsMultipleSelection: true,
         quality: 0.7,
         aspect: [1, 1],

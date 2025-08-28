@@ -137,7 +137,7 @@ const AddStaffScreen = ({ navigation }) => {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaType?.Images || 'images', // Safe access with fallback
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.8,
