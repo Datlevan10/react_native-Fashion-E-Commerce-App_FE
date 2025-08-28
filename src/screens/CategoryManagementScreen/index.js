@@ -159,10 +159,8 @@ const CategoryManagementScreen = () => {
         Alert.alert('Info', 'Category update API not implemented yet');
         return;
       } else {
-        // For creating, we'd need a create category API
-        // response = await apiService.createCategory(formDataToSend);
-        Alert.alert('Info', 'Category creation API not implemented yet');
-        return;
+        // Create new category
+        response = await apiService.createCategory(formDataToSend);
       }
 
       if (response.status === 200 || response.status === 201) {

@@ -79,6 +79,12 @@ const getCategories = async () => {
   return api.get("/categories");
 };
 
+const createCategory = async (categoryData) => {
+  return api.post("/categories", categoryData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
 const getListAllProducts = async () => {
   return api.get("/products");
 };
@@ -438,6 +444,7 @@ export default {
   getSalesReports,
   getOrdersReports,
   getCategories,
+  createCategory,
   getStores,
   getListAllProducts,
   getProductByProductId,

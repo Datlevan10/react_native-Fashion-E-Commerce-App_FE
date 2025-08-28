@@ -25,6 +25,8 @@ import CheckoutScreen from "./screens/CheckoutScreen";
 import OrderScreen from "./screens/OrderScreen";
 import TrackingDetailScreen from "./screens/CheckoutScreen/TrackingDetailScreen";
 import WishlistScreen from "./screens/WishlistScreen";
+import MyOrdersScreen from "./screens/MyOrdersScreen";
+import OrderDetailsScreen from "./screens/OrderDetailsScreen";
 
 import UserInactivity from "react-native-user-inactivity";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -285,6 +287,16 @@ export default function App() {
             <Stack.Screen
               name="SettingsScreen"
               component={SettingsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="MyOrdersScreen"
+              component={MyOrdersScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="OrderDetailsScreen"
+              component={OrderDetailsScreen}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
