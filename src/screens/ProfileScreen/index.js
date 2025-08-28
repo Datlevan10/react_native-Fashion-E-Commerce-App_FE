@@ -76,20 +76,20 @@ export default function ProfileScreen({ navigation }) {
   }, []);
 
   const itemOtherInformation = [
-    { icon: "settings", title: "Settings", iconColor: "#999" },
-    { icon: "shopping-bag", title: "My Order", iconColor: "#4CAF50" },
+    { icon: "settings", title: "Cài đặt", iconColor: "#999" },
+    { icon: "shopping-bag", title: "Đơn hàng của tôi", iconColor: "#4CAF50" },
     // { icon: "notifications", title: "Notification", iconColor: "#FF9800" },
     {
       icon: "notifications",
-      title: "Notifications",
+      title: "Thông báo",
       iconColor: "#FF9800",
       showSwitch: true,
       initialSwitchState: true,
     },
-    { icon: "translate", title: "Language", iconColor: "#2196F3" },
-    { icon: "payment", title: "Payment & Payout", iconColor: "#fbcc23" },
+    { icon: "translate", title: "Ngôn ngữ", iconColor: "#2196F3" },
+    { icon: "payment", title: "Thanh toán và chi trả", iconColor: "#fbcc23" },
   ];
-  const itemOther = [{ icon: "logout", title: "Logout", iconColor: "#db4437" }];
+  const itemOther = [{ icon: "logout", title: "Đăng xuất", iconColor: "#db4437" }];
 
   const handleRowPress = (title) => {
     console.log("Navigating to:", title);
@@ -174,7 +174,7 @@ export default function ProfileScreen({ navigation }) {
             />
           </View>
           <View style={styles.otherInformation}>
-            <Text style={styles.otherInformationTitle}>Other Information</Text>
+            <Text style={styles.otherInformationTitle}>Thông tin khác</Text>
             <OtherInformationForm
               items={itemOtherInformation}
               onRowPress={handleRowPress}

@@ -8,19 +8,19 @@ const ProfileStats = ({ totalOrders, totalIncome, totalViews }) => {
       <View style={styles.column}>
         <Feather name="shopping-bag" size={22} color="#4CAF50" />
         <Text style={styles.value}>{totalOrders}</Text>
-        <Text style={styles.title}>Total Orders</Text>
+        <Text style={styles.title}>Số đơn hàng</Text>
       </View>
       <View style={styles.divider} />
       <View style={styles.column}>
         <MaterialIcons name="attach-money" size={22} color="#FF9800" />
         <Text style={styles.value}>${totalIncome}</Text>
-        <Text style={styles.title}>Total Income</Text>
+        <Text style={styles.title}>Chi tiêu</Text>
       </View>
       <View style={styles.divider} />
       <View style={styles.column}>
         <AntDesign name="eye" size={22} color="#2196F3" />
         <Text style={styles.value}>{totalViews}</Text>
-        <Text style={styles.title}>Total Views</Text>
+        <Text style={styles.title}>Lượt xem</Text>
       </View>
     </View>
   );

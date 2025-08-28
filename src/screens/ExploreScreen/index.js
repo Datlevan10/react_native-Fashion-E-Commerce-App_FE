@@ -385,7 +385,7 @@ const ExploreScreen = ({ navigation }) => {
               isActive={activeFilters.rating || activeFilters.size || activeFilters.price}
             />
             <FilterBox 
-              text={activeFilters.rating ? `${activeFilters.rating} Stars` : "Xếp hạnghạng"} 
+              text={activeFilters.rating ? `${activeFilters.rating} Stars` : "Xếp hạng"} 
               icon="keyboard-arrow-down" 
               onPress={() => openFilterModal('rating')}
               isActive={activeFilters.rating !== null}

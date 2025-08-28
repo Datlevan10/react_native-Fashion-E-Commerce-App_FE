@@ -28,7 +28,7 @@ const ProfileInfoForm = ({
       </View>
       <View style={styles.row}>
         <Text style={styles.stats}>
-          250 <Text style={styles.statsText}>Following</Text>
+          250 <Text style={styles.statsText}>Theo dõi</Text>
         </Text>
         <Text style={styles.stats}>
           250 <Text style={styles.statsText}>Follower</Text>
@@ -36,10 +36,10 @@ const ProfileInfoForm = ({
       </View>
       <View style={styles.row}>
         <TouchableOpacity style={styles.button} onPress={onManageProfilePress}>
-          <Text style={styles.buttonText}>Manage Profile</Text>
+          <Text style={styles.buttonText}>Quản lý hồ sơ</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.detailButton]} onPress={onDetailPress}>
-          <Text style={[styles.buttonText, styles.detailButtonText]}>Detail</Text>
+          <Text style={[styles.buttonText, styles.detailButtonText]}>Chi tiết</Text>
         </TouchableOpacity>
       </View>
     </View>

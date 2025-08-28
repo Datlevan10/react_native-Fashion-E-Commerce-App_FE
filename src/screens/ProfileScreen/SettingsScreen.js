@@ -106,7 +106,7 @@ const SettingsScreen = ({ navigation }) => {
         >
           <Feather name="arrow-left" size={24} color={Colors.blackColor} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Settings</Text>
+        <Text style={styles.headerTitle}>Cài đặt</Text>
         <View style={styles.placeholder} />
       </View>
 

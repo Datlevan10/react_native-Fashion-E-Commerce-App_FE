@@ -521,8 +521,8 @@ export default {
   getCartItems,
   updateCartItem,
   removeFromCart,
-  getAllCustomerCarts,
-  getCustomerNotOrderedCartDetails,
+  // getAllCustomerCarts,
+  // getCustomerNotOrderedCartDetails,
   // Order Management
   createOrder,
   getCustomerOrders,

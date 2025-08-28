@@ -28,7 +28,7 @@ export default function DetailProfileScreen({ route, navigation }) {
           >
             <Feather name="arrow-left" size={22} color={Colors.blackColor} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Detail</Text>
+          <Text style={styles.headerTitle}>Chi tiết</Text>
           <View style={styles.placeholder} />
         </View>
 

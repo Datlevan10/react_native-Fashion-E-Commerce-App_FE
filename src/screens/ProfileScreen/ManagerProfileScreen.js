@@ -63,7 +63,7 @@ export default function ManagerProfileScreen({ navigation }) {
           >
             <Feather name="arrow-left" size={22} color={Colors.blackColor} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Manage Profile</Text>
+          <Text style={styles.headerTitle}>Quản lý hồ sơ</Text>
           <View style={styles.placeholder} />
         </View>
       </View>
@@ -135,7 +135,7 @@ export default function ManagerProfileScreen({ navigation }) {
                 <View style={styles.IconBox}>
                   <MaterialIcons name="visibility" size={23} color="#333" />
                 </View>
-                <Text style={styles.modalOptionText}>View picture</Text>
+                <Text style={styles.modalOptionText}>Xem hình ảnh</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.modalOptionRow}
@@ -144,7 +144,7 @@ export default function ManagerProfileScreen({ navigation }) {
                 <View style={styles.IconBox}>
                   <MaterialIcons name="photo-camera" size={23} color="#333" />
                 </View>
-                <Text style={styles.modalOptionText}>Change picture</Text>
+                <Text style={styles.modalOptionText}>Thay đổi hình ảnh</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.modalOptionRow}
@@ -153,7 +153,7 @@ export default function ManagerProfileScreen({ navigation }) {
                 <View style={styles.IconBox}>
                   <MaterialIcons name="delete" size={23} color="#333" />
                 </View>
-                <Text style={styles.modalOptionText}>Delete picture</Text>
+                <Text style={styles.modalOptionText}>Xóa hình ảnh</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.modalOptionRow}
