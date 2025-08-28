@@ -1,0 +1,257 @@
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  Alert,
+} from "react-native";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
+import Colors from "../../styles/Color";
+
+const { width } = Dimensions.get("window");
+
+export default function ModernCartItem({
+  item,
+  onQuantityChange,
+  onSizeChange,
+  onRemove,
+}) {
+  const [quantity, setQuantity] = useState(item.quantity);
+  const [selectedSize, setSelectedSize] = useState(item.size);
+
+  const handleQuantityIncrease = () => {
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    onQuantityChange(item.cart_detail_id, newQuantity);
+  };
+
+  const handleQuantityDecrease = () => {
+    if (quantity > 1) {
+      const newQuantity = quantity - 1;
+      setQuantity(newQuantity);
+      onQuantityChange(item.cart_detail_id, newQuantity);
+    }
+  };
+
+  const handleRemove = () => {
+    Alert.alert(
+      "Remove Item",
+      "Are you sure you want to remove this item from your cart?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Remove",
+          style: "destructive",
+          onPress: () => onRemove(item.cart_detail_id),
+        },
+      ]
+    );
+  };
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(price);
+  };
+
+  const imageSource = item.image ? 
+    { uri: `http://192.168.1.58:8080${item.image}` } : 
+    require("../../../assets/image/placeholder.png");
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.imageContainer}>
+        <Image source={imageSource} style={styles.productImage} resizeMode="cover" />
+      </View>
+      
+      <View style={styles.contentContainer}>
+        <View style={styles.header}>
+          <View style={styles.productInfo}>
+            <Text style={styles.productName} numberOfLines={2}>
+              {item.product_name}
+            </Text>
+            <View style={styles.detailsRow}>
+              <Text style={styles.detailText}>Size: {item.size}</Text>
+              {item.color && item.color !== "N/A" && (
+                <>
+                  <Text style={styles.separator}>•</Text>
+                  <Text style={styles.detailText}>Color: {item.color}</Text>
+                </>
+              )}
+            </View>
+          </View>
+          
+          <TouchableOpacity style={styles.removeButton} onPress={handleRemove}>
+            <Feather name="trash-2" size={20} color="#ff4757" />
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.footer}>
+          <View style={styles.priceContainer}>
+            <Text style={styles.unitPrice}>{formatPrice(item.unit_price)}</Text>
+            <Text style={styles.totalPrice}>{formatPrice(item.total_price)}</Text>
+          </View>
+          
+          <View style={styles.quantityContainer}>
+            <TouchableOpacity
+              style={[styles.quantityButton, quantity <= 1 && styles.disabledButton]}
+              onPress={handleQuantityDecrease}
+              disabled={quantity <= 1}
+            >
+              <Feather 
+                name="minus" 
+                size={18} 
+                color={quantity <= 1 ? Colors.lightGray : Colors.blackColor} 
+              />
+            </TouchableOpacity>
+            
+            <View style={styles.quantityDisplay}>
+              <Text style={styles.quantityText}>{quantity}</Text>
+            </View>
+            
+            <TouchableOpacity
+              style={styles.quantityButton}
+              onPress={handleQuantityIncrease}
+            >
+              <Feather name="plus" size={18} color={Colors.blackColor} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    backgroundColor: Colors.whiteColor,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  imageContainer: {
+    width: 90,
+    height: 90,
+    borderRadius: 8,
+    overflow: "hidden",
+    backgroundColor: Colors.lightGray,
+  },
+  productImage: {
+    width: "100%",
+    height: "100%",
+  },
+  contentContainer: {
+    flex: 1,
+    marginLeft: 16,
+    justifyContent: "space-between",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+  },
+  productInfo: {
+    flex: 1,
+    marginRight: 12,
+  },
+  productName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: Colors.blackColor,
+    lineHeight: 22,
+    marginBottom: 4,
+  },
+  detailsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+  },
+  detailText: {
+    fontSize: 14,
+    color: Colors.darkGray,
+  },
+  separator: {
+    fontSize: 14,
+    color: Colors.darkGray,
+    marginHorizontal: 8,
+  },
+  removeButton: {
+    padding: 4,
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 12,
+  },
+  priceContainer: {
+    flex: 1,
+  },
+  unitPrice: {
+    fontSize: 14,
+    color: Colors.darkGray,
+    textDecorationLine: "line-through",
+  },
+  totalPrice: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: Colors.blackColor,
+    marginTop: 2,
+  },
+  quantityContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Colors.lightGray,
+    borderRadius: 8,
+    padding: 2,
+  },
+  quantityButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 6,
+    backgroundColor: Colors.whiteColor,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  disabledButton: {
+    backgroundColor: Colors.lightGray,
+    shadowOpacity: 0,
+    elevation: 0,
+  },
+  quantityDisplay: {
+    minWidth: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 8,
+  },
+  quantityText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: Colors.blackColor,
+  },
+});
