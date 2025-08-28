@@ -69,13 +69,15 @@ export default function AdminDashboardScreen({ navigation }) {
         apiService.getTopProducts(5),
       ]);
 
+      console.log("TOTAL PRODUCT: ", productsRes.data)
+
       setDashboardData({
-        totalCustomers: customersRes.data.total || 0,
-        totalStaff: staffRes.data.total || 0,
-        totalProducts: productsRes.data.total || 0,
-        totalCategories: categoriesRes.data.total || 0,
-        totalCarts: cartsRes.data.total || 0,
-        activeCarts: activeCartsRes.data.active || 0,
+        totalCustomers: customersRes.data.data.total || 0,
+        totalStaff: staffRes.data.data.total || 0,
+        totalProducts: productsRes.data.data.total || 0,
+        totalCategories: categoriesRes.data.data.total || 0,
+        totalCarts: cartsRes.data.data.total || 0,
+        activeCarts: activeCartsRes.data.data.active || 0,
         todayOrders: ordersRes.data.today || 0,
         weekOrders: ordersRes.data.week || 0,
         monthOrders: ordersRes.data.month || 0,

@@ -368,7 +368,7 @@ const deleteStaff = async (staffId) => {
 
 // Customer Management APIs
 const getAllCustomers = async (page = 1, limit = 20) => {
-  return api.get(`/admin/customers?page=${page}&limit=${limit}`);
+  return api.get(`/customers`);
 };
 
 const getCustomerById = async (customerId) => {
@@ -385,8 +385,8 @@ const getOrderById = async (orderId) => {
 };
 
 // Product Management APIs
-const getAllProductsAdmin = async (page = 1, limit = 20) => {
-  return api.get(`/admin/products?page=${page}&limit=${limit}`);
+const getAllProductsAdmin = async () => {
+  return api.get(`/products`);
 };
 
 const createProduct = async (productData) => {
