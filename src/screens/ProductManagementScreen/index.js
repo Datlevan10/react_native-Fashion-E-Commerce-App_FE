@@ -212,13 +212,14 @@ const ProductManagementScreen = () => {
       }
 
       if (response.status === 200 || response.status === 201) {
+        // Refresh data immediately
+        await fetchProducts(true);
+        
+        // Close modal and show success message
+        setModalVisible(false);
         Alert.alert(
           'Success',
-          `Product ${editingProduct ? 'updated' : 'created'} successfully`,
-          [{ text: 'OK', onPress: () => {
-            setModalVisible(false);
-            handleRefresh();
-          }}]
+          `Product ${editingProduct ? 'updated' : 'created'} successfully`
         );
       }
     } catch (error) {
@@ -243,8 +244,11 @@ const ProductManagementScreen = () => {
             try {
               setLoading(true);
               await apiService.deleteProduct(product.product_id);
+              
+              // Refresh data immediately
+              await fetchProducts(true);
+              
               Alert.alert('Success', 'Product deleted successfully');
-              handleRefresh();
             } catch (error) {
               console.error('Error deleting product:', error);
               Alert.alert('Error', 'Failed to delete product');
@@ -262,13 +266,17 @@ const ProductManagementScreen = () => {
     product.description?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const renderProductItem = ({ item }) => (
-    <View style={styles.productCard}>
-      <Image
-        source={{ uri: item.image_url ? `${API_BASE_URL}${item.image_url}` : null }}
-        style={styles.productImage}
-        defaultSource={require('../../../assets/image/default_image.jpg')}
-      />
+  const renderProductItem = ({ item }) => {
+    // Get the first image from the image array
+    const firstImage = item.image && item.image.length > 0 ? item.image[0].url : null;
+    
+    return (
+      <View style={styles.productCard}>
+        <Image
+          source={{ uri: firstImage ? `${API_BASE_URL}${firstImage}` : null }}
+          style={styles.productImage}
+          defaultSource={require('../../../assets/image/default_image.jpg')}
+        />
       <View style={styles.productInfo}>
         <Text style={styles.productName} numberOfLines={2}>
           {item.product_name}
@@ -305,7 +313,8 @@ const ProductManagementScreen = () => {
         </TouchableOpacity>
       </View>
     </View>
-  );
+    );
+  };
 
   const renderFormModal = () => (
     <Modal

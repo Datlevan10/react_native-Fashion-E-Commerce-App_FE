@@ -168,13 +168,14 @@ const CategoryManagementScreen = () => {
       }
 
       if (response.status === 200 || response.status === 201) {
+        // Refresh data immediately
+        await fetchCategories(true);
+        
+        // Close modal and show success message
+        setModalVisible(false);
         Alert.alert(
           'Success',
-          `Category ${editingCategory ? 'updated' : 'created'} successfully`,
-          [{ text: 'OK', onPress: () => {
-            setModalVisible(false);
-            handleRefresh();
-          }}]
+          `Category ${editingCategory ? 'updated' : 'created'} successfully`
         );
       }
     } catch (error) {
@@ -214,13 +215,12 @@ const CategoryManagementScreen = () => {
               const response = await apiService.deleteCategory(category.category_id);
               
               if (response.status === 200) {
+                // Refresh data immediately
+                await fetchCategories(true);
+                
                 Alert.alert(
                   'Success',
-                  'Category deleted successfully',
-                  [{ 
-                    text: 'OK', 
-                    onPress: () => handleRefresh()
-                  }]
+                  'Category deleted successfully'
                 );
               }
             } catch (error) {
