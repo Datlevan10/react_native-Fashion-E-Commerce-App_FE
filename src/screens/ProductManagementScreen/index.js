@@ -137,16 +137,29 @@ const ProductManagementScreen = () => {
 
   const handleEditProduct = (product) => {
     setEditingProduct(product);
+    
+    // Extract sizes from API format: [{"size": "0.5"}, {"size": "1"}] -> "0.5, 1"
+    let sizesString = '';
+    if (Array.isArray(product.size)) {
+      sizesString = product.size.map(item => item.size || item).join(', ');
+    }
+    
+    // Extract colors from API format: [{"color_code": "#C41E3A"}, {"color_code": "#FF0000"}] -> "#C41E3A, #FF0000"
+    let colorsString = '';
+    if (Array.isArray(product.color)) {
+      colorsString = product.color.map(item => item.color_code || item).join(', ');
+    }
+    
     setFormData({
       product_name: product.product_name || '',
       description: product.description || '',
       old_price: product.old_price?.toString() || '',
       new_price: product.new_price?.toString() || '',
       category_id: product.category_id?.toString() || '',
-      sizes: Array.isArray(product.sizes) ? product.sizes.join(', ') : product.sizes || '',
-      colors: Array.isArray(product.colors) ? product.colors.join(', ') : product.colors || '',
-      quantity_in_stock: product.quantity_in_stock?.toString() || '',
-      is_featured: product.is_featured || false,
+      sizes: sizesString,
+      colors: colorsString,
+      quantity_in_stock: '',  // Keep UI field but don't use backend value
+      is_featured: false,     // Keep UI field but don't use backend value
     });
     setSelectedImages([]);
     setModalVisible(true);
@@ -182,33 +195,76 @@ const ProductManagementScreen = () => {
     try {
       setLoading(true);
 
-      const formDataToSend = new FormData();
-      
-      // Append form fields
-      Object.keys(formData).forEach(key => {
-        if (key === 'sizes' || key === 'colors') {
-          // Convert comma-separated string to array
-          const arrayValue = formData[key].split(',').map(item => item.trim()).filter(Boolean);
-          formDataToSend.append(key, JSON.stringify(arrayValue));
-        } else {
-          formDataToSend.append(key, formData[key]);
-        }
-      });
+      let dataToSend;
+      let hasImages = selectedImages.length > 0;
 
-      // Append images
-      selectedImages.forEach((image, index) => {
-        formDataToSend.append('images', {
-          uri: image.uri,
-          type: image.type || 'image/jpeg',
-          name: `product_image_${index}.jpg`,
+      if (hasImages || !editingProduct) {
+        // Use FormData for create (always) or update with new images
+        const formDataToSend = new FormData();
+        
+        // Append basic form fields (exclude quantity_in_stock and is_featured - not in backend)
+        formDataToSend.append('product_name', formData.product_name);
+        formDataToSend.append('description', formData.description);
+        formDataToSend.append('category_id', formData.category_id);
+        formDataToSend.append('new_price', formData.new_price);
+        
+        if (formData.old_price) {
+          formDataToSend.append('old_price', formData.old_price);
+        }
+
+        // Handle sizes - convert to array and append each individually
+        if (formData.sizes) {
+          const sizesArray = formData.sizes.split(',').map(item => item.trim()).filter(Boolean);
+          sizesArray.forEach((size, index) => {
+            formDataToSend.append(`size[${index}]`, size);
+          });
+        }
+
+        // Handle colors - convert to array and append each individually  
+        if (formData.colors) {
+          const colorsArray = formData.colors.split(',').map(item => item.trim()).filter(Boolean);
+          colorsArray.forEach((color, index) => {
+            formDataToSend.append(`color[${index}]`, color);
+          });
+        }
+
+        // Append images - backend expects 'image' not 'images'
+        selectedImages.forEach((image, index) => {
+          formDataToSend.append('image[]', {
+            uri: image.uri,
+            type: image.type || 'image/jpeg',
+            name: `product_image_${index}.jpg`,
+          });
         });
-      });
+
+        dataToSend = formDataToSend;
+      } else {
+        // Use JSON for updates without new images
+        dataToSend = {
+          product_name: formData.product_name,
+          description: formData.description,
+          category_id: formData.category_id,
+          new_price: formData.new_price,
+        };
+        
+        if (formData.old_price) {
+          dataToSend.old_price = formData.old_price;
+        }
+        
+        if (formData.sizes) {
+          dataToSend.size = formData.sizes.split(',').map(item => item.trim()).filter(Boolean);
+        }
+        
+        if (formData.colors) {
+          dataToSend.color = formData.colors.split(',').map(item => item.trim()).filter(Boolean);
+        }
+      }
 
       let response;
       if (editingProduct) {
-        response = await apiService.updateProduct(editingProduct.product_id, formDataToSend);
+        response = await apiService.updateProduct(editingProduct.product_id, dataToSend, hasImages);
       } else {
-        response = await apiService.createProduct(formDataToSend);
+        response = await apiService.createProduct(dataToSend);
       }
 
       if (response.status === 200 || response.status === 201) {

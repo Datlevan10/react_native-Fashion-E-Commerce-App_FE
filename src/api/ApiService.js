@@ -390,7 +390,7 @@ const deleteStaff = async (staffId) => {
 
 // Customer Management APIs
 const getAllCustomers = async (page = 1, limit = 20) => {
-  return api.get(`/customers`);
+  return api.get(`/customers?page=${page}&limit=${limit}`);
 };
 
 const getCustomerById = async (customerId) => {
@@ -417,10 +417,12 @@ const createProduct = async (productData) => {
   });
 };
 
-const updateProduct = async (productId, productData) => {
-  return api.put(`/products/${productId}`, productData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+const updateProduct = async (productId, productData, hasImages = false) => {
+  const headers = hasImages 
+    ? { "Content-Type": "multipart/form-data" }
+    : { "Content-Type": "application/json" };
+    
+  return api.put(`/products/${productId}`, productData, { headers });
 };
 
 const deleteProduct = async (productId) => {

@@ -36,7 +36,10 @@ export default function CustomerManagementScreen({ navigation }) {
     try {
       setLoading(currentPage === 1);
       const response = await apiService.getAllCustomers(currentPage, 20);
-      const newCustomers = response.data.customers || [];
+      
+      // Handle different possible response structures
+      const responseData = response.data;
+      const newCustomers = responseData.data || responseData.customers || responseData || [];
       
       if (currentPage === 1) {
         setCustomers(newCustomers);
@@ -44,9 +47,14 @@ export default function CustomerManagementScreen({ navigation }) {
         setCustomers(prev => [...prev, ...newCustomers]);
       }
       
-      setTotalPages(response.data.totalPages || 1);
+      // Handle pagination info
+      const totalPages = responseData.totalPages || 
+                        responseData.last_page || 
+                        Math.ceil((responseData.total || newCustomers.length) / 20) || 1;
+      setTotalPages(totalPages);
     } catch (error) {
       console.error("Error fetching customers data:", error);
+      console.log("Response error:", error.response?.data);
       Alert.alert("Error", "Failed to fetch customers data. Please try again.");
     } finally {
       setLoading(false);
@@ -92,11 +100,12 @@ export default function CustomerManagementScreen({ navigation }) {
           onPress: async () => {
             try {
               await apiService.updateCustomerStatus(customerId, newStatus);
-              setCustomers(customers.map(customer => 
-                customer.id === customerId 
+              setCustomers(customers.map(customer => {
+                const currentId = customer.id || customer.customer_id;
+                return currentId === customerId 
                   ? { ...customer, status: newStatus }
-                  : customer
-              ));
+                  : customer;
+              }));
               Alert.alert("Success", `Customer ${newStatus} successfully`);
             } catch (error) {
               console.error("Error updating customer status:", error);
@@ -108,15 +117,19 @@ export default function CustomerManagementScreen({ navigation }) {
     );
   };
 
-  const renderCustomerCard = ({ item }) => (
-    <CustomerCard
-      customer={item}
-      onPress={() =>
-        navigation.navigate("CustomerDetailsScreen", { customerId: item.id })
-      }
-      onStatusChange={(status) => handleUpdateCustomerStatus(item.id, status)}
-    />
-  );
+  const renderCustomerCard = ({ item }) => {
+    const customerId = item.id || item.customer_id;
+    
+    return (
+      <CustomerCard
+        customer={item}
+        onPress={() =>
+          navigation.navigate("CustomerDetailsScreen", { customerId })
+        }
+        onStatusChange={(status) => handleUpdateCustomerStatus(customerId, status)}
+      />
+    );
+  };
 
   const renderHeader = () => (
     <View style={styles.header}>
@@ -204,7 +217,7 @@ export default function CustomerManagementScreen({ navigation }) {
         <FlatList
           data={filteredCustomers}
           renderItem={renderCustomerCard}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => (item.id || item.customer_id).toString()}
           ListHeaderComponent={renderHeader}
           ListEmptyComponent={!loading ? renderEmptyList : null}
           ListFooterComponent={renderFooter}
