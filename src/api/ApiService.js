@@ -85,10 +85,12 @@ const createCategory = async (categoryData) => {
   });
 };
 
-const updateCategory = async (categoryId, categoryData) => {
-  return api.put(`/categories/${categoryId}`, categoryData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+const updateCategory = async (categoryId, categoryData, hasImage = false) => {
+  const headers = hasImage 
+    ? { "Content-Type": "multipart/form-data" }
+    : { "Content-Type": "application/json" };
+    
+  return api.put(`/categories/${categoryId}`, categoryData, { headers });
 };
 
 const deleteCategory = async (categoryId) => {

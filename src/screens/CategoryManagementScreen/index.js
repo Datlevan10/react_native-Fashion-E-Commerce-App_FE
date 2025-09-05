@@ -137,34 +137,53 @@ const CategoryManagementScreen = () => {
     try {
       setLoading(true);
 
-      const formDataToSend = new FormData();
-      
-      // Append form fields
-      formDataToSend.append('category_name', formData.category_name);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('sort_order', formData.sort_order || '0');
-      formDataToSend.append('is_active', formData.is_active ? '1' : '0');
-      
-      if (formData.parent_category_id) {
-        formDataToSend.append('parent_category_id', formData.parent_category_id);
-      }
+      let dataToSend;
+      let hasImage = false;
 
-      // Append image if selected
       if (selectedImage) {
+        // Use FormData when there's an image
+        hasImage = true;
+        const formDataToSend = new FormData();
+        
+        // Append form fields
+        formDataToSend.append('category_name', formData.category_name);
+        formDataToSend.append('description', formData.description);
+        formDataToSend.append('sort_order', formData.sort_order || '0');
+        formDataToSend.append('is_active', formData.is_active ? '1' : '0');
+        
+        if (formData.parent_category_id) {
+          formDataToSend.append('parent_category_id', formData.parent_category_id);
+        }
+
+        // Append image
         formDataToSend.append('image_category', {
           uri: selectedImage.uri,
           type: selectedImage.type || 'image/jpeg',
           name: 'image_category.jpg',
         });
+        
+        dataToSend = formDataToSend;
+      } else {
+        // Use JSON when no image
+        dataToSend = {
+          category_name: formData.category_name,
+          description: formData.description,
+          sort_order: formData.sort_order || '0',
+          is_active: formData.is_active ? '1' : '0',
+        };
+        
+        if (formData.parent_category_id) {
+          dataToSend.parent_category_id = formData.parent_category_id;
+        }
       }
 
       let response;
       if (editingCategory) {
         // Update existing category
-        response = await apiService.updateCategory(editingCategory.category_id, formDataToSend);
+        response = await apiService.updateCategory(editingCategory.category_id, dataToSend, hasImage);
       } else {
-        // Create new category
-        response = await apiService.createCategory(formDataToSend);
+        // Create new category (always uses FormData because image is required)
+        response = await apiService.createCategory(dataToSend);
       }
 
       if (response.status === 200 || response.status === 201) {
