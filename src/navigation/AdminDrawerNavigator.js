@@ -35,56 +35,56 @@ const CustomDrawerContent = ({ navigation }) => {
 
   const menuItems = [
     {
-      title: 'Dashboard',
+      title: 'Bảng điều khiển',
       icon: 'dashboard',
       iconType: 'MaterialIcons',
       screen: 'AdminDashboard',
       color: Colors.primary,
     },
     {
-      title: 'Customer Management',
+      title: 'Quản lý khách hàng',
       icon: 'users',
       iconType: 'Feather',
       screen: 'CustomerManagement',
       color: Colors.success,
     },
     {
-      title: 'Staff Management',
+      title: 'Quản lý nhân viên',
       icon: 'user-friends',
       iconType: 'FontAwesome5',
       screen: 'StaffManagement',
       color: Colors.warning,
     },
     {
-      title: 'Product Management',
+      title: 'Quản lý sản phẩm',
       icon: 'package',
       iconType: 'Feather',
       screen: 'ProductManagement',
       color: Colors.info,
     },
     {
-      title: 'Category Management',
+      title: 'Quản lý danh mục',
       icon: 'grid',
       iconType: 'Feather',
       screen: 'CategoryManagement',
       color: Colors.secondary,
     },
     {
-      title: 'Cart Management',
+      title: 'Quản lý giỏ hàng',
       icon: 'shopping-cart',
       iconType: 'Feather',
       screen: 'CartManagement',
       color: Colors.primary,
     },
     {
-      title: 'Order Management',
+      title: 'Quản lý đơn hàng',
       icon: 'shopping-bag',
       iconType: 'Feather',
       screen: 'OrderManagement',
       color: Colors.error,
     },
     {
-      title: 'Reports',
+      title: 'Báo cáo',
       icon: 'bar-chart',
       iconType: 'Feather',
       screen: 'Reports',
@@ -114,8 +114,8 @@ const CustomDrawerContent = ({ navigation }) => {
         <View style={styles.adminAvatar}>
           <MaterialIcons name="admin-panel-settings" size={40} color={Colors.whiteColor} />
         </View>
-        <Text style={styles.adminName}>Admin Panel</Text>
-        <Text style={styles.adminEmail}>Fashion E-Commerce</Text>
+        <Text style={styles.adminName}>Bảng quản trị</Text>
+        <Text style={styles.adminEmail}>Happy-Field App</Text>
       </View>
 
       {/* Menu Items */}
@@ -139,7 +139,7 @@ const CustomDrawerContent = ({ navigation }) => {
       <View style={styles.drawerFooter}>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Feather name="log-out" size={20} color={Colors.error} />
-          <Text style={styles.logoutText}>Logout</Text>
+          <Text style={styles.logoutText}>Đăng xuất</Text>
         </TouchableOpacity>
         <Text style={styles.versionText}>Version 1.0.0</Text>
       </View>
@@ -170,7 +170,7 @@ const AdminDrawerNavigator = () => {
         component={AdminDashboardScreen}
         options={{
           title: 'Dashboard',
-          headerTitle: 'Admin Dashboard',
+          headerTitle: 'Bảng điều khiển quản trị',
         }}
       />
       <Drawer.Screen
@@ -178,7 +178,7 @@ const AdminDrawerNavigator = () => {
         component={CustomerManagementScreen}
         options={{
           title: 'Customers',
-          headerTitle: 'Customer Management',
+          headerTitle: 'Quản lý khách hàng',
         }}
       />
       <Drawer.Screen
@@ -186,7 +186,7 @@ const AdminDrawerNavigator = () => {
         component={StaffManagementScreen}
         options={{
           title: 'Staff',
-          headerTitle: 'Staff Management',
+          headerTitle: 'Quản lý nhân viên',
         }}
       />
       <Drawer.Screen
@@ -194,7 +194,7 @@ const AdminDrawerNavigator = () => {
         component={ProductManagementScreen}
         options={{
           title: 'Products',
-          headerTitle: 'Product Management',
+          headerTitle: 'Quản lý sản phẩm',
         }}
       />
       <Drawer.Screen
@@ -202,7 +202,7 @@ const AdminDrawerNavigator = () => {
         component={CategoryManagementScreen}
         options={{
           title: 'Categories',
-          headerTitle: 'Category Management',
+          headerTitle: 'Quản lý danh mục',
         }}
       />
       <Drawer.Screen
@@ -210,7 +210,7 @@ const AdminDrawerNavigator = () => {
         component={CartManagementScreen}
         options={{
           title: 'Carts',
-          headerTitle: 'Cart Management',
+          headerTitle: 'Quản lý giỏ hàng',
         }}
       />
       <Drawer.Screen
@@ -218,7 +218,7 @@ const AdminDrawerNavigator = () => {
         component={OrderManagementScreen}
         options={{
           title: 'Orders',
-          headerTitle: 'Order Management',
+          headerTitle: 'Quản lý đơn hàng',
         }}
       />
       <Drawer.Screen
@@ -226,7 +226,7 @@ const AdminDrawerNavigator = () => {
         component={ReportsScreen}
         options={{
           title: 'Reports',
-          headerTitle: 'Reports & Analytics',
+          headerTitle: 'Báo cáo & Phân tích',
         }}
       />
     </Drawer.Navigator>

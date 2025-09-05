@@ -69,8 +69,6 @@ export default function AdminDashboardScreen({ navigation }) {
         apiService.getTopProducts(5),
       ]);
 
-      console.log("TOTAL PRODUCT: ", productsRes.data)
-
       setDashboardData({
         totalCustomers: customersRes.data.data.total || 0,
         totalStaff: staffRes.data.data.total || 0,
@@ -112,42 +110,42 @@ export default function AdminDashboardScreen({ navigation }) {
 
   const quickActions = [
     {
-      title: "View Orders",
+      title: "Xem đơn hàng",
       icon: "shopping-bag",
       iconType: "Feather",
       color: Colors.primary,
       onPress: () => navigation.navigate("OrderManagementScreen"),
     },
     {
-      title: "Manage Staff",
+      title: "Quản lý nhân viên",
       icon: "users",
       iconType: "Feather",
       color: Colors.secondary,
       onPress: () => navigation.navigate("StaffManagementScreen"),
     },
     {
-      title: "Customers",
+      title: "Khách hàng",
       icon: "user-friends",
       iconType: "FontAwesome5",
       color: Colors.warning,
       onPress: () => navigation.navigate("CustomerManagementScreen"),
     },
     {
-      title: "Products",
+      title: "Các sản phẩm",
       icon: "package",
       iconType: "Feather",
       color: Colors.blueProduct,
       onPress: () => navigation.navigate("ProductManagementScreen"),
     },
     {
-      title: "Reports",
+      title: "Báo cáo",
       icon: "bar-chart",
       iconType: "Feather",
       color: "#9c27b0",
       onPress: () => navigation.navigate("ReportsScreen"),
     },
     {
-      title: "Settings",
+      title: "Cài đặt",
       icon: "settings",
       iconType: "Feather",
       color: Colors.textSecondary,
@@ -161,7 +159,7 @@ export default function AdminDashboardScreen({ navigation }) {
         colors={["#1a73e8", "#4285f4"]}
         style={styles.loadingContainer}
       >
-        <Text style={styles.loadingText}>Loading Dashboard...</Text>
+        <Text style={styles.loadingText}>Đang tải Bảng điều khiển...</Text>
       </LinearGradient>
     );
   }
@@ -177,15 +175,15 @@ export default function AdminDashboardScreen({ navigation }) {
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>Admin Dashboard</Text>
-            <Text style={styles.headerSubtitle}>Welcome back, Admin!</Text>
+            <Text style={styles.headerTitle}>Bảng điều khiển</Text>
+            <Text style={styles.headerSubtitle}>Chào mừng trở lại, Admin!</Text>
           </View>
 
           {/* Metrics Cards */}
           <View style={styles.metricsContainer}>
             <View style={styles.metricsRow}>
               <DashboardMetricCard
-                title="Total Customers"
+                title="Tổng số khách hàng"
                 value={dashboardData.totalCustomers}
                 icon="users"
                 iconType="Feather"
@@ -193,7 +191,7 @@ export default function AdminDashboardScreen({ navigation }) {
                 style={styles.metricCard}
               />
               <DashboardMetricCard
-                title="Total Staff"
+                title="Tổng số nhân viên"
                 value={dashboardData.totalStaff}
                 icon="user-check"
                 iconType="Feather"
@@ -203,7 +201,7 @@ export default function AdminDashboardScreen({ navigation }) {
             </View>
             <View style={styles.metricsRow}>
               <DashboardMetricCard
-                title="Total Products"
+                title="Tổng sản phẩm"
                 value={dashboardData.totalProducts}
                 icon="package"
                 iconType="Feather"
@@ -211,7 +209,7 @@ export default function AdminDashboardScreen({ navigation }) {
                 style={styles.metricCard}
               />
               <DashboardMetricCard
-                title="Categories"
+                title="Danh mục"
                 value={dashboardData.totalCategories}
                 icon="grid"
                 iconType="Feather"
@@ -221,7 +219,7 @@ export default function AdminDashboardScreen({ navigation }) {
             </View>
             <View style={styles.metricsRow}>
               <DashboardMetricCard
-                title="Total Carts"
+                title="Tổng số giỏ hàng"
                 value={dashboardData.totalCarts}
                 icon="shopping-cart"
                 iconType="Feather"
@@ -229,7 +227,7 @@ export default function AdminDashboardScreen({ navigation }) {
                 style={styles.metricCard}
               />
               <DashboardMetricCard
-                title="Active Carts"
+                title="Giỏ hàng đang hoạt động"
                 value={dashboardData.activeCarts}
                 icon="shopping-bag"
                 iconType="Feather"
@@ -241,27 +239,27 @@ export default function AdminDashboardScreen({ navigation }) {
 
           {/* Revenue Cards */}
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Revenue Overview</Text>
+            <Text style={styles.sectionTitle}>Tổng quan về doanh thu</Text>
             <View style={styles.revenueContainer}>
               <DashboardMetricCard
-                title="Today's Revenue"
-                value={`$${dashboardData.todayRevenue.toLocaleString()}`}
+                title="Doanh thu hôm nay"
+                value={`VND ${dashboardData.todayRevenue.toLocaleString()}`}
                 icon="dollar-sign"
                 iconType="Feather"
                 color={Colors.success}
                 style={styles.revenueCard}
               />
               <DashboardMetricCard
-                title="This Week"
-                value={`$${dashboardData.weekRevenue.toLocaleString()}`}
+                title="Tuần này"
+                value={`VND ${dashboardData.weekRevenue.toLocaleString()}`}
                 icon="trending-up"
                 iconType="Feather"
                 color={Colors.primary}
                 style={styles.revenueCard}
               />
               <DashboardMetricCard
-                title="This Month"
-                value={`$${dashboardData.monthRevenue.toLocaleString()}`}
+                title="Tháng này"
+                value={`VND ${dashboardData.monthRevenue.toLocaleString()}`}
                 icon="calendar"
                 iconType="Feather"
                 color={Colors.secondary}
@@ -272,18 +270,18 @@ export default function AdminDashboardScreen({ navigation }) {
 
           {/* Orders Overview */}
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Orders Overview</Text>
+            <Text style={styles.sectionTitle}>Tổng quan đơn hàng</Text>
             <View style={styles.ordersContainer}>
               <View style={styles.orderCard}>
-                <Text style={styles.orderCardTitle}>Today</Text>
+                <Text style={styles.orderCardTitle}>Hôm nay</Text>
                 <Text style={styles.orderCardValue}>{dashboardData.todayOrders}</Text>
               </View>
               <View style={styles.orderCard}>
-                <Text style={styles.orderCardTitle}>This Week</Text>
+                <Text style={styles.orderCardTitle}>Tuần này</Text>
                 <Text style={styles.orderCardValue}>{dashboardData.weekOrders}</Text>
               </View>
               <View style={styles.orderCard}>
-                <Text style={styles.orderCardTitle}>This Month</Text>
+                <Text style={styles.orderCardTitle}>Tháng này</Text>
                 <Text style={styles.orderCardValue}>{dashboardData.monthOrders}</Text>
               </View>
             </View>
@@ -291,14 +289,14 @@ export default function AdminDashboardScreen({ navigation }) {
 
           {/* Charts Section */}
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Analytics</Text>
+            <Text style={styles.sectionTitle}>Phân tích</Text>
             <SalesChart />
             <OrderStatusChart />
           </View>
 
           {/* Quick Actions */}
           <View style={styles.sectionContainer}>
-            <Text style={styles.sectionTitle}>Quick Actions</Text>
+            <Text style={styles.sectionTitle}>Hành động nhanh</Text>
             <View style={styles.quickActionsContainer}>
               {quickActions.map((action, index) => (
                 <QuickActionCard
@@ -317,11 +315,11 @@ export default function AdminDashboardScreen({ navigation }) {
           {/* Recent Orders */}
           <View style={styles.sectionContainer}>
             <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Recent Orders</Text>
+              <Text style={styles.sectionTitle}>Đơn hàng gần đây</Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate("OrderManagementScreen")}
               >
-                <Text style={styles.viewAllText}>View All</Text>
+                <Text style={styles.viewAllText}>Xem tất cả</Text>
               </TouchableOpacity>
             </View>
             <RecentOrdersList orders={recentOrders} />

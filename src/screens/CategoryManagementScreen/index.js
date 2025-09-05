@@ -307,17 +307,6 @@ const CategoryManagementScreen = () => {
                     <Text style={styles.metaText}>{childCategories.length} subcategories</Text>
                   </View>
                 )}
-                <View style={[
-                  styles.statusBadge,
-                  { backgroundColor: item.is_active ? Colors.success + '20' : Colors.error + '20' }
-                ]}>
-                  <Text style={[
-                    styles.statusText,
-                    { color: item.is_active ? Colors.success : Colors.error }
-                  ]}>
-                    {item.is_active ? 'Active' : 'Inactive'}
-                  </Text>
-                </View>
               </View>
             </View>
           </View>
@@ -373,7 +362,7 @@ const CategoryManagementScreen = () => {
             <Feather name="x" size={24} color={Colors.blackColor} />
           </TouchableOpacity>
           <Text style={styles.modalTitle}>
-            {editingCategory ? 'Edit Category' : 'Add New Category'}
+            {editingCategory ? 'Chỉnh sửa danh mục' : 'Thêm danh mục mới'}
           </Text>
           <TouchableOpacity
             onPress={handleSubmit}
@@ -383,7 +372,7 @@ const CategoryManagementScreen = () => {
             {loading ? (
               <ActivityIndicator size="small" color={Colors.primary} />
             ) : (
-              <Text style={styles.saveButtonText}>Save</Text>
+              <Text style={styles.saveButtonText}>Lưu</Text>
             )}
           </TouchableOpacity>
         </View>
@@ -391,18 +380,18 @@ const CategoryManagementScreen = () => {
         <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
           {/* Category Name */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Category Name *</Text>
+            <Text style={styles.inputLabel}>Tên danh mục *</Text>
             <TextInput
               style={styles.textInput}
               value={formData.category_name}
               onChangeText={(text) => setFormData({...formData, category_name: text})}
-              placeholder="Enter category name"
+              placeholder="Nhập tên danh mục"
             />
           </View>
 
           {/* Description */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Description</Text>
+            <Text style={styles.inputLabel}>Mô tả</Text>
             <TextInput
               style={[styles.textInput, styles.textArea]}
               value={formData.description}
@@ -415,10 +404,10 @@ const CategoryManagementScreen = () => {
 
           {/* Parent Category */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Parent Category (Optional)</Text>
+            <Text style={styles.inputLabel}>Danh mục cha (Tùy chọn)</Text>
             <View style={styles.pickerContainer}>
               <Text style={styles.pickerText}>
-                {categories.find(cat => cat.category_id === formData.parent_category_id)?.category_name || 'None (Top Level)'}
+                {categories.find(cat => cat.category_id === formData.parent_category_id)?.category_name || 'Không có (Cấp cao nhất)'}
               </Text>
             </View>
             <ScrollView horizontal style={styles.parentCategoryList}>
@@ -456,24 +445,12 @@ const CategoryManagementScreen = () => {
             </ScrollView>
           </View>
 
-          {/* Sort Order */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Sort Order</Text>
-            <TextInput
-              style={styles.textInput}
-              value={formData.sort_order}
-              onChangeText={(text) => setFormData({...formData, sort_order: text})}
-              placeholder="0"
-              keyboardType="numeric"
-            />
-          </View>
-
           {/* Category Image */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Category Image</Text>
+            <Text style={styles.inputLabel}>Hình ảnh danh mục</Text>
             <TouchableOpacity style={styles.imagePickerButton} onPress={handleImagePicker}>
               <Feather name="image" size={20} color={Colors.primary} />
-              <Text style={styles.imagePickerText}>Select Image</Text>
+              <Text style={styles.imagePickerText}>Chọn hình ảnh</Text>
             </TouchableOpacity>
             
             {selectedImage && (
@@ -487,26 +464,6 @@ const CategoryManagementScreen = () => {
                 </TouchableOpacity>
               </View>
             )}
-          </View>
-
-          {/* Active Status */}
-          <View style={styles.toggleContainer}>
-            <TouchableOpacity
-              style={[styles.toggleButton, formData.is_active && styles.toggleButtonActive]}
-              onPress={() => setFormData({...formData, is_active: !formData.is_active})}
-            >
-              <Text style={[
-                styles.toggleText,
-                formData.is_active && styles.toggleTextActive
-              ]}>
-                Active Category
-              </Text>
-              <Feather
-                name={formData.is_active ? "check-circle" : "circle"}
-                size={20}
-                color={formData.is_active ? Colors.whiteColor : Colors.textSecondary}
-              />
-            </TouchableOpacity>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -523,7 +480,7 @@ const CategoryManagementScreen = () => {
         <Feather name="search" size={20} color={Colors.textSecondary} />
         <TextInput
           style={styles.searchInput}
-          placeholder="Search categories..."
+          placeholder="Tìm kiếm danh mục..."
           value={searchQuery}
           onChangeText={setSearchQuery}
         />

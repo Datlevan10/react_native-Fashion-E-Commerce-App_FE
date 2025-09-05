@@ -50,7 +50,7 @@ const getAdminProfile = async () => {
 
 // Admin Management APIs
 const getAllStaffs = async () => {
-  return api.get("/admin/staffs");
+  return api.get("/staffs");
 };
 
 const toggleStaffStatus = async (staffId) => {
@@ -369,7 +369,7 @@ const getOrderDetails = async (orderId) => {
 
 // Staff Management APIs
 const getAllStaff = async () => {
-  return api.get("/admin/staff");
+  return api.get("/staffs");
 };
 
 const getStaffById = async (staffId) => {

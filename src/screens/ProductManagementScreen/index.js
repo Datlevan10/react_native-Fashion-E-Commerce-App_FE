@@ -387,7 +387,7 @@ const ProductManagementScreen = () => {
             <Feather name="x" size={24} color={Colors.blackColor} />
           </TouchableOpacity>
           <Text style={styles.modalTitle}>
-            {editingProduct ? 'Edit Product' : 'Add New Product'}
+            {editingProduct ? 'Chỉnh sửa sản phẩm' : 'Thêm sản phẩm mới'}
           </Text>
           <TouchableOpacity
             onPress={handleSubmit}
@@ -397,7 +397,7 @@ const ProductManagementScreen = () => {
             {loading ? (
               <ActivityIndicator size="small" color={Colors.primary} />
             ) : (
-              <Text style={styles.saveButtonText}>Save</Text>
+              <Text style={styles.saveButtonText}>Lưu</Text>
             )}
           </TouchableOpacity>
         </View>
@@ -405,7 +405,7 @@ const ProductManagementScreen = () => {
         <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
           {/* Product Name */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Product Name *</Text>
+            <Text style={styles.inputLabel}>Tên sản phẩm *</Text>
             <TextInput
               style={styles.textInput}
               value={formData.product_name}
@@ -416,7 +416,7 @@ const ProductManagementScreen = () => {
 
           {/* Description */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Description *</Text>
+            <Text style={styles.inputLabel}>Mô tả *</Text>
             <TextInput
               style={[styles.textInput, styles.textArea]}
               value={formData.description}
@@ -430,7 +430,7 @@ const ProductManagementScreen = () => {
           {/* Prices */}
           <View style={styles.rowContainer}>
             <View style={[styles.inputContainer, styles.halfWidth]}>
-              <Text style={styles.inputLabel}>New Price *</Text>
+              <Text style={styles.inputLabel}>Giá mới *</Text>
               <TextInput
                 style={styles.textInput}
                 value={formData.new_price}
@@ -440,7 +440,7 @@ const ProductManagementScreen = () => {
               />
             </View>
             <View style={[styles.inputContainer, styles.halfWidth]}>
-              <Text style={styles.inputLabel}>Old Price</Text>
+              <Text style={styles.inputLabel}>Giá cũ</Text>
               <TextInput
                 style={styles.textInput}
                 value={formData.old_price}
@@ -453,7 +453,7 @@ const ProductManagementScreen = () => {
 
           {/* Category */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Category *</Text>
+            <Text style={styles.inputLabel}>Danh mục *</Text>
             <View style={styles.pickerContainer}>
               <Text style={styles.pickerText}>
                 {categories.find(cat => cat.category_id.toString() === formData.category_id)?.category_name || 'Select category'}
@@ -482,7 +482,7 @@ const ProductManagementScreen = () => {
 
           {/* Sizes and Colors */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Sizes (comma separated)</Text>
+            <Text style={styles.inputLabel}>Khối lượnglượng (1kg : 1, 700g : 700  ... phân cách bằng dấu phẩy)</Text>
             <TextInput
               style={styles.textInput}
               value={formData.sizes}
@@ -492,7 +492,7 @@ const ProductManagementScreen = () => {
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Colors (comma separated)</Text>
+            <Text style={styles.inputLabel}>Màu sắc (phân cách bằng dấu phẩy)</Text>
             <TextInput
               style={styles.textInput}
               value={formData.colors}
@@ -501,24 +501,12 @@ const ProductManagementScreen = () => {
             />
           </View>
 
-          {/* Stock */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Quantity in Stock</Text>
-            <TextInput
-              style={styles.textInput}
-              value={formData.quantity_in_stock}
-              onChangeText={(text) => setFormData({...formData, quantity_in_stock: text})}
-              placeholder="0"
-              keyboardType="numeric"
-            />
-          </View>
-
           {/* Images */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Product Images</Text>
+            <Text style={styles.inputLabel}>Hình ảnh sản phẩm</Text>
             <TouchableOpacity style={styles.imagePickerButton} onPress={handleImagePicker}>
               <Feather name="image" size={20} color={Colors.primary} />
-              <Text style={styles.imagePickerText}>Select Images</Text>
+              <Text style={styles.imagePickerText}>Chọn hình ảnh</Text>
             </TouchableOpacity>
             
             {selectedImages.length > 0 && (
@@ -537,26 +525,6 @@ const ProductManagementScreen = () => {
               </ScrollView>
             )}
           </View>
-
-          {/* Featured Toggle */}
-          <View style={styles.toggleContainer}>
-            <TouchableOpacity
-              style={[styles.toggleButton, formData.is_featured && styles.toggleButtonActive]}
-              onPress={() => setFormData({...formData, is_featured: !formData.is_featured})}
-            >
-              <Text style={[
-                styles.toggleText,
-                formData.is_featured && styles.toggleTextActive
-              ]}>
-                Featured Product
-              </Text>
-              <Feather
-                name={formData.is_featured ? "check-circle" : "circle"}
-                size={20}
-                color={formData.is_featured ? Colors.whiteColor : Colors.textSecondary}
-              />
-            </TouchableOpacity>
-          </View>
         </ScrollView>
       </SafeAreaView>
     </Modal>
@@ -569,7 +537,7 @@ const ProductManagementScreen = () => {
         <Feather name="search" size={20} color={Colors.textSecondary} />
         <TextInput
           style={styles.searchInput}
-          placeholder="Search products..."
+          placeholder="Tìm kiếm sản phẩm..."
           value={searchQuery}
           onChangeText={setSearchQuery}
         />

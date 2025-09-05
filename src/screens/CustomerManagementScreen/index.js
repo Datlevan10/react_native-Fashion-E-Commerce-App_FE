@@ -134,26 +134,13 @@ export default function CustomerManagementScreen({ navigation }) {
   const renderHeader = () => (
     <View style={styles.header}>
       <View style={styles.headerTop}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Feather name="arrow-left" size={24} color={Colors.whiteColor} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Customer Management</Text>
-        <TouchableOpacity
-          style={styles.analyticsButton}
-          onPress={() => navigation.navigate("CustomerAnalyticsScreen")}
-        >
-          <Feather name="bar-chart-2" size={24} color={Colors.whiteColor} />
-        </TouchableOpacity>
       </View>
 
       <View style={styles.searchContainer}>
         <Feather name="search" size={20} color={Colors.textSecondary} />
         <TextInput
           style={styles.searchInput}
-          placeholder="Search customers by name, email, or phone..."
+          placeholder="Tìm kiếm khách hàng theo tên, email hoặc số điện thoại..."
           placeholderTextColor={Colors.textSecondary}
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -168,19 +155,19 @@ export default function CustomerManagementScreen({ navigation }) {
       <View style={styles.statsContainer}>
         <View style={styles.statCard}>
           <Text style={styles.statValue}>{customers.length}</Text>
-          <Text style={styles.statLabel}>Total Customers</Text>
+          <Text style={styles.statLabel}>Tổng số khách hàng</Text>
         </View>
         <View style={styles.statCard}>
           <Text style={styles.statValue}>
             {customers.filter((c) => c.status === "active").length}
           </Text>
-          <Text style={styles.statLabel}>Active</Text>
+          <Text style={styles.statLabel}>Hoạt động</Text>
         </View>
         <View style={styles.statCard}>
           <Text style={styles.statValue}>
             {customers.filter((c) => c.total_orders > 0).length}
           </Text>
-          <Text style={styles.statLabel}>With Orders</Text>
+          <Text style={styles.statLabel}>Đơn hàng</Text>
         </View>
       </View>
     </View>

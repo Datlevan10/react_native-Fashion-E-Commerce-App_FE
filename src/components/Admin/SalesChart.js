@@ -24,7 +24,7 @@ const SalesChart = ({ data = [] }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Sales This Week</Text>
+        <Text style={styles.title}>Doanh số tuần này</Text>
         <FontAwesome5 name="chart-line" size={16} color={Colors.primary} />
       </View>
       
@@ -35,7 +35,7 @@ const SalesChart = ({ data = [] }) => {
             return (
               <View key={index} style={styles.barContainer}>
                 <View style={styles.barColumn}>
-                  <Text style={styles.valueText}>${(item.sales / 1000).toFixed(1)}k</Text>
+                  <Text style={styles.valueText}>VND{(item.sales / 1000).toFixed(1)}k</Text>
                   <View
                     style={[
                       styles.bar,
@@ -56,13 +56,13 @@ const SalesChart = ({ data = [] }) => {
 
       <View style={styles.summary}>
         <View style={styles.summaryItem}>
-          <Text style={styles.summaryLabel}>Total Sales</Text>
+          <Text style={styles.summaryLabel}>Tổng doanh số</Text>
           <Text style={styles.summaryValue}>
             ${chartData.reduce((sum, item) => sum + item.sales, 0).toLocaleString()}
           </Text>
         </View>
         <View style={styles.summaryItem}>
-          <Text style={styles.summaryLabel}>Average</Text>
+          <Text style={styles.summaryLabel}>Trung bình</Text>
           <Text style={styles.summaryValue}>
             ${Math.round(chartData.reduce((sum, item) => sum + item.sales, 0) / chartData.length).toLocaleString()}
           </Text>

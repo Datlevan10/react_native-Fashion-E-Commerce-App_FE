@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   content: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
   },
   iconContainer: {
@@ -69,19 +69,19 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.grayBgColor,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 12,
   },
   textContainer: {
     flex: 1,
+    alignItems: 'center'
   },
   value: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: "500",
     color: Colors.textPrimary,
     marginBottom: 2,
   },
   title: {
-    fontSize: 14,
+    fontSize: 16,
     color: Colors.textSecondary,
     fontWeight: "500",
   },

@@ -6,11 +6,11 @@ import Colors from "../../styles/Color";
 const OrderStatusChart = ({ data = [] }) => {
   // Default data for demonstration
   const defaultData = [
-    { status: "Pending", count: 25, color: Colors.warning },
-    { status: "Confirmed", count: 45, color: Colors.blueProduct },
-    { status: "Shipped", count: 60, color: Colors.primary },
-    { status: "Delivered", count: 120, color: Colors.success },
-    { status: "Cancelled", count: 8, color: Colors.error },
+    { status: "Chưa giải quyết", count: 25, color: Colors.warning },
+    { status: "Đã xác nhận", count: 45, color: Colors.blueProduct },
+    { status: "Đã vận chuyển", count: 60, color: Colors.primary },
+    { status: "Đã giao hàng", count: 120, color: Colors.success },
+    { status: "Đã hủy", count: 8, color: Colors.error },
   ];
 
   const chartData = data.length > 0 ? data : defaultData;
@@ -36,7 +36,7 @@ const OrderStatusChart = ({ data = [] }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Order Status Distribution</Text>
+        <Text style={styles.title}>Phân phối trạng thái đơn hàng</Text>
         <FontAwesome5 name="chart-pie" size={16} color={Colors.primary} />
       </View>
 
@@ -61,7 +61,7 @@ const OrderStatusChart = ({ data = [] }) => {
             })}
           </View>
           <View style={styles.totalContainer}>
-            <Text style={styles.totalLabel}>Total Orders</Text>
+            <Text style={styles.totalLabel}>Tổng số đơn hàng</Text>
             <Text style={styles.totalValue}>{total}</Text>
           </View>
         </View>
