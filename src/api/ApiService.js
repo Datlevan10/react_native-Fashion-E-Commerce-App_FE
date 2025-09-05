@@ -412,19 +412,19 @@ const getAllProductsAdmin = async () => {
 };
 
 const createProduct = async (productData) => {
-  return api.post("/admin/products", productData, {
+  return api.post("/products", productData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
 
 const updateProduct = async (productId, productData) => {
-  return api.put(`/admin/products/${productId}`, productData, {
+  return api.put(`/products/${productId}`, productData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
 
 const deleteProduct = async (productId) => {
-  return api.delete(`/admin/products/${productId}`);
+  return api.delete(`/products/${productId}`);
 };
 
 // Reports APIs

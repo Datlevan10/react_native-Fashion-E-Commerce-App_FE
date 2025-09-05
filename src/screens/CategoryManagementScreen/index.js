@@ -283,9 +283,9 @@ const CategoryManagementScreen = () => {
         <View style={styles.categoryHeader}>
           <View style={styles.categoryInfo}>
             <View style={styles.categoryImageContainer}>
-              {item.image_url ? (
+              {item.image_category ? (
                 <Image
-                  source={{ uri: `${API_BASE_URL}${item.image_url}` }}
+                  source={{ uri: `${API_BASE_URL}${item.image_category}` }}
                   style={styles.categoryImage}
                 />
               ) : (
