@@ -19,6 +19,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import ManagerProfileScreen from "./screens/ProfileScreen/ManagerProfileScreen";
 import DetailProfileScreen from "./screens/ProfileScreen/DetailProfileScreen";
 import SettingsScreen from "./screens/ProfileScreen/SettingsScreen";
+import MyOrderScreen from "./screens/ProfileScreen/MyOrderScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen/ForgotPasswordScreen";
 import CheckoutScreen from "./screens/CheckoutScreen";
@@ -292,6 +293,11 @@ export default function App() {
             <Stack.Screen
               name="MyOrdersScreen"
               component={MyOrdersScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="MyOrderScreen"
+              component={MyOrderScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen

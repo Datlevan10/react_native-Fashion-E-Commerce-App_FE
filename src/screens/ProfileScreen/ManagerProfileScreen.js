@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -9,7 +9,9 @@ import {
   Image,
   Modal,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  Alert,
+  ActivityIndicator
 } from "react-native";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { PanGestureHandler } from "react-native-gesture-handler";
@@ -18,25 +20,102 @@ import PasswordTextInput from "../../components/TextField/PasswordTextInput";
 import CustomHandleButton from "../../components/Button/CustomHandleButton";
 import imageTest from "../../../assets/image/profile.png";
 import Colors from "../../styles/Color";
+import ApiService from "../../api/ApiService";
+import * as SecureStore from "expo-secure-store";
+import * as ImagePicker from 'expo-image-picker';
 
 export default function ManagerProfileScreen({ navigation }) {
+  const [customer, setCustomer] = useState(null);
   const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [address, setAddress] = useState("");
+  const [gender, setGender] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [imageUri, setImageUri] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
 
-  const handleSave = () => {
-    console.log("Data save", {
-      userName,
-      fullName,
-      email,
-      phoneNumber,
-      password,
-      address,
-    });
+  useEffect(() => {
+    fetchCustomerData();
+  }, []);
+
+  const fetchCustomerData = async () => {
+    try {
+      const customerId = await SecureStore.getItemAsync("customer_id");
+      if (customerId) {
+        const response = await ApiService.getInfoCustomerByCustomerId(customerId);
+        const customerData = response.data.data;
+        
+        setCustomer(customerData);
+        setUserName(customerData.user_name || "");
+        setFullName(customerData.full_name || "");
+        setEmail(customerData.email || "");
+        setPhoneNumber(customerData.phone_number || "");
+        setAddress(customerData.address || "");
+        setGender(customerData.gender || "");
+        setDateOfBirth(customerData.date_of_birth || "");
+        setImageUri(customerData.image || null);
+      }
+    } catch (error) {
+      console.error("Error fetching customer data:", error);
+      Alert.alert("Error", "Failed to load customer data");
+    }
+  };
+
+  const handleSave = async () => {
+    if (!customer) return;
+    
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      
+      // Only append fields that have been changed
+      if (userName !== customer.user_name) formData.append('user_name', userName);
+      if (fullName !== customer.full_name) formData.append('full_name', fullName);
+      if (email !== customer.email) formData.append('email', email);
+      if (phoneNumber !== customer.phone_number) formData.append('phone_number', phoneNumber);
+      if (address !== customer.address) formData.append('address', address);
+      if (gender !== customer.gender) formData.append('gender', gender);
+      if (dateOfBirth !== customer.date_of_birth) formData.append('date_of_birth', dateOfBirth);
+      
+      // Only append password if it's not empty
+      if (password) {
+        formData.append('password', password);
+      }
+      
+      // Handle image upload
+      if (imageUri && imageUri !== customer.image) {
+        const uriParts = imageUri.split('.');
+        const fileType = uriParts[uriParts.length - 1];
+        
+        formData.append('image', {
+          uri: imageUri,
+          name: `photo.${fileType}`,
+          type: `image/${fileType}`
+        });
+      }
+
+      const response = await ApiService.updateCustomer(customer.id, formData);
+      
+      if (response.data) {
+        Alert.alert(
+          "Success",
+          "Profile updated successfully",
+          [{ text: "OK", onPress: () => navigation.goBack() }]
+        );
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      Alert.alert(
+        "Error", 
+        error.response?.data?.message || "Failed to update profile"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleModal = () => {
@@ -47,6 +126,54 @@ export default function ManagerProfileScreen({ navigation }) {
     if (event.nativeEvent.translationY > 50) {
       toggleModal();
     }
+  };
+
+  const pickImage = async () => {
+    // Request permission
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to change your profile picture!');
+      return;
+    }
+
+    // Launch image picker
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+      toggleModal();
+    }
+  };
+
+  const takePhoto = async () => {
+    // Request permission
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission Denied', 'Sorry, we need camera permissions to take a photo!');
+      return;
+    }
+
+    // Launch camera
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+      toggleModal();
+    }
+  };
+
+  const deleteImage = () => {
+    setImageUri(null);
+    toggleModal();
   };
 
   return (
@@ -69,7 +196,10 @@ export default function ManagerProfileScreen({ navigation }) {
       </View>
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.avatarContainer}>
-          <Image source={imageTest} style={styles.avatar} />
+          <Image 
+            source={imageUri ? { uri: imageUri } : imageTest} 
+            style={styles.avatar} 
+          />
           <TouchableOpacity
             style={styles.cameraIconContainer}
             onPress={toggleModal}
@@ -106,7 +236,7 @@ export default function ManagerProfileScreen({ navigation }) {
         <PasswordTextInput
           value={password}
           onChangeText={setPassword}
-          placeholder="Enter new your password"
+          placeholder="Enter new your password (leave blank to keep current)"
         />
         <CustomTextInput
           value={address}
@@ -115,10 +245,18 @@ export default function ManagerProfileScreen({ navigation }) {
           prefixIcon="location-on"
         />
         <CustomHandleButton
-          buttonText="Save"
+          buttonText={loading ? "Saving..." : "Save"}
           buttonColor="#179e7a"
           onPress={handleSave}
+          disabled={loading}
         />
+        {loading && (
+          <ActivityIndicator 
+            size="large" 
+            color="#179e7a" 
+            style={{ marginTop: 20 }}
+          />
+        )}
         <Modal
           visible={isModalVisible}
           transparent={true}
@@ -130,7 +268,13 @@ export default function ManagerProfileScreen({ navigation }) {
               <View style={styles.dragHandle} />
               <TouchableOpacity
                 style={styles.modalOptionRow}
-                onPress={() => alert("View picture")}
+                onPress={() => {
+                  if (imageUri) {
+                    Alert.alert("Current Image", imageUri);
+                  } else {
+                    Alert.alert("No Image", "No custom image set");
+                  }
+                }}
               >
                 <View style={styles.IconBox}>
                   <MaterialIcons name="visibility" size={23} color="#333" />
@@ -139,16 +283,25 @@ export default function ManagerProfileScreen({ navigation }) {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.modalOptionRow}
-                onPress={() => alert("Change picture")}
+                onPress={pickImage}
+              >
+                <View style={styles.IconBox}>
+                  <MaterialIcons name="photo-library" size={23} color="#333" />
+                </View>
+                <Text style={styles.modalOptionText}>Chọn từ thư viện</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalOptionRow}
+                onPress={takePhoto}
               >
                 <View style={styles.IconBox}>
                   <MaterialIcons name="photo-camera" size={23} color="#333" />
                 </View>
-                <Text style={styles.modalOptionText}>Thay đổi hình ảnh</Text>
+                <Text style={styles.modalOptionText}>Chụp ảnh mới</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.modalOptionRow}
-                onPress={() => alert("Delete picture")}
+                onPress={deleteImage}
               >
                 <View style={styles.IconBox}>
                   <MaterialIcons name="delete" size={23} color="#333" />

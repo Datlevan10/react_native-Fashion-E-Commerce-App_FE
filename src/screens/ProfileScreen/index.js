@@ -95,20 +95,20 @@ export default function ProfileScreen({ navigation }) {
     console.log("Navigating to:", title);
     
     switch (title) {
-      case "Settings":
+      case "Cài đặt":
         navigation.navigate("SettingsScreen");
         break;
-      case "My Order":
-        navigation.navigate("MyOrdersScreen");
+      case "Đơn hàng của tôi":
+        navigation.navigate("MyOrderScreen");
         break;
-      case "Notifications":
+      case "Thông báo":
         navigation.navigate("NotificationScreen");
         break;
-      case "Language":
+      case "Ngôn ngữ":
         // Could navigate to a language selector or settings
         console.log("Language settings pressed");
         break;
-      case "Payment & Payout":
+      case "Thanh toán và chi trả":
         console.log("Payment settings pressed");
         break;
       default:

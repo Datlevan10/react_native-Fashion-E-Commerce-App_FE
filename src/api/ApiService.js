@@ -171,6 +171,12 @@ const getInfoCustomerByCustomerId = async (customerId) => {
   return api.get(`/customers/${customerId}`);
 };
 
+const updateCustomer = async (customerId, data) => {
+  return api.put(`/customers/${customerId}`, data, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
 // Cart, Cart Detail
 const addProductToCart = async (productData) => {
   return api.post("/carts", productData);
@@ -498,6 +504,7 @@ export default {
   getReviewByProductIdLimit,
   addProductToFavorite,
   getInfoCustomerByCustomerId,
+  updateCustomer,
   getFavoriteProductByCustomerId,
   removeProductFromFavorite,
   getNotification,
