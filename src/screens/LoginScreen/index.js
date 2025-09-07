@@ -181,7 +181,7 @@ export default function LoginScreen({ navigation }) {
         <View style={styles.container}>
           <View>
             <Text style={styles.loginText}>Đăng nhập</Text>
-            <Text style={styles.subtitleText}>Chào mừng trở lại với Happy Fiedl</Text>
+            <Text style={styles.subtitleText}>Chào mừng trở lại với Happy Field</Text>
           </View>
           <CustomTextInput
             value={identifier}
@@ -189,7 +189,7 @@ export default function LoginScreen({ navigation }) {
               setIdentifier(text);
               setIdentifierError("");
             }}
-            placeholder="Email or Username"
+            placeholder="Email hoặc tên người dùng"
             prefixIcon="person"
           />
           {identifierError ? (
@@ -201,7 +201,7 @@ export default function LoginScreen({ navigation }) {
               setPassword(text);
               setPasswordError("");
             }}
-            placeholder="Password"
+            placeholder="Mật khẩu"
           />
           {passwordError ? (
             <Text style={styles.errorText}>{passwordError}</Text>

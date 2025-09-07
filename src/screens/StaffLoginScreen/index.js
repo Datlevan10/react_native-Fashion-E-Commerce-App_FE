@@ -141,7 +141,7 @@ export default function StaffLoginScreen({ navigation }) {
 
           <View style={styles.formContainer}>
             <CustomTextInput
-              placeholder="Email, Username, or Phone"
+              placeholder="Email, Tên người dùng hoặc Số điện thoại"
               value={identifier}
               onChangeText={setIdentifier}
               error={identifierError}
@@ -150,7 +150,7 @@ export default function StaffLoginScreen({ navigation }) {
             />
 
             <PasswordTextInput
-              placeholder="Password"
+              placeholder="Mật khẩu"
               value={password}
               onChangeText={setPassword}
               error={passwordError}

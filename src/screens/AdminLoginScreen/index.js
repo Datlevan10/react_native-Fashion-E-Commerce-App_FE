@@ -92,8 +92,8 @@ export default function AdminLoginScreen({ navigation }) {
           await SecureStore.setItemAsync("user_type", "admin");
 
           ShowAlertWithTitleContentAndOneActions(
-            "Login Successful",
-            "Welcome to Admin Dashboard",
+            "Đăng nhập thành công",
+            "Chào mừng đến với Bảng điều khiển quản trị",
             () => {
               navigation.replace("AdminDrawer");
             }
@@ -103,9 +103,9 @@ export default function AdminLoginScreen({ navigation }) {
         const errorMessage =
           error.response?.data?.message ||
           error.response?.data?.error ||
-          "Login failed. Please check your admin credentials.";
+          "Đăng nhập không thành công. Vui lòng kiểm tra thông tin đăng nhập quản trị của bạn.";
         
-        Alert.alert("Login Failed", errorMessage);
+        Alert.alert("Đăng nhập không thành công", errorMessage);
       } finally {
         setIsLoading(false);
       }
@@ -146,7 +146,7 @@ export default function AdminLoginScreen({ navigation }) {
             </View>
 
             <CustomTextInput
-              placeholder="Email, Username, or Phone"
+              placeholder="Email, Tên người dùng hoặc Số điện thoại"
               value={identifier}
               onChangeText={setIdentifier}
               error={identifierError}
@@ -155,7 +155,7 @@ export default function AdminLoginScreen({ navigation }) {
             />
 
             <PasswordTextInput
-              placeholder="Password"
+              placeholder="Mật khẩu"
               value={password}
               onChangeText={setPassword}
               error={passwordError}

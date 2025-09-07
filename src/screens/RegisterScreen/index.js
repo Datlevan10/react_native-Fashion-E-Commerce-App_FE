@@ -222,7 +222,7 @@ export default function RegisterScreen({ navigation }) {
               setUsername(value);
               setErrorMessages({ ...errorMessages, username: "" });
             }}
-            placeholder="Enter your username"
+            placeholder="Nhập tên người dùng của bạn"
             prefixIcon="person"
           />
           {errorMessages.username ? (
@@ -235,7 +235,7 @@ export default function RegisterScreen({ navigation }) {
               setFullName(value);
               setErrorMessages({ ...errorMessages, fullName: "" });
             }}
-            placeholder="Enter your full name"
+            placeholder="Nhập tên đầy đủ của bạn"
             prefixIcon="account-circle"
           />
           {errorMessages.fullName ? (
@@ -248,7 +248,7 @@ export default function RegisterScreen({ navigation }) {
               setEmail(value);
               setErrorMessages({ ...errorMessages, email: "" });
             }}
-            placeholder="Enter your email"
+            placeholder="Nhập email của bạn"
             prefixIcon="email"
             keyboardType="email-address"
           />
@@ -262,7 +262,7 @@ export default function RegisterScreen({ navigation }) {
               setPhoneNumber(value);
               setErrorMessages({ ...errorMessages, phoneNumber: "" });
             }}
-            placeholder="Enter your phone number"
+            placeholder="Nhập số điện thoại của bạn"
             prefixIcon="phone"
             keyboardType="phone-pad"
           />
@@ -276,7 +276,7 @@ export default function RegisterScreen({ navigation }) {
               setPassword(value);
               setErrorMessages({ ...errorMessages, password: "" });
             }}
-            placeholder="Enter your password"
+            placeholder="Nhập mật khẩu của bạn"
           />
           {errorMessages.password ? (
             <Text style={styles.errorText}>{errorMessages.password}</Text>
