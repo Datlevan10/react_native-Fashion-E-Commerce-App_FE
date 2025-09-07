@@ -16,7 +16,6 @@ import {
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import CustomTextInput from "../../components/TextField/CustomTextInput";
-import PasswordTextInput from "../../components/TextField/PasswordTextInput";
 import CustomHandleButton from "../../components/Button/CustomHandleButton";
 import imageTest from "../../../assets/image/profile.png";
 import Colors from "../../styles/Color";
@@ -30,7 +29,6 @@ export default function ManagerProfileScreen({ navigation }) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [password, setPassword] = useState("");
   const [address, setAddress] = useState("");
   const [gender, setGender] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
@@ -81,11 +79,6 @@ export default function ManagerProfileScreen({ navigation }) {
       if (gender !== customer.gender) formData.append('gender', gender);
       if (dateOfBirth !== customer.date_of_birth) formData.append('date_of_birth', dateOfBirth);
       
-      // Only append password if it's not empty
-      if (password) {
-        formData.append('password', password);
-      }
-      
       // Handle image upload
       if (imageUri && imageUri !== customer.image) {
         const uriParts = imageUri.split('.');
@@ -98,7 +91,7 @@ export default function ManagerProfileScreen({ navigation }) {
         });
       }
 
-      const response = await ApiService.updateCustomer(customer.id, formData);
+      const response = await ApiService.updateCustomer(customer.customer_id, formData);
       
       if (response.data) {
         Alert.alert(
@@ -232,11 +225,6 @@ export default function ManagerProfileScreen({ navigation }) {
           placeholder="Enter new your phone number"
           prefixIcon="phone"
           keyboardType="phone-pad"
-        />
-        <PasswordTextInput
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Enter new your password (leave blank to keep current)"
         />
         <CustomTextInput
           value={address}

@@ -65,17 +65,17 @@ export default function MyOrderScreen({ navigation }) {
   const getStatusText = (status) => {
     switch (status?.toLowerCase()) {
       case "pending":
-        return "ang ch›";
+        return "ƒêang ch·ªù";
       case "processing":
-        return "ang xÌ l˝";
+        return "ƒêang x·ª≠ l√Ω";
       case "shipped":
-        return "ang giao";
+        return "ƒêang giao";
       case "delivered":
-        return "„ giao";
+        return "ƒê√£ giao";
       case "completed":
-        return "Ho‡n th‡nh";
+        return "Ho√†n th√†nh";
       case "cancelled":
-        return "„ hÁy";
+        return "ƒê√£ h·ªßy";
       default:
         return status || "N/A";
     }
@@ -83,7 +83,7 @@ export default function MyOrderScreen({ navigation }) {
 
   const formatCurrency = (amount) => {
     const numAmount = parseFloat(amount) || 0;
-    return numAmount.toLocaleString('vi-VN') + ' ';
+    return numAmount.toLocaleString('vi-VN') + ' ƒë';
   };
 
   const formatDate = (dateString) => {
@@ -102,11 +102,11 @@ export default function MyOrderScreen({ navigation }) {
     return (
       <TouchableOpacity 
         style={styles.orderCard}
-        onPress={() => navigation.navigate("OrderDetailsScreen", { orderId: item.id })}
+        onPress={() => navigation.navigate("OrderDetailsScreen", { orderId: item.order_id })}
       >
         <View style={styles.orderHeader}>
           <View>
-            <Text style={styles.orderId}>°n h‡ng #{item.id}</Text>
+            <Text style={styles.orderId}>ƒê∆°n h√†ng #{item.order_id}</Text>
             <Text style={styles.orderDate}>{formatDate(item.created_at)}</Text>
           </View>
           <View style={[styles.statusBadge, { backgroundColor: getStatusColor(item.order_status) }]}>
@@ -127,13 +127,13 @@ export default function MyOrderScreen({ navigation }) {
           <View style={styles.detailRow}>
             <MaterialIcons name="payment" size={20} color="#666" />
             <Text style={styles.detailText}>
-              {item.payment_method || "Cash on delivery"}
+              {item.payment_method === "cash_on_delivery" ? "Thanh to√°n khi nh·∫≠n h√†ng" : item.payment_method}
             </Text>
           </View>
         </View>
 
         <View style={styles.orderFooter}>
-          <Text style={styles.totalLabel}>T’ng cŸng:</Text>
+          <Text style={styles.totalLabel}>T·ªïng c·ªông:</Text>
           <Text style={styles.totalAmount}>{formatCurrency(item.total_price)}</Text>
         </View>
       </TouchableOpacity>
@@ -143,12 +143,12 @@ export default function MyOrderScreen({ navigation }) {
   const EmptyComponent = () => (
     <View style={styles.emptyContainer}>
       <MaterialIcons name="shopping-basket" size={80} color="#ccc" />
-      <Text style={styles.emptyText}>Ch∞a cÛ °n h‡ng n‡o</Text>
+      <Text style={styles.emptyText}>Ch∆∞a c√≥ ƒë∆°n h√†ng n√†o</Text>
       <TouchableOpacity 
         style={styles.shopNowButton}
         onPress={() => navigation.navigate("HomeScreen")}
       >
-        <Text style={styles.shopNowText}>Mua sØm ngay</Text>
+        <Text style={styles.shopNowText}>Mua s·∫Øm ngay</Text>
       </TouchableOpacity>
     </View>
   );
@@ -159,7 +159,7 @@ export default function MyOrderScreen({ navigation }) {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Feather name="arrow-left" size={24} color={Colors.blackColor} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>°n h‡ng cÁa tÙi</Text>
+        <Text style={styles.headerTitle}>ƒê∆°n h√†ng c·ªßa t√¥i</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -171,7 +171,7 @@ export default function MyOrderScreen({ navigation }) {
         <FlatList
           data={orders}
           renderItem={renderOrderItem}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.order_id}
           contentContainerStyle={styles.listContainer}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
