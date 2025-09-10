@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../styles/Color";
+import API_BASE_URL from "../../configs/config";
 
 const { width } = Dimensions.get("window");
 
@@ -66,7 +67,7 @@ export default function ModernCartItem({
   };
 
   const imageSource = item.image ? 
-    { uri: `http://192.168.1.58:8080${item.image}` } : 
+    { uri: `${API_BASE_URL}${item.image}` } : 
     require("../../../assets/image/default_image.jpg");
 
   return (

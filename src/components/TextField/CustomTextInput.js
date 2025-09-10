@@ -3,7 +3,7 @@ import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Colors from '../../styles/Color';
 
-const CustomTextInput = ({ value, onChangeText, placeholder, prefixIcon }) => {
+const CustomTextInput = ({ value, onChangeText, placeholder, prefixIcon, textContentType, autoComplete }) => {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
@@ -18,6 +18,10 @@ const CustomTextInput = ({ value, onChangeText, placeholder, prefixIcon }) => {
         placeholder={placeholder}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        textContentType={textContentType}
+        autoComplete={autoComplete}
+        autoCapitalize="none"
+        autoCorrect={false}
       />
       {isFocused && value ? (
         <TouchableOpacity onPress={() => onChangeText('')}>

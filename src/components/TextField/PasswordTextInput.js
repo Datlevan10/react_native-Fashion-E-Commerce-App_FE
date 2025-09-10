@@ -18,6 +18,10 @@ const PasswordTextInput = ({ value, onChangeText, placeholder }) => {
         secureTextEntry={!showPassword}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        textContentType="password"
+        autoComplete="current-password"
+        autoCapitalize="none"
+        autoCorrect={false}
       />
       {isFocused && value ? (
         <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>

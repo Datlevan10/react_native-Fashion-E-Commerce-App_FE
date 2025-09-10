@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { AppState } from "react-native";
+import { AppState, Linking } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -34,6 +34,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 import api from "./api/AxiosInstance";
 import { handleLogout } from "./utils/AuthUtils";
+import ZaloPayService from "./services/ZaloPayService";
 
 const Stack = createStackNavigator();
 
@@ -43,6 +44,18 @@ export default function App() {
   const [appState, setAppState] = useState(AppState.currentState);
   const [showWelcome, setShowWelcome] = useState(true);
   const backgroundTime = useRef(null);
+
+  // Deep linking configuration for ZaloPay
+  const linking = {
+    prefixes: ['demozpdk://', 'happyfield://'],
+    config: {
+      screens: {
+        OrderScreen: 'order',
+        MyOrdersScreen: 'orders',
+        HomeScreen: 'home',
+      },
+    },
+  };
 
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -73,6 +86,30 @@ export default function App() {
 
     checkLoginStatus();
 
+    // Handle deep linking for ZaloPay payment results
+    const handleDeepLink = (url) => {
+      console.log('Deep link received:', url);
+      if (url && url.includes('demozpdk://')) {
+        const paymentResult = ZaloPayService.parsePaymentResult(url);
+        console.log('Payment result:', paymentResult);
+        
+        // You can dispatch navigation or update global state here
+        // For now, we'll let the OrderScreen handle the result
+      }
+    };
+
+    // Listen for deep links
+    const linkingListener = Linking.addEventListener('url', ({ url }) => {
+      handleDeepLink(url);
+    });
+
+    // Check if app was opened via deep link
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        handleDeepLink(url);
+      }
+    });
+
     const appStateListener = AppState.addEventListener(
       "change",
       handleAppStateChange
@@ -83,6 +120,7 @@ export default function App() {
     const welcomeTimer = setTimeout(() => setShowWelcome(false), 5000);
 
     return () => {
+      linkingListener.remove();
       appStateListener.remove();
       clearTimeout(welcomeTimer);
     };
@@ -131,7 +169,7 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <UserInactivity
         timeForInactivity={1 * 60 * 1000}
         onAction={async (isActive) => {

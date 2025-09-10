@@ -14,6 +14,7 @@ import {
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import ApiService from "../../api/ApiService";
 import Colors from "../../styles/Color";
+import API_BASE_URL from "../../configs/config";
 
 const { width } = Dimensions.get("window");
 
@@ -220,7 +221,7 @@ const OrderDetailsScreen = ({ navigation, route }) => {
             <View style={styles.itemImageContainer}>
               {item.product?.image_url ? (
                 <Image 
-                  source={{ uri: `http://192.168.1.58:8080${item.product.image_url}` }} 
+                  source={{ uri: `${API_BASE_URL}${item.product.image_url}` }} 
                   style={styles.itemImage}
                   resizeMode="cover"
                 />

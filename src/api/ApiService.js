@@ -448,6 +448,23 @@ const getProductReport = async (startDate, endDate) => {
   return api.get(`/admin/reports/products?start_date=${startDate}&end_date=${endDate}`);
 };
 
+// ============ ZALOPAY PAYMENT APIs ============
+
+// Create ZaloPay payment order
+const createZaloPayPayment = async (paymentData) => {
+  return api.post("/payments/zalopay/create", paymentData);
+};
+
+// Query ZaloPay payment status
+const queryZaloPayStatus = async (appTransId) => {
+  return api.post("/payments/zalopay/query", { app_trans_id: appTransId });
+};
+
+// Handle ZaloPay callback (for backend verification)
+const verifyZaloPayCallback = async (callbackData) => {
+  return api.post("/payments/zalopay/callback", callbackData);
+};
+
 export default {
   registerCustomer,
   authenticateLoginCustomer,
@@ -579,4 +596,8 @@ export default {
   getSalesReport,
   getCustomerReport,
   getProductReport,
+  // ZaloPay APIs
+  createZaloPayPayment,
+  queryZaloPayStatus,
+  verifyZaloPayCallback,
 }

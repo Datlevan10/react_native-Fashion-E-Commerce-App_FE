@@ -10,12 +10,14 @@ import {
   ActivityIndicator,
   Image,
   SafeAreaView,
+  Linking,
 } from 'react-native';
 import { Feather, MaterialIcons, FontAwesome5, AntDesign } from 'react-native-vector-icons';
 import * as SecureStore from 'expo-secure-store';
 import Colors from '../../styles/Color';
 import apiService from '../../api/ApiService';
 import API_BASE_URL from '../../configs/config';
+import ZaloPayService from '../../services/ZaloPayService';
 
 const OrderScreen = ({ navigation, route }) => {
   const { cartId, cartItems = [] } = route.params || {};
@@ -133,19 +135,12 @@ const OrderScreen = ({ navigation, route }) => {
       console.log('Cart ID being used:', cartId);
       console.log('Customer ID being used:', customerId);
 
-      const response = await apiService.createOrder(orderPayload);
-
-      if (response.status === 201 || response.status === 200) {
-        Alert.alert(
-          'Đã đặt hàng thành công!',
-          `Đơn hàng của bạn đã được tạo. Mã đơn hàng: ${response.data.order_id || 'N/A'}`,
-          [
-            {
-              text: 'Tiếp tục mua sắm',
-              onPress: () => navigation.navigate('HomeScreen')
-            }
-          ]
-        );
+      // Handle different payment methods
+      if (orderData.payment_method === 'zalo_pay') {
+        await handleZaloPayPayment(orderPayload);
+      } else {
+        // Handle other payment methods (cash_on_delivery, qr_code, etc.)
+        await handleRegularOrder(orderPayload);
       }
     } catch (error) {
       console.error('Order creation error:', error);
@@ -154,6 +149,107 @@ const OrderScreen = ({ navigation, route }) => {
                           error.response?.data?.error || 
                           'Failed to create order. Please try again.';
       Alert.alert('Order Failed', errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegularOrder = async (orderPayload) => {
+    const response = await apiService.createOrder(orderPayload);
+
+    if (response.status === 201 || response.status === 200) {
+      Alert.alert(
+        'Đã đặt hàng thành công!',
+        `Đơn hàng của bạn đã được tạo. Mã đơn hàng: ${response.data.order_id || 'N/A'}`,
+        [
+          {
+            text: 'Tiếp tục mua sắm',
+            onPress: () => navigation.navigate('HomeScreen')
+          }
+        ]
+      );
+    }
+  };
+
+  const handleZaloPayPayment = async (orderPayload) => {
+    try {
+      // First create the order
+      const orderResponse = await apiService.createOrder(orderPayload);
+      
+      if (orderResponse.status === 201 || orderResponse.status === 200) {
+        const orderId = orderResponse.data.order_id;
+        const totalAmountWithShipping = totalAmount + shippingFee;
+        
+        // Prepare ZaloPay payment info
+        const zaloPayInfo = {
+          amount: totalAmountWithShipping,
+          description: `Thanh toán đơn hàng #${orderId}`,
+          orderId: orderId,
+          customerId: customerId
+        };
+
+        // Process ZaloPay payment
+        const paymentResult = await ZaloPayService.createPayment(zaloPayInfo);
+        
+        if (paymentResult.success) {
+          // Open ZaloPay for payment
+          await ZaloPayService.openPayment(paymentResult.order_url);
+          
+          // Show success message and wait for payment result
+          Alert.alert(
+            'Đơn hàng đã được tạo',
+            'Vui lòng hoàn tất thanh toán trong ứng dụng ZaloPay và quay lại ứng dụng.',
+            [
+              {
+                text: 'Kiểm tra trạng thái',
+                onPress: () => checkPaymentStatus(orderId)
+              },
+              {
+                text: 'Về trang chủ',
+                onPress: () => navigation.navigate('HomeScreen')
+              }
+            ]
+          );
+        } else {
+          throw new Error(paymentResult.error || 'Không thể tạo thanh toán ZaloPay');
+        }
+      }
+    } catch (error) {
+      console.error('ZaloPay payment error:', error);
+      throw error; // Re-throw to be handled by the main createOrder function
+    }
+  };
+
+  const checkPaymentStatus = async (orderId) => {
+    try {
+      setLoading(true);
+      const statusResult = await ZaloPayService.queryPaymentStatus(orderId);
+      
+      if (statusResult.success) {
+        Alert.alert(
+          'Thanh toán thành công!',
+          'Đơn hàng của bạn đã được thanh toán thành công.',
+          [
+            {
+              text: 'Xem đơn hàng',
+              onPress: () => navigation.navigate('MyOrdersScreen')
+            },
+            {
+              text: 'Tiếp tục mua sắm',
+              onPress: () => navigation.navigate('HomeScreen')
+            }
+          ]
+        );
+      } else {
+        Alert.alert(
+          'Chưa thanh toán',
+          'Đơn hàng chưa được thanh toán. Vui lòng hoàn tất thanh toán trong ZaloPay.',
+          [{ text: 'OK' }]
+        );
+      }
+    } catch (error) {
+      console.error('Error checking payment status:', error);
+      Alert.alert('Lỗi', 'Không thể kiểm tra trạng thái thanh toán');
     } finally {
       setLoading(false);
     }

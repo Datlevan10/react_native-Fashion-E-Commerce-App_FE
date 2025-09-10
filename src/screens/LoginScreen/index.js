@@ -191,6 +191,8 @@ export default function LoginScreen({ navigation }) {
             }}
             placeholder="Email hoặc tên người dùng"
             prefixIcon="person"
+            textContentType="username"
+            autoComplete="username"
           />
           {identifierError ? (
             <Text style={styles.errorText}>{identifierError}</Text>
