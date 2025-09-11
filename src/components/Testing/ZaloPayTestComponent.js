@@ -238,6 +238,33 @@ const ZaloPayTestComponent = ({ navigation }) => {
     }
   };
 
+  const testInitializePaymentMethods = async () => {
+    addLog('🚀 Testing Payment Methods Initialization', 'info');
+    setLoading(true);
+
+    try {
+      const response = await apiService.initializePaymentMethods();
+      addLog('✅ Payment methods initialized successfully', 'success');
+      addLog(`Response: ${JSON.stringify(response.data)}`, 'success');
+      setTestResults(prev => ({ ...prev, initializePayment: { success: true, data: response.data } }));
+      
+      Alert.alert('Success', 'Payment methods initialized! You can now test order creation.');
+    } catch (error) {
+      if (error.response?.status === 409) {
+        addLog('ℹ️ Payment methods already exist (this is fine)', 'info');
+        setTestResults(prev => ({ ...prev, initializePayment: { success: true, data: 'Already exists' } }));
+      } else {
+        addLog(`❌ Failed to initialize payment methods: ${error.message}`, 'error');
+        if (error.response?.data) {
+          addLog(`Error details: ${JSON.stringify(error.response.data)}`, 'error');
+        }
+        setTestResults(prev => ({ ...prev, initializePayment: { success: false, error: error.message } }));
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const testOrderScreenIntegration = async () => {
     addLog('🚀 Testing OrderScreen Integration', 'info');
     
@@ -329,6 +356,7 @@ const ZaloPayTestComponent = ({ navigation }) => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>API Tests</Text>
         
+        {renderTestButton('0. Initialize Payment Methods', testInitializePaymentMethods, loading)}
         {renderTestButton('1. Test Create Payment', testCreateZaloPayPayment, loading)}
         {renderTestButton('2. Test Query Status', testQueryPaymentStatus, loading)}
         {renderTestButton('3. Test Service Integration', testZaloPayServiceIntegration, loading)}
@@ -356,6 +384,9 @@ const ZaloPayTestComponent = ({ navigation }) => {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Test Summary</Text>
         <View style={styles.summaryContainer}>
+          <Text style={styles.summaryItem}>
+            Payment Methods Init: {testResults.initializePayment?.success ? '✅ PASS' : '❌ NOT TESTED'}
+          </Text>
           <Text style={styles.summaryItem}>
             Create Payment: {testResults.createPayment?.success ? '✅ PASS' : '❌ NOT TESTED'}
           </Text>

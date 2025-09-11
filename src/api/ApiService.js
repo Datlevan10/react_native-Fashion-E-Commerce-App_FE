@@ -450,6 +450,11 @@ const getProductReport = async (startDate, endDate) => {
 
 // ============ ZALOPAY PAYMENT APIs ============
 
+// Initialize payment methods (one-time setup)
+const initializePaymentMethods = async () => {
+  return api.post("/payments/initialize");
+};
+
 // Create ZaloPay payment order
 const createZaloPayPayment = async (paymentData) => {
   return api.post("/payments/zalopay/create", paymentData);
@@ -597,6 +602,7 @@ export default {
   getCustomerReport,
   getProductReport,
   // ZaloPay APIs
+  initializePaymentMethods,
   createZaloPayPayment,
   queryZaloPayStatus,
   verifyZaloPayCallback,

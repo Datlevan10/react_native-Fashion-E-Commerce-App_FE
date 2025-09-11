@@ -136,7 +136,7 @@ const OrderScreen = ({ navigation, route }) => {
       console.log('Customer ID being used:', customerId);
 
       // Handle different payment methods
-      if (orderData.payment_method === 'zalo_pay') {
+      if (orderData.payment_method === 'zalopay') {
         await handleZaloPayPayment(orderPayload);
       } else {
         // Handle other payment methods (cash_on_delivery, qr_code, etc.)
@@ -445,16 +445,16 @@ const OrderScreen = ({ navigation, route }) => {
           <TouchableOpacity
             style={[
               styles.paymentOption,
-              orderData.payment_method === 'zalo_pay' && styles.selectedPayment
+              orderData.payment_method === 'zalopay' && styles.selectedPayment
             ]}
-            onPress={() => handleInputChange('payment_method', 'zalo_pay')}
+            onPress={() => handleInputChange('payment_method', 'zalopay')}
           >
             <FontAwesome5 name="mobile-alt" size={24} color="#0068FF" />
             <View style={styles.paymentDetails}>
               <Text style={styles.paymentText}>Thanh toán bằng ZaloPay</Text>
               <Text style={styles.paymentSubtext}>Ví kỹ thuật số an toàn</Text>
             </View>
-            {orderData.payment_method === 'zalo_pay' && (
+            {orderData.payment_method === 'zalopay' && (
               <Feather name="check-circle" size={20} color={Colors.success} />
             )}
           </TouchableOpacity>
