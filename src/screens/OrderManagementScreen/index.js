@@ -57,7 +57,19 @@ export default function OrderManagementScreen({ navigation }) {
       }
 
       const response = await apiService.getAllOrders(currentPage, 20, filterParams);
-      const newOrders = response.data.orders || [];
+      
+      // Handle different response formats from backend
+      let newOrders = [];
+      if (Array.isArray(response.data)) {
+        // If response.data is directly an array of orders
+        newOrders = response.data;
+      } else if (response.data.orders) {
+        // If response.data has an orders property
+        newOrders = response.data.orders;
+      } else if (response.data.data) {
+        // If response.data has a data property (paginated response)
+        newOrders = response.data.data;
+      }
       
       if (currentPage === 1) {
         setOrders(newOrders);
@@ -65,9 +77,13 @@ export default function OrderManagementScreen({ navigation }) {
         setOrders(prev => [...prev, ...newOrders]);
       }
       
-      setTotalPages(response.data.totalPages || 1);
+      // Calculate total pages based on response or order count
+      const totalOrders = response.data.total || newOrders.length;
+      const calculatedPages = Math.ceil(totalOrders / 20);
+      setTotalPages(response.data.totalPages || response.data.last_page || calculatedPages || 1);
     } catch (error) {
       console.error("Error fetching orders data:", error);
+      console.error("Error response:", error.response?.data);
       Alert.alert("Error", "Failed to fetch orders data. Please try again.");
     } finally {
       setLoading(false);

@@ -261,62 +261,133 @@ const hideNotification = async (notificationId, data) => {
   return api.post(`/notifications/hide/${notificationId}`, data);
 };
 
-// Admin Dashboard APIs
+// Admin Dashboard APIs - These calculate statistics from actual data
 const getTotalCustomers = async () => {
-  return api.get("/admin/dashboard/customers/total");
+  // Get all customers and return count
+  const response = await api.get("/customers");
+  return { data: { total: response.data.length } };
 };
 
 const getTotalStaff = async () => {
-  return api.get("/admin/dashboard/staff/total");
+  // Get all staff and return count
+  const response = await api.get("/staffs");
+  return { data: { total: response.data.length } };
 };
 
 const getTotalProducts = async () => {
-  return api.get("/admin/dashboard/products/total");
+  // Get all products and return count
+  const response = await api.get("/products");
+  return { data: { total: response.data.length } };
 };
 
 const getTotalCategories = async () => {
-  return api.get("/admin/dashboard/categories/total");
+  // Get all categories and return count
+  const response = await api.get("/categories");
+  return { data: { total: response.data.length } };
 };
 
 const getOrderStatistics = async () => {
-  return api.get("/admin/dashboard/orders/statistics");
+  // Get all orders and calculate statistics
+  const response = await api.get("/orders");
+  const orders = response.data;
+  
+  const statistics = {
+    total: orders.length,
+    pending: orders.filter(o => o.status === 'pending').length,
+    confirmed: orders.filter(o => o.status === 'confirmed').length,
+    shipped: orders.filter(o => o.status === 'shipped').length,
+    delivered: orders.filter(o => o.status === 'delivered').length,
+    cancelled: orders.filter(o => o.status === 'cancelled').length,
+  };
+  
+  return { data: statistics };
 };
 
 const getRecentOrders = async (limit = 10) => {
-  return api.get(`/admin/orders/recent?limit=${limit}`);
+  // Get all orders and return most recent
+  const response = await api.get("/orders");
+  const orders = response.data;
+  
+  // Sort by created_at or id (descending) and take first 'limit' items
+  const sortedOrders = orders.sort((a, b) => {
+    const dateA = new Date(a.created_at || 0);
+    const dateB = new Date(b.created_at || 0);
+    return dateB - dateA;
+  }).slice(0, limit);
+  
+  return { data: sortedOrders };
 };
 
 const getTopProducts = async (limit = 5) => {
-  return api.get(`/admin/products/top-selling?limit=${limit}`);
+  // This would need order details to calculate, for now return empty
+  // In real implementation, you'd need to analyze order_details
+  return { data: [] };
 };
 
 // Cart and Order Statistics for Admin Dashboard
 const getTotalCarts = async () => {
-  return api.get("/admin/dashboard/carts/total");
+  // Get all carts and return count
+  const response = await api.get("/carts");
+  return { data: { total: response.data.length } };
 };
 
 const getActiveCarts = async () => {
-  return api.get("/admin/dashboard/carts/active");
+  // Get carts that are not ordered
+  const response = await api.get("/carts");
+  const activeCarts = response.data.filter(cart => !cart.is_ordered);
+  return { data: { total: activeCarts.length, carts: activeCarts } };
 };
 
 const getCartStatistics = async () => {
-  return api.get("/admin/dashboard/carts/statistics");
+  // Get all carts and calculate statistics
+  const response = await api.get("/carts");
+  const carts = response.data;
+  
+  const statistics = {
+    total: carts.length,
+    active: carts.filter(c => !c.is_ordered).length,
+    completed: carts.filter(c => c.is_ordered).length,
+  };
+  
+  return { data: statistics };
 };
 
 const getTotalOrders = async () => {
-  return api.get("/admin/dashboard/orders/total");
+  // Get all orders and return count
+  const response = await api.get("/orders");
+  return { data: { total: response.data.length } };
 };
 
 const getOrdersByStatus = async (status) => {
-  return api.get(`/admin/dashboard/orders/status/${status}`);
+  // Use the correct backend route for filtering by status
+  return api.get(`/orders/status/${status}`);
 };
 
 const getAllCarts = async (page = 1, limit = 20) => {
-  return api.get(`/admin/carts?page=${page}&limit=${limit}`);
+  // Get all carts with pagination params (backend may or may not use them)
+  return api.get(`/carts?page=${page}&limit=${limit}`);
 };
 
-const getAllOrders = async (page = 1, limit = 20) => {
-  return api.get(`/admin/orders?page=${page}&limit=${limit}`);
+const getAllOrders = async (page = 1, limit = 20, filters = {}) => {
+  // Build query params
+  const params = new URLSearchParams();
+  params.append('page', page);
+  params.append('limit', limit);
+  
+  // Add filters if provided
+  if (filters.status && filters.status !== 'all') {
+    // Use status-specific endpoint if filtering by status
+    return api.get(`/orders/status/${filters.status}?${params.toString()}`);
+  }
+  
+  // Add other filters as query params
+  Object.keys(filters).forEach(key => {
+    if (filters[key] && filters[key] !== 'all') {
+      params.append(key, filters[key]);
+    }
+  });
+  
+  return api.get(`/orders?${params.toString()}`);
 };
 
 // ============ CART MANAGEMENT APIs ============
@@ -363,7 +434,7 @@ const getCustomerOrders = async (customerId) => {
   return api.get(`/orders/customer/${customerId}`);
 };
 
-// Update order status
+// Update order status - Updated to match backend route
 const updateOrderStatus = async (orderId, status) => {
   return api.put(`/orders/${orderId}/status`, { status });
 };
@@ -371,6 +442,11 @@ const updateOrderStatus = async (orderId, status) => {
 // Get order details
 const getOrderDetails = async (orderId) => {
   return api.get(`/orders/${orderId}`);
+};
+
+// Get order history
+const getOrderHistory = async () => {
+  return api.get('/orders/history');
 };
 
 // Staff Management APIs
@@ -409,7 +485,7 @@ const updateCustomerStatus = async (customerId, status) => {
 
 
 const getOrderById = async (orderId) => {
-  return api.get(`/admin/orders/${orderId}`);
+  return api.get(`/orders/${orderId}`);
 };
 
 // Product Management APIs
@@ -561,6 +637,7 @@ export default {
   getCustomerOrders,
   updateOrderStatus,
   getOrderDetails,
+  getOrderHistory,
   getAllStaff,
   getStaffById,
   createStaff,

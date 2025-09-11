@@ -91,7 +91,9 @@ const OrderCard = ({ order, onPress, onStatusUpdate }) => {
 
       <View style={styles.customerSection}>
         <Feather name="user" size={14} color={Colors.textSecondary} />
-        <Text style={styles.customerName}>{order.customer_name}</Text>
+        <Text style={styles.customerName}>
+          {order.customer_name || order.customer?.name || `Customer ${order.customer_id}` || 'Unknown Customer'}
+        </Text>
       </View>
 
       <View style={styles.detailsSection}>
@@ -110,7 +112,9 @@ const OrderCard = ({ order, onPress, onStatusUpdate }) => {
       <View style={styles.footer}>
         <View style={styles.amountSection}>
           <Text style={styles.amountLabel}>Total Amount</Text>
-          <Text style={styles.amountValue}>${order.total_amount?.toLocaleString()}</Text>
+          <Text style={styles.amountValue}>
+            {order.total_amount ? `$${order.total_amount.toLocaleString()}` : 'N/A'}
+          </Text>
         </View>
         
         {nextStatus && order.status !== "cancelled" && (
@@ -129,12 +133,19 @@ const OrderCard = ({ order, onPress, onStatusUpdate }) => {
       {order.payment_method && (
         <View style={styles.paymentInfo}>
           <FontAwesome5
-            name={order.payment_method === "card" ? "credit-card" : "money-bill-wave"}
+            name={
+              order.payment_method === "zalopay" ? "mobile-alt" :
+              order.payment_method === "qr_code" ? "qrcode" :
+              order.payment_method === "cash_on_delivery" ? "money-bill-wave" : "credit-card"
+            }
             size={12}
             color={Colors.textSecondary}
           />
           <Text style={styles.paymentText}>
-            {order.payment_method === "card" ? "Card Payment" : "Cash on Delivery"}
+            {order.payment_method === "zalopay" ? "ZaloPay" :
+             order.payment_method === "qr_code" ? "QR Code" :
+             order.payment_method === "cash_on_delivery" ? "Cash on Delivery" : 
+             order.payment_method}
           </Text>
         </View>
       )}

@@ -35,13 +35,26 @@ const OrderDetailsScreen = ({ navigation, route }) => {
       
       const response = await ApiService.getOrderDetails(orderId);
       
-      if (response.status === 200 && response.data?.data) {
-        setOrderDetails(response.data.data);
+      // Handle different response formats
+      let orderData = null;
+      if (response.data) {
+        if (response.data.data) {
+          orderData = response.data.data;
+        } else if (Array.isArray(response.data)) {
+          orderData = response.data[0];
+        } else {
+          orderData = response.data;
+        }
+      }
+      
+      if (orderData) {
+        setOrderDetails(orderData);
       } else {
         setError("Order details not found");
       }
     } catch (error) {
       console.error("Error fetching order details:", error);
+      console.error("Error response:", error.response?.data);
       setError("Failed to load order details");
     } finally {
       setLoading(false);
@@ -113,10 +126,11 @@ const OrderDetailsScreen = ({ navigation, route }) => {
           style: "destructive",
           onPress: async () => {
             try {
-              // Implement cancel order API call
+              await ApiService.updateOrderStatus(orderId, 'cancelled');
               Alert.alert("Success", "Order has been cancelled");
               fetchOrderDetails(); // Refresh data
             } catch (error) {
+              console.error("Error cancelling order:", error);
               Alert.alert("Error", "Failed to cancel order");
             }
           }
