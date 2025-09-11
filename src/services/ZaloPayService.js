@@ -30,7 +30,7 @@ class ZaloPayService {
         order_id: orderId,
         customer_id: customerId,
         redirect_url: this.REDIRECT_URL,
-        callback_url: `${API_BASE_URL}/api/zalopay/callback`, // Your backend callback URL
+        callback_url: `${API_BASE_URL}/api/payments/zalopay/callback`, // Your backend callback URL
       };
 
       // Call your backend API to create ZaloPay payment
