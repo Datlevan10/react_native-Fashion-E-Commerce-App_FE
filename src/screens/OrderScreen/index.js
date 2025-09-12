@@ -192,24 +192,14 @@ const OrderScreen = ({ navigation, route }) => {
         const paymentResult = await ZaloPayService.createPayment(zaloPayInfo);
         
         if (paymentResult.success) {
-          // Open ZaloPay for payment
-          await ZaloPayService.openPayment(paymentResult.order_url);
-          
-          // Show success message and wait for payment result
-          Alert.alert(
-            'Đơn hàng đã được tạo',
-            'Vui lòng hoàn tất thanh toán trong ứng dụng ZaloPay và quay lại ứng dụng.',
-            [
-              {
-                text: 'Kiểm tra trạng thái',
-                onPress: () => checkPaymentStatus(orderId)
-              },
-              {
-                text: 'Về trang chủ',
-                onPress: () => navigation.navigate('HomeScreen')
-              }
-            ]
-          );
+          // Navigate to QR code display screen
+          navigation.navigate('ZaloPayQRScreen', {
+            orderId: orderId,
+            amount: totalAmountWithShipping,
+            orderUrl: paymentResult.order_url,
+            zpTransToken: paymentResult.zp_trans_token,
+            description: `Thanh toán đơn hàng #${orderId}`
+          });
         } else {
           throw new Error(paymentResult.error || 'Không thể tạo thanh toán ZaloPay');
         }
