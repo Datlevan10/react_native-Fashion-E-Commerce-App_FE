@@ -18,10 +18,18 @@ const CustomDrawerContent = ({ navigation, onClose }) => {
       onClose();
       
       // Navigate to login - need to go to root navigator
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'UserTypeSelectionScreen' }],
-      });
+      const rootNavigation = navigation.getParent();
+      if (rootNavigation) {
+        rootNavigation.reset({
+          index: 0,
+          routes: [{ name: 'UserTypeSelectionScreen' }],
+        });
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'UserTypeSelectionScreen' }],
+        });
+      }
     } catch (error) {
       console.error('Error during logout:', error);
     }

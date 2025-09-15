@@ -62,11 +62,6 @@ const CustomDrawer = ({
     ]).start();
   };
 
-  const onGestureEvent = Animated.event(
-    [{ nativeEvent: { translationX: translateX } }],
-    { useNativeDriver: true }
-  );
-
   const onHandlerStateChange = (event) => {
     if (event.nativeEvent.oldState === State.ACTIVE) {
       const { translationX, velocityX } = event.nativeEvent;
@@ -86,6 +81,11 @@ const CustomDrawer = ({
       }
     }
   };
+
+  const onGestureEvent = Animated.event(
+    [{ nativeEvent: { translationX: translateX } }],
+    { useNativeDriver: true }
+  );
 
   const handleOverlayPress = () => {
     onClose();
@@ -114,11 +114,28 @@ const CustomDrawer = ({
       )}
 
       {/* Drawer */}
-      <PanGestureHandler
-        onGestureEvent={onGestureEvent}
-        onHandlerStateChange={onHandlerStateChange}
-        activeOffsetX={drawerPosition === 'left' ? [-10, 10] : [-10, 10]}
-      >
+      {isOpen && (
+        <PanGestureHandler
+          onHandlerStateChange={onHandlerStateChange}
+          activeOffsetX={drawerPosition === 'left' ? [-10, 50] : [-50, 10]}
+          failOffsetY={[-20, 20]}
+        >
+          <Animated.View
+            style={[
+              styles.drawer,
+              {
+                width: DRAWER_WIDTH,
+                [drawerPosition]: 0,
+                transform: [{ translateX }],
+              },
+            ]}
+          >
+            {drawerContent}
+          </Animated.View>
+        </PanGestureHandler>
+      )}
+      
+      {!isOpen && (
         <Animated.View
           style={[
             styles.drawer,
@@ -131,7 +148,7 @@ const CustomDrawer = ({
         >
           {drawerContent}
         </Animated.View>
-      </PanGestureHandler>
+      )}
     </View>
   );
 };
