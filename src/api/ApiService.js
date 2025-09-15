@@ -171,10 +171,12 @@ const getInfoCustomerByCustomerId = async (customerId) => {
   return api.get(`/customers/${customerId}`);
 };
 
-const updateCustomer = async (customerId, data) => {
-  return api.put(`/customers/${customerId}`, data, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
+const updateCustomer = async (customerId, data, hasImages = false) => {
+  const headers = hasImages 
+    ? { "Content-Type": "multipart/form-data" }
+    : { "Content-Type": "application/json" };
+    
+  return api.put(`/customers/${customerId}`, data, { headers });
 };
 
 // Cart, Cart Detail
@@ -525,26 +527,26 @@ const getProductReport = async (startDate, endDate) => {
 };
 
 // ============ ZALOPAY PAYMENT APIs ============
-// Commented out ZaloPay APIs to fix runtime error
-// // Initialize payment methods (one-time setup)
-// const initializePaymentMethods = async () => {
-//   return api.post("/payments/initialize");
-// };
 
-// // Create ZaloPay payment order
-// const createZaloPayPayment = async (paymentData) => {
-//   return api.post("/payments/zalopay/create", paymentData);
-// };
+// Initialize payment methods (one-time setup)
+const initializePaymentMethods = async () => {
+  return api.post("/payments/initialize");
+};
 
-// // Query ZaloPay payment status
-// const queryZaloPayStatus = async (appTransId) => {
-//   return api.post("/payments/zalopay/query", { app_trans_id: appTransId });
-// };
+// Create ZaloPay payment order
+const createZaloPayPayment = async (paymentData) => {
+  return api.post("/payments/zalopay/create", paymentData);
+};
 
-// // Handle ZaloPay callback (for backend verification)
-// const verifyZaloPayCallback = async (callbackData) => {
-//   return api.post("/payments/zalopay/callback", callbackData);
-// };
+// Query ZaloPay payment status
+const queryZaloPayStatus = async (appTransId) => {
+  return api.post("/payments/zalopay/query", { app_trans_id: appTransId });
+};
+
+// Handle ZaloPay callback (for backend verification)
+const verifyZaloPayCallback = async (callbackData) => {
+  return api.post("/payments/zalopay/callback", callbackData);
+};
 
 export default {
   registerCustomer,
@@ -678,9 +680,9 @@ export default {
   getSalesReport,
   getCustomerReport,
   getProductReport,
-  // ZaloPay APIs - commented out
-  // initializePaymentMethods,
-  // createZaloPayPayment,
-  // queryZaloPayStatus,
-  // verifyZaloPayCallback,
+  // ZaloPay APIs
+  initializePaymentMethods,
+  createZaloPayPayment,
+  queryZaloPayStatus,
+  verifyZaloPayCallback,
 }

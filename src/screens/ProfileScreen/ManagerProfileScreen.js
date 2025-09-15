@@ -68,19 +68,27 @@ export default function ManagerProfileScreen({ navigation }) {
     
     setLoading(true);
     try {
-      const formData = new FormData();
+      // Check if image is being updated
+      const hasImageUpdate = imageUri && imageUri !== customer.image;
       
-      // Only append fields that have been changed
-      if (userName !== customer.user_name) formData.append('user_name', userName);
-      if (fullName !== customer.full_name) formData.append('full_name', fullName);
-      if (email !== customer.email) formData.append('email', email);
-      if (phoneNumber !== customer.phone_number) formData.append('phone_number', phoneNumber);
-      if (address !== customer.address) formData.append('address', address);
-      if (gender !== customer.gender) formData.append('gender', gender);
-      if (dateOfBirth !== customer.date_of_birth) formData.append('date_of_birth', dateOfBirth);
+      let requestData;
+      let hasImages = false;
       
-      // Handle image upload
-      if (imageUri && imageUri !== customer.image) {
+      if (hasImageUpdate) {
+        // Use FormData when uploading image
+        const formData = new FormData();
+        hasImages = true;
+        
+        // Only append fields that have been changed
+        if (userName !== customer.user_name) formData.append('user_name', userName);
+        if (fullName !== customer.full_name) formData.append('full_name', fullName);
+        if (email !== customer.email) formData.append('email', email);
+        if (phoneNumber !== customer.phone_number) formData.append('phone_number', phoneNumber);
+        if (address !== customer.address) formData.append('address', address);
+        if (gender !== customer.gender) formData.append('gender', gender);
+        if (dateOfBirth !== customer.date_of_birth) formData.append('date_of_birth', dateOfBirth);
+        
+        // Handle image upload
         const uriParts = imageUri.split('.');
         const fileType = uriParts[uriParts.length - 1];
         
@@ -89,9 +97,24 @@ export default function ManagerProfileScreen({ navigation }) {
           name: `photo.${fileType}`,
           type: `image/${fileType}`
         });
+        
+        requestData = formData;
+      } else {
+        // Use JSON when no image upload
+        requestData = {};
+        hasImages = false;
+        
+        // Only include fields that have been changed
+        if (userName !== customer.user_name) requestData.user_name = userName;
+        if (fullName !== customer.full_name) requestData.full_name = fullName;
+        if (email !== customer.email) requestData.email = email;
+        if (phoneNumber !== customer.phone_number) requestData.phone_number = phoneNumber;
+        if (address !== customer.address) requestData.address = address;
+        if (gender !== customer.gender) requestData.gender = gender;
+        if (dateOfBirth !== customer.date_of_birth) requestData.date_of_birth = dateOfBirth;
       }
 
-      const response = await ApiService.updateCustomer(customer.customer_id, formData);
+      const response = await ApiService.updateCustomer(customer.customer_id, requestData, hasImages);
       
       if (response.data) {
         Alert.alert(
