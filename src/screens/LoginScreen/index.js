@@ -96,7 +96,7 @@ export default function LoginScreen({ navigation }) {
           // await checkStoredData();
 
           ShowAlertWithTitleContentAndOneActions(
-            "Đăng nhập thành côngcông",
+            "Đăng nhập thành công",
             "Chào mừng đến với HappyField"
           );
           navigation.replace("HomeScreen");

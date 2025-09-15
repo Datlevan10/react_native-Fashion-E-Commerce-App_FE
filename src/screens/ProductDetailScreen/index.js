@@ -224,7 +224,7 @@ export default function ProductDetailScreen({ route, navigation }) {
       const addResponse = await apiService.addToCart(cartItemData);
 
       if (addResponse.status === 201 || addResponse.status === 200) {
-        Alert.alert("Thành côngcông", "Sản phẩm đã được thêm vào giỏ hànghàng");
+        Alert.alert("Thành công", "Sản phẩm đã được thêm vào giỏ hàng");
       } else {
         Alert.alert(
           "Error",
