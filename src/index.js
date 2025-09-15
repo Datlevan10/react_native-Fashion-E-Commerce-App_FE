@@ -9,7 +9,7 @@ import UserTypeSelectionScreen from "./screens/UserTypeSelectionScreen";
 import LoginScreen from "./screens/LoginScreen";
 import StaffLoginScreen from "./screens/StaffLoginScreen";
 import AdminLoginScreen from "./screens/AdminLoginScreen";
-import AdminDrawerNavigator from "./navigation/AdminDrawerNavigator";
+import AdminLayout from "./screens/AdminLayout/AdminLayout";
 import HomeScreen from "./screens/HomeScreen";
 import ExploreScreen from "./screens/ExploreScreen";
 import CategoryProductsScreen from "./screens/CategoryProductsScreen";
@@ -265,7 +265,7 @@ export default function App() {
             />
             <Stack.Screen
               name="AdminDrawer"
-              component={AdminDrawerNavigator}
+              component={AdminLayout}
               options={{ headerShown: false }}
             />
             <Stack.Screen
