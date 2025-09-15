@@ -163,6 +163,8 @@ const AdminDrawerNavigator = () => {
           backgroundColor: Colors.whiteColor,
           width: 280,
         },
+        swipeEnabled: true,
+        drawerType: 'front',
       }}
     >
       <Drawer.Screen
