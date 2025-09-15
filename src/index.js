@@ -28,15 +28,15 @@ import TrackingDetailScreen from "./screens/CheckoutScreen/TrackingDetailScreen"
 import WishlistScreen from "./screens/WishlistScreen";
 import MyOrdersScreen from "./screens/MyOrdersScreen";
 import OrderDetailsScreen from "./screens/OrderDetailsScreen";
-// import ZaloPayTestScreen from "./screens/TestingScreen/ZaloPayTestScreen";
-// import ZaloPayQRScreen from "./screens/ZaloPayQRScreen";
+import ZaloPayTestScreen from "./screens/TestingScreen/ZaloPayTestScreen";
+import ZaloPayQRScreen from "./screens/ZaloPayQRScreen";
 
 import UserInactivity from "react-native-user-inactivity";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from "expo-secure-store";
 import api from "./api/AxiosInstance";
 import { handleLogout } from "./utils/AuthUtils";
-// import ZaloPayService from "./services/ZaloPayService";
+import ZaloPayService from "./services/ZaloPayService";
 import apiService from "./api/ApiService";
 
 const Stack = createStackNavigator();
@@ -48,17 +48,17 @@ export default function App() {
   const [showWelcome, setShowWelcome] = useState(true);
   const backgroundTime = useRef(null);
 
-  // Deep linking configuration for ZaloPay - commented out
-  // const linking = {
-  //   prefixes: ['demozpdk://', 'happyfield://'],
-  //   config: {
-  //     screens: {
-  //       OrderScreen: 'order',
-  //       MyOrdersScreen: 'orders',
-  //       HomeScreen: 'home',
-  //     },
-  //   },
-  // };
+  // Deep linking configuration for ZaloPay
+  const linking = {
+    prefixes: ['demozpdk://', 'happyfield://'],
+    config: {
+      screens: {
+        OrderScreen: 'order',
+        MyOrdersScreen: 'orders',
+        HomeScreen: 'home',
+      },
+    },
+  };
 
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -87,45 +87,45 @@ export default function App() {
       }
     };
 
-    // const initializePaymentMethods = async () => {
-    //   try {
-    //     console.log('Initializing payment methods...');
-    //     const response = await apiService.initializePaymentMethods();
-    //     console.log('Payment methods initialized successfully:', response.data);
-    //   } catch (error) {
-    //     console.log('Payment methods already exist or initialization failed:', error.message);
-    //     // This is okay - methods might already be initialized
-    //   }
-    // };
+    const initializePaymentMethods = async () => {
+      try {
+        console.log('Initializing payment methods...');
+        const response = await apiService.initializePaymentMethods();
+        console.log('Payment methods initialized successfully:', response.data);
+      } catch (error) {
+        console.log('Payment methods already exist or initialization failed:', error.message);
+        // This is okay - methods might already be initialized
+      }
+    };
 
     checkLoginStatus();
     
-    // Initialize payment methods on app startup - commented out
-    // initializePaymentMethods();
+    // Initialize payment methods on app startup
+    initializePaymentMethods();
 
-    // Handle deep linking for ZaloPay payment results - commented out
-    // const handleDeepLink = (url) => {
-    //   console.log('Deep link received:', url);
-    //   if (url && url.includes('demozpdk://')) {
-    //     const paymentResult = ZaloPayService.parsePaymentResult(url);
-    //     console.log('Payment result:', paymentResult);
-    //     
-    //     // You can dispatch navigation or update global state here
-    //     // For now, we'll let the OrderScreen handle the result
-    //   }
-    // };
+    // Handle deep linking for ZaloPay payment results
+    const handleDeepLink = (url) => {
+      console.log('Deep link received:', url);
+      if (url && url.includes('demozpdk://')) {
+        const paymentResult = ZaloPayService.parsePaymentResult(url);
+        console.log('Payment result:', paymentResult);
+        
+        // You can dispatch navigation or update global state here
+        // For now, we'll let the OrderScreen handle the result
+      }
+    };
 
-    // Listen for deep links - commented out
-    // const linkingListener = Linking.addEventListener('url', ({ url }) => {
-    //   handleDeepLink(url);
-    // });
+    // Listen for deep links
+    const linkingListener = Linking.addEventListener('url', ({ url }) => {
+      handleDeepLink(url);
+    });
 
-    // Check if app was opened via deep link - commented out
-    // Linking.getInitialURL().then((url) => {
-    //   if (url) {
-    //     handleDeepLink(url);
-    //   }
-    // });
+    // Check if app was opened via deep link
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        handleDeepLink(url);
+      }
+    });
 
     const appStateListener = AppState.addEventListener(
       "change",
@@ -137,7 +137,7 @@ export default function App() {
     const welcomeTimer = setTimeout(() => setShowWelcome(false), 5000);
 
     return () => {
-      // linkingListener.remove();
+      linkingListener.remove();
       appStateListener.remove();
       clearTimeout(welcomeTimer);
     };
@@ -186,7 +186,7 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <UserInactivity
         timeForInactivity={1 * 60 * 1000}
         onAction={async (isActive) => {
@@ -360,7 +360,7 @@ export default function App() {
               component={OrderDetailsScreen}
               options={{ headerShown: false }}
             />
-            {/* <Stack.Screen
+            <Stack.Screen
               name="ZaloPayTestScreen"
               component={ZaloPayTestScreen}
               options={{ headerShown: false }}
@@ -369,7 +369,7 @@ export default function App() {
               name="ZaloPayQRScreen"
               component={ZaloPayQRScreen}
               options={{ headerShown: false }}
-            /> */}
+            />
           </Stack.Navigator>
         </UserInactivity>
     </NavigationContainer>
