@@ -62,7 +62,7 @@ const CustomDrawer = ({
     ]).start();
   };
 
-  const onHandlerStateChange = (event) => {
+  const onDrawerHandlerStateChange = (event) => {
     if (event.nativeEvent.oldState === State.ACTIVE) {
       const { translationX, velocityX } = event.nativeEvent;
       
@@ -82,6 +82,24 @@ const CustomDrawer = ({
     }
   };
 
+  const onEdgeHandlerStateChange = (event) => {
+    if (event.nativeEvent.oldState === State.ACTIVE) {
+      const { translationX, velocityX } = event.nativeEvent;
+      
+      let shouldOpen = false;
+      
+      if (drawerPosition === 'left') {
+        shouldOpen = translationX > 50 || velocityX > 500;
+      } else {
+        shouldOpen = translationX < -50 || velocityX < -500;
+      }
+
+      if (shouldOpen && !isOpen) {
+        openDrawer();
+      }
+    }
+  };
+
   const onGestureEvent = Animated.event(
     [{ nativeEvent: { translationX: translateX } }],
     { useNativeDriver: true }
@@ -93,6 +111,18 @@ const CustomDrawer = ({
 
   return (
     <View style={styles.container}>
+      {/* Edge swipe detector for opening drawer */}
+      {!isOpen && (
+        <PanGestureHandler
+          onHandlerStateChange={onEdgeHandlerStateChange}
+          activeOffsetX={drawerPosition === 'left' ? [0, 50] : [-50, 0]}
+          failOffsetX={drawerPosition === 'left' ? [-10, 200] : [-200, 10]}
+          shouldCancelWhenOutside={true}
+        >
+          <Animated.View style={styles.edgeDetector} />
+        </PanGestureHandler>
+      )}
+
       {/* Main Content */}
       <View style={styles.mainContent}>
         {children}
@@ -116,7 +146,7 @@ const CustomDrawer = ({
       {/* Drawer */}
       {isOpen && (
         <PanGestureHandler
-          onHandlerStateChange={onHandlerStateChange}
+          onHandlerStateChange={onDrawerHandlerStateChange}
           activeOffsetX={drawerPosition === 'left' ? [-10, 50] : [-50, 10]}
           failOffsetY={[-20, 20]}
         >
@@ -156,6 +186,15 @@ const CustomDrawer = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  edgeDetector: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: 20,
+    zIndex: 0,
+    backgroundColor: 'transparent',
   },
   mainContent: {
     flex: 1,
