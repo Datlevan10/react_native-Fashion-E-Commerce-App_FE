@@ -30,7 +30,7 @@ export default function ManagerProfileScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
-  const [gender, setGender] = useState("");
+  const [gender, setGender] = useState(null);
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [imageUri, setImageUri] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -53,7 +53,7 @@ export default function ManagerProfileScreen({ navigation }) {
         setEmail(customerData.email || "");
         setPhoneNumber(customerData.phone_number || "");
         setAddress(customerData.address || "");
-        setGender(customerData.gender || "");
+        setGender(customerData.gender || null); // Keep null if no gender
         setDateOfBirth(customerData.date_of_birth || "");
         setImageUri(customerData.image || null);
       }
@@ -85,7 +85,8 @@ export default function ManagerProfileScreen({ navigation }) {
         if (email !== customer.email) formData.append('email', email);
         if (phoneNumber !== customer.phone_number) formData.append('phone_number', phoneNumber);
         if (address !== customer.address) formData.append('address', address);
-        if (gender !== customer.gender) formData.append('gender', gender);
+        // Only send gender if it has a valid value and has changed
+        if (gender && gender !== customer.gender) formData.append('gender', gender);
         if (dateOfBirth !== customer.date_of_birth) formData.append('date_of_birth', dateOfBirth);
         
         // Handle image upload
@@ -110,21 +111,34 @@ export default function ManagerProfileScreen({ navigation }) {
         if (email !== customer.email) requestData.email = email;
         if (phoneNumber !== customer.phone_number) requestData.phone_number = phoneNumber;
         if (address !== customer.address) requestData.address = address;
-        if (gender !== customer.gender) requestData.gender = gender;
+        // Only send gender if it has a valid value and has changed
+        if (gender && gender !== customer.gender) requestData.gender = gender;
         if (dateOfBirth !== customer.date_of_birth) requestData.date_of_birth = dateOfBirth;
       }
 
-      const response = await ApiService.updateCustomer(customer.customer_id, requestData, hasImages);
-      
-      if (response.data) {
+      // Check if there are any changes to update
+      if (hasImages || Object.keys(requestData).length > 0) {
+        const response = await ApiService.updateCustomer(customer.customer_id, requestData, hasImages);
+        
+        if (response.data) {
+          Alert.alert(
+            "Success",
+            "Profile updated successfully",
+            [{ text: "OK", onPress: () => navigation.goBack() }]
+          );
+        }
+      } else {
         Alert.alert(
-          "Success",
-          "Profile updated successfully",
-          [{ text: "OK", onPress: () => navigation.goBack() }]
+          "No Changes",
+          "No changes were made to your profile",
+          [{ text: "OK" }]
         );
       }
     } catch (error) {
       console.error("Error updating profile:", error);
+      if (error.response?.data) {
+        console.log("Error details:", error.response.data);
+      }
       Alert.alert(
         "Error", 
         error.response?.data?.message || "Failed to update profile"
