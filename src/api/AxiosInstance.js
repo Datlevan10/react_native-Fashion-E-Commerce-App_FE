@@ -25,17 +25,25 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshToken = await SecureStore.getItemAsync("refresh_token");
+        // Check for admin refresh token first, then customer refresh token
+        let refreshToken = await SecureStore.getItemAsync("admin_refresh_token");
+        let isAdmin = true;
+        if (!refreshToken) {
+          refreshToken = await SecureStore.getItemAsync("refresh_token");
+          isAdmin = false;
+        }
+        
         if (!refreshToken) {
           throw new Error("No refresh token available.");
         }
 
-        // console.log("Attempting to refresh token...");
-        // console.log("Original request URL:", originalRequest.url);
-        // console.log("Refresh token sent:", refreshToken);
+        // Use appropriate endpoint based on user type
+        const refreshEndpoint = isAdmin 
+          ? `${API_URL}/admin/auth/refresh-token`
+          : `${API_URL}/customers/auth/refresh-token`;
 
         const { data } = await axios.post(
-          `${API_URL}/customers/auth/refresh-token`,
+          refreshEndpoint,
           {
             refresh_token: refreshToken,
           },
@@ -45,14 +53,20 @@ api.interceptors.response.use(
         const { access_token, expires_in } = data;
         const newExpiryTime = Date.now() + expires_in * 1000;
 
-        // console.log("New access token received:", access_token);
-        // console.log("New expiry time:", new Date(newExpiryTime).toLocaleString());
-
-        await SecureStore.setItemAsync("access_token", access_token);
-        await SecureStore.setItemAsync(
-          "access_token_expiry",
-          newExpiryTime.toString()
-        );
+        // Store tokens with appropriate keys
+        if (isAdmin) {
+          await SecureStore.setItemAsync("admin_access_token", access_token);
+          await SecureStore.setItemAsync(
+            "admin_token_expiry",
+            newExpiryTime.toString()
+          );
+        } else {
+          await SecureStore.setItemAsync("access_token", access_token);
+          await SecureStore.setItemAsync(
+            "access_token_expiry",
+            newExpiryTime.toString()
+          );
+        }
 
         api.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
         originalRequest.headers["Authorization"] = `Bearer ${access_token}`;
@@ -60,8 +74,11 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         console.log("Refresh token error:", refreshError.response?.data);
+        // Clear both admin and customer tokens
         await SecureStore.deleteItemAsync("access_token");
         await SecureStore.deleteItemAsync("refresh_token");
+        await SecureStore.deleteItemAsync("admin_access_token");
+        await SecureStore.deleteItemAsync("admin_refresh_token");
       }
     }
 
@@ -71,7 +88,11 @@ api.interceptors.response.use(
 
 api.interceptors.request.use(
   async (config) => {
-    const token = await SecureStore.getItemAsync("access_token");
+    // Check for admin token first, then customer token
+    let token = await SecureStore.getItemAsync("admin_access_token");
+    if (!token) {
+      token = await SecureStore.getItemAsync("access_token");
+    }
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }

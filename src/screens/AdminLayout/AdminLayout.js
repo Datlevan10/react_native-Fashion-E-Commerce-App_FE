@@ -8,16 +8,13 @@ import CustomDrawerContent from '../../components/CustomDrawer/CustomDrawerConte
 
 // Import Admin Screens
 import AdminDashboardScreen from '../AdminDashboardScreen';
-import PlaceholderScreen from '../../components/PlaceholderScreen';
-
-// Create placeholder components for screens that might have issues
-const CustomerManagementScreen = () => <PlaceholderScreen title="Customer Management" />;
-const StaffManagementScreen = () => <PlaceholderScreen title="Staff Management" />;
-const ProductManagementScreen = () => <PlaceholderScreen title="Product Management" />;
-const CategoryManagementScreen = () => <PlaceholderScreen title="Category Management" />;
-const CartManagementScreen = () => <PlaceholderScreen title="Cart Management" />;
-const OrderManagementScreen = () => <PlaceholderScreen title="Order Management" />;
-const ReportsScreen = () => <PlaceholderScreen title="Reports & Analytics" />;
+import CustomerManagementScreen from '../CustomerManagementScreen';
+import StaffManagementScreen from '../StaffManagementScreen';
+import ProductManagementScreen from '../ProductManagementScreen';
+import CategoryManagementScreen from '../CategoryManagementScreen';
+import CartManagementScreen from '../CartManagementScreen';
+import OrderManagementScreen from '../OrderManagementScreen';
+import ReportsScreen from '../ReportsScreen';
 
 const Stack = createStackNavigator();
 
