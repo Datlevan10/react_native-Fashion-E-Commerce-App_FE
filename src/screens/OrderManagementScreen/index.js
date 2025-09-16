@@ -110,7 +110,7 @@ export default function OrderManagementScreen({ navigation }) {
     }
 
     const filtered = orders.filter((order) =>
-      order.id.toString().includes(searchQuery) ||
+      (order.id || order.order_id || '').toString().includes(searchQuery) ||
       order.customer_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       order.customer_email?.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -257,7 +257,7 @@ export default function OrderManagementScreen({ navigation }) {
         <FlatList
           data={filteredOrders}
           renderItem={renderOrderCard}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => (item.id || item.order_id || Math.random()).toString()}
           ListHeaderComponent={renderHeader}
           ListEmptyComponent={!loading ? renderEmptyList : null}
           ListFooterComponent={renderFooter}
