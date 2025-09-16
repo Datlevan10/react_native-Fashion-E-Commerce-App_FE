@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DrawerLayout } from 'react-native-drawer-layout';
+import { Drawer } from 'react-native-drawer-layout';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Feather, MaterialIcons, FontAwesome5, Ionicons } from 'react-native-vector-icons';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
@@ -193,7 +193,7 @@ const AdminDrawerNavigator = () => {
   });
 
   return (
-    <DrawerLayout
+    <Drawer
       open={drawerOpen}
       onOpen={() => setDrawerOpen(true)}
       onClose={() => setDrawerOpen(false)}
@@ -264,7 +264,7 @@ const AdminDrawerNavigator = () => {
           }}
         />
       </Stack.Navigator>
-    </DrawerLayout>
+    </Drawer>
   );
 };
 
