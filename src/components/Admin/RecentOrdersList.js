@@ -41,7 +41,7 @@ const RecentOrdersList = ({ orders = [] }) => {
   const renderOrderItem = ({ item }) => (
     <TouchableOpacity style={styles.orderItem} activeOpacity={0.7}>
       <View style={styles.orderHeader}>
-        <Text style={styles.orderId}>#{item.id}</Text>
+        <Text style={styles.orderId}>#{item.order_id || item.id || 'N/A'}</Text>
         <View style={[styles.statusBadge, { backgroundColor: `${getStatusColor(item.status)}15` }]}>
           <FontAwesome5
             name={getStatusIcon(item.status)}
@@ -55,7 +55,7 @@ const RecentOrdersList = ({ orders = [] }) => {
       </View>
       <Text style={styles.customerName}>{item.customer_name}</Text>
       <View style={styles.orderFooter}>
-        <Text style={styles.orderAmount}>${item.total_amount}</Text>
+        <Text style={styles.orderAmount}>VND {item.total_price || item.total_amount || '0'}</Text>
         <Text style={styles.orderDate}>{item.created_at}</Text>
       </View>
     </TouchableOpacity>
@@ -75,7 +75,7 @@ const RecentOrdersList = ({ orders = [] }) => {
       <FlatList
         data={orders}
         renderItem={renderOrderItem}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => (item.order_id || item.id || Math.random()).toString()}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />

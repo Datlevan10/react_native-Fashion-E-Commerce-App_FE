@@ -33,21 +33,33 @@ const OrderDetailsScreen = ({ navigation, route }) => {
       setError(null);
       setLoading(true);
       
-      const response = await ApiService.getOrderDetails(orderId);
+      const response = await ApiService.getOrderDetailsByOrderId(orderId);
       
-      // Handle different response formats
-      let orderData = null;
-      if (response.data) {
-        if (response.data.data) {
-          orderData = response.data.data;
-        } else if (Array.isArray(response.data)) {
-          orderData = response.data[0];
-        } else {
-          orderData = response.data;
-        }
-      }
-      
-      if (orderData) {
+      if (response.data.order_details && response.data.order_details.length > 0) {
+        // Transform order details for display
+        const orderData = {
+          order_id: orderId,
+          order_items: response.data.order_details.map(detail => ({
+            product: {
+              product_name: detail.product_name,
+              image_url: detail.image
+            },
+            quantity: detail.quantity,
+            unit_price: detail.unit_price,
+            total_price: detail.total_price,
+            color: detail.color,
+            size: detail.size
+          })),
+          customer_name: response.data.order_details[0].customer_name,
+          staff_name: response.data.order_details[0].staff_name,
+          total_price: response.data.order_details.reduce((sum, item) => 
+            sum + parseFloat(item.total_price || 0), 0
+          ),
+          order_status: 'pending', // Default status
+          order_date: response.data.order_details[0].created_at,
+          created_at: response.data.order_details[0].created_at
+        };
+        
         setOrderDetails(orderData);
       } else {
         setError("Order details not found");
