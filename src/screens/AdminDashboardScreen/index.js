@@ -69,23 +69,50 @@ export default function AdminDashboardScreen({ navigation }) {
         apiService.getTopProducts(5),
       ]);
 
+      // Log each API response to debug
+      console.log("=== API Responses Debug ===");
+      console.log("1. customersRes:", JSON.stringify(customersRes, null, 2));
+      console.log("2. staffRes:", JSON.stringify(staffRes, null, 2));
+      console.log("3. productsRes:", JSON.stringify(productsRes, null, 2));
+      console.log("4. categoriesRes:", JSON.stringify(categoriesRes, null, 2));
+      console.log("5. cartsRes:", JSON.stringify(cartsRes, null, 2));
+      console.log("6. activeCartsRes:", JSON.stringify(activeCartsRes, null, 2));
+      console.log("7. ordersRes:", JSON.stringify(ordersRes, null, 2));
+      console.log("8. recentOrdersRes:", JSON.stringify(recentOrdersRes, null, 2));
+      console.log("9. topProductsRes:", JSON.stringify(topProductsRes, null, 2));
+      console.log("=========================");
+
+      // Safely access data with multiple fallbacks
+      const safeGetValue = (obj, path, defaultValue = 0) => {
+        try {
+          const keys = path.split('.');
+          let value = obj;
+          for (const key of keys) {
+            value = value?.[key];
+          }
+          return value ?? defaultValue;
+        } catch (e) {
+          return defaultValue;
+        }
+      };
+
       setDashboardData({
-        totalCustomers: customersRes.data.data.total || 0,
-        totalStaff: staffRes.data.data.total || 0,
-        totalProducts: productsRes.data.data.total || 0,
-        totalCategories: categoriesRes.data.data.total || 0,
-        totalCarts: cartsRes.data.data.total || 0,
-        activeCarts: activeCartsRes.data.data.active || 0,
-        todayOrders: ordersRes.data.data.today || 0,
-        weekOrders: ordersRes.data.data.week || 0,
-        monthOrders: ordersRes.data.data.month || 0,
-        todayRevenue: ordersRes.data.data.todayRevenue || 0,
-        weekRevenue: ordersRes.data.data.weekRevenue || 0,
-        monthRevenue: ordersRes.data.data.monthRevenue || 0,
+        totalCustomers: safeGetValue(customersRes, 'data.data.total', 0),
+        totalStaff: safeGetValue(staffRes, 'data.data.total', 0),
+        totalProducts: safeGetValue(productsRes, 'data.data.total', 0),
+        totalCategories: safeGetValue(categoriesRes, 'data.data.total', 0),
+        totalCarts: safeGetValue(cartsRes, 'data.data.total', 0),
+        activeCarts: safeGetValue(activeCartsRes, 'data.data.active', 0),
+        todayOrders: safeGetValue(ordersRes, 'data.data.today', 0) || safeGetValue(ordersRes, 'data.today', 0),
+        weekOrders: safeGetValue(ordersRes, 'data.data.week', 0) || safeGetValue(ordersRes, 'data.week', 0),
+        monthOrders: safeGetValue(ordersRes, 'data.data.month', 0) || safeGetValue(ordersRes, 'data.month', 0),
+        todayRevenue: safeGetValue(ordersRes, 'data.data.todayRevenue', 0) || safeGetValue(ordersRes, 'data.todayRevenue', 0),
+        weekRevenue: safeGetValue(ordersRes, 'data.data.weekRevenue', 0) || safeGetValue(ordersRes, 'data.weekRevenue', 0),
+        monthRevenue: safeGetValue(ordersRes, 'data.data.monthRevenue', 0) || safeGetValue(ordersRes, 'data.monthRevenue', 0),
       });
 
-      setRecentOrders(recentOrdersRes.data.orders || []);
-      setTopProducts(topProductsRes.data.products || []);
+      setRecentOrders(safeGetValue(recentOrdersRes, 'data.orders', []) || safeGetValue(recentOrdersRes, 'data.data', []));
+      setTopProducts(safeGetValue(topProductsRes, 'data.products', []) || safeGetValue(topProductsRes, 'data.data', []));
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
       // Set default values if API calls fail
