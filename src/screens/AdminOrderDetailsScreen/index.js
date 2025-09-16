@@ -276,13 +276,6 @@ export default function AdminOrderDetailsScreen({ navigation, route }) {
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
           {/* Header */}
           <View style={styles.header}>
-            <TouchableOpacity
-              style={styles.backButton}
-              onPress={() => navigation.goBack()}
-            >
-              <Feather name="arrow-left" size={24} color={Colors.whiteColor} />
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Chi tiết đơn hàng - Admin</Text>
           </View>
 
           {/* Order Summary */}
