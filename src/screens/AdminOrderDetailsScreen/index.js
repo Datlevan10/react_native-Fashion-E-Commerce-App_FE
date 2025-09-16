@@ -65,14 +65,14 @@ export default function AdminOrderDetailsScreen({ navigation, route }) {
   const updateOrderStatus = async (status) => {
     try {
       setUpdating(true);
-      await ApiService.updateOrderStatus(orderId, status);
+      await ApiService.updateOrderStatusAdmin(orderId, status);
       Alert.alert(
         "Thành công", 
         `Đơn hàng đã được ${status === 'confirmed' ? 'xác nhận' : 'cập nhật trạng thái'} thành công`,
         [{ text: "OK", onPress: () => navigation.goBack() }]
       );
     } catch (error) {
-      console.error("Error updating order status:", error);
+      console.error("Error updating order status (admin):", error);
       Alert.alert("Lỗi", "Không thể cập nhật trạng thái đơn hàng");
     } finally {
       setUpdating(false);
@@ -82,14 +82,14 @@ export default function AdminOrderDetailsScreen({ navigation, route }) {
   const cancelOrder = async () => {
     try {
       setUpdating(true);
-      await ApiService.cancelOrder(orderId);
+      await ApiService.cancelOrderAdmin(orderId);
       Alert.alert(
         "Thành công", 
         "Đơn hàng đã được hủy thành công",
         [{ text: "OK", onPress: () => navigation.goBack() }]
       );
     } catch (error) {
-      console.error("Error cancelling order:", error);
+      console.error("Error cancelling order (admin):", error);
       Alert.alert("Lỗi", "Không thể hủy đơn hàng");
     } finally {
       setUpdating(false);
