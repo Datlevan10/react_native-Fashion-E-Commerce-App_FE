@@ -65,7 +65,7 @@ export default function AdminDashboardScreen({ navigation }) {
         apiService.getTotalCarts(),
         apiService.getActiveCarts(),
         apiService.getOrderStatistics(),
-        apiService.getRecentOrders(10),
+        // apiService.getRecentOrders(10),
         apiService.getTopProducts(5),
       ]);
 

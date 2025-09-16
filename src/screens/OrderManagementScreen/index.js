@@ -169,26 +169,13 @@ export default function OrderManagementScreen({ navigation }) {
   const renderHeader = () => (
     <View style={styles.header}>
       <View style={styles.headerTop}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Feather name="arrow-left" size={24} color={Colors.whiteColor} />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Order Management</Text>
-        <TouchableOpacity
-          style={styles.filterButton}
-          onPress={() => setShowFilters(!showFilters)}
-        >
-          <Feather name="filter" size={24} color={Colors.whiteColor} />
-        </TouchableOpacity>
       </View>
 
       <View style={styles.searchContainer}>
         <Feather name="search" size={20} color={Colors.textSecondary} />
         <TextInput
           style={styles.searchInput}
-          placeholder="Search by order ID, customer name or email..."
+          placeholder="Tìm kiếm theo ID đơn hàng, tên khách hàng hoặc email..."
           placeholderTextColor={Colors.textSecondary}
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -211,19 +198,19 @@ export default function OrderManagementScreen({ navigation }) {
       <View style={styles.statsContainer}>
         <View style={styles.statCard}>
           <Text style={styles.statValue}>{orders.length}</Text>
-          <Text style={styles.statLabel}>Total Orders</Text>
+          <Text style={styles.statLabel}>Tổng số đơn hàng</Text>
         </View>
         <View style={styles.statCard}>
           <Text style={styles.statValue}>{getOrderStatusCount("pending")}</Text>
-          <Text style={styles.statLabel}>Pending</Text>
+          <Text style={styles.statLabel}>Đang chờ duyệt</Text>
         </View>
         <View style={styles.statCard}>
           <Text style={styles.statValue}>{getOrderStatusCount("confirmed")}</Text>
-          <Text style={styles.statLabel}>Confirmed</Text>
+          <Text style={styles.statLabel}>Đã xác nhận</Text>
         </View>
         <View style={styles.statCard}>
           <Text style={styles.statValue}>{getOrderStatusCount("delivered")}</Text>
-          <Text style={styles.statLabel}>Delivered</Text>
+          <Text style={styles.statLabel}>Đã giao hàng</Text>
         </View>
       </View>
     </View>
@@ -242,7 +229,7 @@ export default function OrderManagementScreen({ navigation }) {
   const renderEmptyList = () => (
     <View style={styles.emptyContainer}>
       <Feather name="shopping-bag" size={64} color={Colors.textSecondary} />
-      <Text style={styles.emptyTitle}>No Orders Found</Text>
+      <Text style={styles.emptyTitle}>Không tìm thấy đơn hàng nào</Text>
       <Text style={styles.emptySubtitle}>
         {searchQuery ? "Try adjusting your search criteria" : "No orders placed yet"}
       </Text>
