@@ -768,6 +768,29 @@ const getProductCountsForOrders = async (orders) => {
   }
 };
 
+// ============ ORDER MANAGEMENT APIs ============
+// Update order status (for admin)
+const updateOrderStatus = async (orderId, status) => {
+  try {
+    const response = await api.put(`/orders/${orderId}/status`, { status });
+    return response;
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    throw error;
+  }
+};
+
+// Cancel order (for both admin and customer)
+const cancelOrder = async (orderId) => {
+  try {
+    const response = await api.put(`/orders/${orderId}/cancel`);
+    return response;
+  } catch (error) {
+    console.error("Error cancelling order:", error);
+    throw error;
+  }
+};
+
 export default {
   registerCustomer,
   authenticateLoginCustomer,
@@ -910,4 +933,7 @@ export default {
   getOrderDetailsByOrderId,
   getOrderDetailById,
   getProductCountsForOrders,
+  // Order Management APIs
+  updateOrderStatus,
+  cancelOrder,
 }

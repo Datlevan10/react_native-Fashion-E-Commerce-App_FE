@@ -160,7 +160,7 @@ export default function OrderManagementScreen({ navigation }) {
     <OrderCard
       order={item}
       onPress={() =>
-        navigation.navigate("OrderDetailsScreen", { orderId: item.order_id || item.id })
+        navigation.navigate("AdminOrderDetailsScreen", { orderId: item.order_id || item.id })
       }
       onStatusUpdate={(status) => handleUpdateOrderStatus(item.order_id || item.id, status)}
     />

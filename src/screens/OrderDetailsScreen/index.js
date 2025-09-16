@@ -126,24 +126,24 @@ const OrderDetailsScreen = ({ navigation, route }) => {
 
   const handleCancelOrder = () => {
     Alert.alert(
-      "Cancel Order",
-      "Are you sure you want to cancel this order?",
+      "Hủy đơn hàng",
+      "Bạn có chắc chắn muốn hủy đơn hàng này?",
       [
         {
-          text: "No",
+          text: "Không",
           style: "cancel"
         },
         {
-          text: "Yes, Cancel",
+          text: "Hủy đơn hàng",
           style: "destructive",
           onPress: async () => {
             try {
-              await ApiService.updateOrderStatus(orderId, 'cancelled');
-              Alert.alert("Success", "Order has been cancelled");
+              await ApiService.cancelOrder(orderId);
+              Alert.alert("Thành công", "Đơn hàng đã được hủy thành công");
               fetchOrderDetails(); // Refresh data
             } catch (error) {
               console.error("Error cancelling order:", error);
-              Alert.alert("Error", "Failed to cancel order");
+              Alert.alert("Lỗi", "Không thể hủy đơn hàng");
             }
           }
         }
@@ -373,7 +373,7 @@ const OrderDetailsScreen = ({ navigation, route }) => {
                   style={styles.cancelButton}
                   onPress={handleCancelOrder}
                 >
-                  <Text style={styles.cancelButtonText}>Cancel Order</Text>
+                  <Text style={styles.cancelButtonText}>Hủy đơn hàng</Text>
                 </TouchableOpacity>
               </View>
             )}
