@@ -138,11 +138,11 @@ const OrderDetailsScreen = ({ navigation, route }) => {
           style: "destructive",
           onPress: async () => {
             try {
-              await ApiService.cancelOrder(orderId);
+              await ApiService.cancelOrderCustomer(orderId);
               Alert.alert("Thành công", "Đơn hàng đã được hủy thành công");
               fetchOrderDetails(); // Refresh data
             } catch (error) {
-              console.error("Error cancelling order:", error);
+              console.error("Error cancelling order (customer):", error);
               Alert.alert("Lỗi", "Không thể hủy đơn hàng");
             }
           }

@@ -130,7 +130,7 @@ export default function OrderManagementScreen({ navigation }) {
           text: "Update",
           onPress: async () => {
             try {
-              await apiService.updateOrderStatus(orderId, newStatus);
+              await apiService.updateOrderStatusAdmin(orderId, newStatus);
               setOrders(orders.map(order => 
                 order.id === orderId 
                   ? { ...order, status: newStatus }
