@@ -1,7 +1,8 @@
-import React from 'react';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import React, { useState } from 'react';
+import { DrawerLayout } from 'react-native-drawer-layout';
+import { createStackNavigator } from '@react-navigation/stack';
 import { Feather, MaterialIcons, FontAwesome5, Ionicons } from 'react-native-vector-icons';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
 import Colors from '../styles/Color';
@@ -14,9 +15,9 @@ import CartManagementScreen from '../screens/CartManagementScreen';
 import OrderManagementScreen from '../screens/OrderManagementScreen';
 import ReportsScreen from '../screens/ReportsScreen';
 
-const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
-const CustomDrawerContent = ({ navigation }) => {
+const CustomDrawerContent = ({ navigation, onClose }) => {
   const handleLogout = async () => {
     try {
       // Clear all admin tokens
@@ -26,8 +27,22 @@ const CustomDrawerContent = ({ navigation }) => {
       await SecureStore.deleteItemAsync('admin_token_expiry');
       await SecureStore.deleteItemAsync('user_type');
       
+      // Close drawer first
+      if (onClose) onClose();
+      
       // Navigate to login - need to go to root navigator
-      navigation.getParent().replace('UserTypeSelectionScreen');
+      const rootNavigation = navigation.getParent();
+      if (rootNavigation) {
+        rootNavigation.reset({
+          index: 0,
+          routes: [{ name: 'UserTypeSelectionScreen' }],
+        });
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'UserTypeSelectionScreen' }],
+        });
+      }
     } catch (error) {
       console.error('Error during logout:', error);
     }
@@ -107,6 +122,13 @@ const CustomDrawerContent = ({ navigation }) => {
     }
   };
 
+  const handleNavigateToScreen = (screenName) => {
+    if (onClose) onClose(); // Close drawer first
+    setTimeout(() => {
+      navigation.navigate(screenName);
+    }, 100); // Small delay to ensure smooth animation
+  };
+
   return (
     <View style={styles.drawerContainer}>
       {/* Header */}
@@ -119,12 +141,12 @@ const CustomDrawerContent = ({ navigation }) => {
       </View>
 
       {/* Menu Items */}
-      <View style={styles.menuContainer}>
+      <ScrollView style={styles.menuContainer} showsVerticalScrollIndicator={false}>
         {menuItems.map((item, index) => (
           <TouchableOpacity
             key={index}
             style={styles.menuItem}
-            onPress={() => navigation.navigate(item.screen)}
+            onPress={() => handleNavigateToScreen(item.screen)}
           >
             <View style={[styles.menuIcon, { backgroundColor: item.color + '20' }]}>
               {renderIcon(item.icon, item.iconType, item.color, 20)}
@@ -133,7 +155,7 @@ const CustomDrawerContent = ({ navigation }) => {
             <Feather name="chevron-right" size={16} color={Colors.textSecondary} />
           </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
 
       {/* Footer */}
       <View style={styles.drawerFooter}>
@@ -148,92 +170,109 @@ const CustomDrawerContent = ({ navigation }) => {
 };
 
 const AdminDrawerNavigator = () => {
-  return (
-    <Drawer.Navigator
-      drawerContent={(props) => <CustomDrawerContent {...props} />}
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: Colors.primary,
-        },
-        headerTintColor: Colors.whiteColor,
-        headerTitleStyle: {
-          fontWeight: '600',
-        },
-        drawerStyle: {
-          backgroundColor: Colors.whiteColor,
-          width: 280,
-        },
-      }}
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const HeaderLeft = ({ navigation }) => (
+    <TouchableOpacity
+      style={styles.menuButton}
+      onPress={() => setDrawerOpen(true)}
     >
-      <Drawer.Screen
-        name="AdminDashboard"
-        component={AdminDashboardScreen}
-        options={{
-          title: 'Dashboard',
-          headerTitle: 'Bảng điều khiển quản trị',
-        }}
-      />
-      <Drawer.Screen
-        name="CustomerManagement"
-        component={CustomerManagementScreen}
-        options={{
-          title: 'Customers',
-          headerTitle: 'Quản lý khách hàng',
-        }}
-      />
-      <Drawer.Screen
-        name="StaffManagement"
-        component={StaffManagementScreen}
-        options={{
-          title: 'Staff',
-          headerTitle: 'Quản lý nhân viên',
-        }}
-      />
-      <Drawer.Screen
-        name="ProductManagement"
-        component={ProductManagementScreen}
-        options={{
-          title: 'Products',
-          headerTitle: 'Quản lý sản phẩm',
-        }}
-      />
-      <Drawer.Screen
-        name="CategoryManagement"
-        component={CategoryManagementScreen}
-        options={{
-          title: 'Categories',
-          headerTitle: 'Quản lý danh mục',
-        }}
-      />
-      <Drawer.Screen
-        name="CartManagement"
-        component={CartManagementScreen}
-        options={{
-          title: 'Carts',
-          headerTitle: 'Quản lý giỏ hàng',
-        }}
-      />
-      <Drawer.Screen
-        name="OrderManagement"
-        component={OrderManagementScreen}
-        options={{
-          title: 'Orders',
-          headerTitle: 'Quản lý đơn hàng',
-        }}
-      />
-      <Drawer.Screen
-        name="Reports"
-        component={ReportsScreen}
-        options={{
-          title: 'Reports',
-          headerTitle: 'Báo cáo & Phân tích',
-        }}
-      />
-    </Drawer.Navigator>
+      <Feather name="menu" size={24} color={Colors.whiteColor} />
+    </TouchableOpacity>
+  );
+
+  const screenOptions = ({ navigation }) => ({
+    headerStyle: {
+      backgroundColor: Colors.primary,
+    },
+    headerTintColor: Colors.whiteColor,
+    headerTitleStyle: {
+      fontWeight: '600',
+    },
+    headerLeft: () => <HeaderLeft navigation={navigation} />,
+  });
+
+  return (
+    <DrawerLayout
+      open={drawerOpen}
+      onOpen={() => setDrawerOpen(true)}
+      onClose={() => setDrawerOpen(false)}
+      drawerWidth={280}
+      drawerPosition="left"
+      renderDrawerContent={({ navigation }) => (
+        <CustomDrawerContent
+          navigation={navigation}
+          onClose={() => setDrawerOpen(false)}
+        />
+      )}
+    >
+      <Stack.Navigator screenOptions={screenOptions}>
+        <Stack.Screen
+          name="AdminDashboard"
+          component={AdminDashboardScreen}
+          options={{
+            title: 'Bảng điều khiển quản trị',
+          }}
+        />
+        <Stack.Screen
+          name="CustomerManagement"
+          component={CustomerManagementScreen}
+          options={{
+            title: 'Quản lý khách hàng',
+          }}
+        />
+        <Stack.Screen
+          name="StaffManagement"
+          component={StaffManagementScreen}
+          options={{
+            title: 'Quản lý nhân viên',
+          }}
+        />
+        <Stack.Screen
+          name="ProductManagement"
+          component={ProductManagementScreen}
+          options={{
+            title: 'Quản lý sản phẩm',
+          }}
+        />
+        <Stack.Screen
+          name="CategoryManagement"
+          component={CategoryManagementScreen}
+          options={{
+            title: 'Quản lý danh mục',
+          }}
+        />
+        <Stack.Screen
+          name="CartManagement"
+          component={CartManagementScreen}
+          options={{
+            title: 'Quản lý giỏ hàng',
+          }}
+        />
+        <Stack.Screen
+          name="OrderManagement"
+          component={OrderManagementScreen}
+          options={{
+            title: 'Quản lý đơn hàng',
+          }}
+        />
+        <Stack.Screen
+          name="Reports"
+          component={ReportsScreen}
+          options={{
+            title: 'Báo cáo & Phân tích',
+          }}
+        />
+      </Stack.Navigator>
+    </DrawerLayout>
   );
 };
 
 const styles = StyleSheet.create({
+  menuButton: {
+    marginLeft: 16,
+    padding: 8,
+  },
   drawerContainer: {
     flex: 1,
     backgroundColor: Colors.whiteColor,
