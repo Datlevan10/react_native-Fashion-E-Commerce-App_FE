@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Drawer } from 'react-native-drawer-layout';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Feather, MaterialIcons, FontAwesome5, Ionicons } from 'react-native-vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import Feather from 'react-native-vector-icons/Feather';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 
@@ -169,10 +173,11 @@ const CustomDrawerContent = ({ navigation, onClose }) => {
   );
 };
 
-const AdminDrawerNavigator = () => {
+const AdminWithDrawer = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const navigation = useNavigation();
 
-  const HeaderLeft = ({ navigation }) => (
+  const HeaderLeft = () => (
     <TouchableOpacity
       style={styles.menuButton}
       onPress={() => setDrawerOpen(true)}
@@ -189,7 +194,7 @@ const AdminDrawerNavigator = () => {
     headerTitleStyle: {
       fontWeight: '600',
     },
-    headerLeft: () => <HeaderLeft navigation={navigation} />,
+    headerLeft: () => <HeaderLeft />,
   });
 
   return (
@@ -199,7 +204,7 @@ const AdminDrawerNavigator = () => {
       onClose={() => setDrawerOpen(false)}
       drawerWidth={280}
       drawerPosition="left"
-      renderDrawerContent={({ navigation }) => (
+      renderDrawerContent={() => (
         <CustomDrawerContent
           navigation={navigation}
           onClose={() => setDrawerOpen(false)}
@@ -265,6 +270,14 @@ const AdminDrawerNavigator = () => {
         />
       </Stack.Navigator>
     </Drawer>
+  );
+};
+
+const AdminDrawerNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="AdminWithDrawer" component={AdminWithDrawer} />
+    </Stack.Navigator>
   );
 };
 
