@@ -153,7 +153,7 @@ export default function OrderManagementScreen({ navigation }) {
   };
 
   const getOrderStatusCount = (status) => {
-    return orders.filter(order => order.status === status).length;
+    return orders.filter(order => order.order_status === status).length;
   };
 
   const renderOrderCard = ({ item }) => (
