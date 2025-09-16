@@ -265,79 +265,220 @@ const hideNotification = async (notificationId, data) => {
 
 // Admin Dashboard APIs - These calculate statistics from actual data
 const getTotalCustomers = async () => {
-  // Get all customers and return count
-  const response = await api.get("/customers");
-  return { data: { total: response.data.length } };
+  try {
+    const response = await api.get("/customers");
+    // Handle different response structures
+    let customers = response.data;
+    if (response.data.data) {
+      customers = response.data.data;
+    }
+    const total = Array.isArray(customers) ? customers.length : 0;
+    return { data: { data: { total } } };
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+    return { data: { data: { total: 0 } } };
+  }
 };
 
 const getTotalStaff = async () => {
-  // Get all staff and return count
-  const response = await api.get("/staffs");
-  return { data: { total: response.data.length } };
+  try {
+    const response = await api.get("/staffs");
+    // Handle different response structures
+    let staffs = response.data;
+    if (response.data.data) {
+      staffs = response.data.data;
+    }
+    const total = Array.isArray(staffs) ? staffs.length : 0;
+    return { data: { data: { total } } };
+  } catch (error) {
+    console.error("Error fetching staffs:", error);
+    return { data: { data: { total: 0 } } };
+  }
 };
 
 const getTotalProducts = async () => {
-  // Get all products and return count
-  const response = await api.get("/products");
-  return { data: { total: response.data.length } };
+  try {
+    const response = await api.get("/products");
+    // Handle different response structures
+    let products = response.data;
+    if (response.data.data) {
+      products = response.data.data;
+    }
+    const total = Array.isArray(products) ? products.length : 0;
+    return { data: { data: { total } } };
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return { data: { data: { total: 0 } } };
+  }
 };
 
 const getTotalCategories = async () => {
-  // Get all categories and return count
-  const response = await api.get("/categories");
-  return { data: { total: response.data.length } };
+  try {
+    const response = await api.get("/categories");
+    // Handle different response structures
+    let categories = response.data;
+    if (response.data.data) {
+      categories = response.data.data;
+    }
+    const total = Array.isArray(categories) ? categories.length : 0;
+    return { data: { data: { total } } };
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return { data: { data: { total: 0 } } };
+  }
 };
 
 const getOrderStatistics = async () => {
-  // Get all orders and calculate statistics
-  const response = await api.get("/orders");
-  const orders = response.data;
-  
-  const statistics = {
-    total: orders.length,
-    pending: orders.filter(o => o.status === 'pending').length,
-    confirmed: orders.filter(o => o.status === 'confirmed').length,
-    shipped: orders.filter(o => o.status === 'shipped').length,
-    delivered: orders.filter(o => o.status === 'delivered').length,
-    cancelled: orders.filter(o => o.status === 'cancelled').length,
-  };
-  
-  return { data: statistics };
+  try {
+    const response = await api.get("/orders");
+    // Handle different response structures
+    let orders = response.data;
+    if (response.data.data) {
+      orders = response.data.data;
+    }
+    
+    if (!Array.isArray(orders)) {
+      orders = [];
+    }
+    
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+    
+    const todayOrders = orders.filter(o => {
+      const orderDate = new Date(o.created_at || o.date_created || 0);
+      return orderDate >= today;
+    }).length;
+    
+    const weekOrders = orders.filter(o => {
+      const orderDate = new Date(o.created_at || o.date_created || 0);
+      return orderDate >= weekAgo;
+    }).length;
+    
+    const monthOrders = orders.filter(o => {
+      const orderDate = new Date(o.created_at || o.date_created || 0);
+      return orderDate >= monthAgo;
+    }).length;
+    
+    // Calculate revenue
+    const todayRevenue = orders.filter(o => {
+      const orderDate = new Date(o.created_at || o.date_created || 0);
+      return orderDate >= today;
+    }).reduce((sum, order) => sum + (parseFloat(order.total_price || order.total || 0)), 0);
+    
+    const weekRevenue = orders.filter(o => {
+      const orderDate = new Date(o.created_at || o.date_created || 0);
+      return orderDate >= weekAgo;
+    }).reduce((sum, order) => sum + (parseFloat(order.total_price || order.total || 0)), 0);
+    
+    const monthRevenue = orders.filter(o => {
+      const orderDate = new Date(o.created_at || o.date_created || 0);
+      return orderDate >= monthAgo;
+    }).reduce((sum, order) => sum + (parseFloat(order.total_price || order.total || 0)), 0);
+    
+    return { 
+      data: {
+        today: todayOrders,
+        week: weekOrders,
+        month: monthOrders,
+        todayRevenue: todayRevenue,
+        weekRevenue: weekRevenue,
+        monthRevenue: monthRevenue,
+        total: orders.length,
+        pending: orders.filter(o => o.status === 'pending').length,
+        confirmed: orders.filter(o => o.status === 'confirmed').length,
+        shipped: orders.filter(o => o.status === 'shipped').length,
+        delivered: orders.filter(o => o.status === 'delivered').length,
+        cancelled: orders.filter(o => o.status === 'cancelled').length,
+      }
+    };
+  } catch (error) {
+    console.error("Error fetching order statistics:", error);
+    return { 
+      data: {
+        today: 0, week: 0, month: 0,
+        todayRevenue: 0, weekRevenue: 0, monthRevenue: 0,
+        total: 0, pending: 0, confirmed: 0, shipped: 0, delivered: 0, cancelled: 0
+      }
+    };
+  }
 };
 
 const getRecentOrders = async (limit = 10) => {
-  // Get all orders and return most recent
-  const response = await api.get("/orders");
-  const orders = response.data;
-  
-  // Sort by created_at or id (descending) and take first 'limit' items
-  const sortedOrders = orders.sort((a, b) => {
-    const dateA = new Date(a.created_at || 0);
-    const dateB = new Date(b.created_at || 0);
-    return dateB - dateA;
-  }).slice(0, limit);
-  
-  return { data: sortedOrders };
+  try {
+    const response = await api.get("/orders");
+    // Handle different response structures
+    let orders = response.data;
+    if (response.data.data) {
+      orders = response.data.data;
+    }
+    
+    if (!Array.isArray(orders)) {
+      orders = [];
+    }
+    
+    // Sort by created_at or id (descending) and take first 'limit' items
+    const sortedOrders = orders.sort((a, b) => {
+      const dateA = new Date(a.created_at || a.date_created || 0);
+      const dateB = new Date(b.created_at || b.date_created || 0);
+      return dateB - dateA;
+    }).slice(0, limit);
+    
+    return { data: { orders: sortedOrders } };
+  } catch (error) {
+    console.error("Error fetching recent orders:", error);
+    return { data: { orders: [] } };
+  }
 };
 
 const getTopProducts = async (limit = 5) => {
-  // This would need order details to calculate, for now return empty
-  // In real implementation, you'd need to analyze order_details
-  return { data: [] };
+  try {
+    // This would need order details to calculate, for now return empty
+    // In real implementation, you'd need to analyze order_details
+    return { data: { products: [] } };
+  } catch (error) {
+    console.error("Error fetching top products:", error);
+    return { data: { products: [] } };
+  }
 };
 
 // Cart and Order Statistics for Admin Dashboard
 const getTotalCarts = async () => {
-  // Get all carts and return count
-  const response = await api.get("/carts");
-  return { data: { total: response.data.length } };
+  try {
+    const response = await api.get("/carts");
+    // Handle different response structures
+    let carts = response.data;
+    if (response.data.data) {
+      carts = response.data.data;
+    }
+    const total = Array.isArray(carts) ? carts.length : 0;
+    return { data: { data: { total } } };
+  } catch (error) {
+    console.error("Error fetching carts:", error);
+    return { data: { data: { total: 0 } } };
+  }
 };
 
 const getActiveCarts = async () => {
-  // Get carts that are not ordered
-  const response = await api.get("/carts");
-  const activeCarts = response.data.filter(cart => !cart.is_ordered);
-  return { data: { total: activeCarts.length, carts: activeCarts } };
+  try {
+    const response = await api.get("/carts");
+    // Handle different response structures
+    let carts = response.data;
+    if (response.data.data) {
+      carts = response.data.data;
+    }
+    
+    if (!Array.isArray(carts)) {
+      carts = [];
+    }
+    
+    const activeCarts = carts.filter(cart => !cart.is_ordered);
+    return { data: { data: { active: activeCarts.length, carts: activeCarts } } };
+  } catch (error) {
+    console.error("Error fetching active carts:", error);
+    return { data: { data: { active: 0, carts: [] } } };
+  }
 };
 
 const getCartStatistics = async () => {
