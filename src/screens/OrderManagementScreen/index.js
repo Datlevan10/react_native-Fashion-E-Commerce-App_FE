@@ -71,10 +71,13 @@ export default function OrderManagementScreen({ navigation }) {
         newOrders = response.data.data;
       }
       
+      // Enhance orders with product counts
+      const ordersWithProductCounts = await apiService.getProductCountsForOrders(newOrders);
+      
       if (currentPage === 1) {
-        setOrders(newOrders);
+        setOrders(ordersWithProductCounts);
       } else {
-        setOrders(prev => [...prev, ...newOrders]);
+        setOrders(prev => [...prev, ...ordersWithProductCounts]);
       }
       
       // Calculate total pages based on response or order count
@@ -157,9 +160,9 @@ export default function OrderManagementScreen({ navigation }) {
     <OrderCard
       order={item}
       onPress={() =>
-        navigation.navigate("OrderDetailsScreen", { orderId: item.id })
+        navigation.navigate("OrderDetailsScreen", { orderId: item.order_id || item.id })
       }
-      onStatusUpdate={(status) => handleUpdateOrderStatus(item.id, status)}
+      onStatusUpdate={(status) => handleUpdateOrderStatus(item.order_id || item.id, status)}
     />
   );
 

@@ -74,7 +74,7 @@ const OrderCard = ({ order, onPress, onStatusUpdate }) => {
     >
       <View style={styles.header}>
         <View style={styles.orderInfo}>
-          <Text style={styles.orderId}>Order #{order.id}</Text>
+          <Text style={styles.orderId}>Order #{order.order_id || order.id || 'N/A'}</Text>
           <Text style={styles.orderDate}>{formatDate(order.created_at)}</Text>
         </View>
         <View style={[styles.statusBadge, { backgroundColor: `${getStatusColor(order.status)}15` }]}>
@@ -99,7 +99,7 @@ const OrderCard = ({ order, onPress, onStatusUpdate }) => {
       <View style={styles.detailsSection}>
         <View style={styles.detailItem}>
           <Feather name="package" size={14} color={Colors.textSecondary} />
-          <Text style={styles.detailText}>{order.total_items || 0} items</Text>
+          <Text style={styles.detailText}>{order.product_count || order.total_items || 0} items</Text>
         </View>
         <View style={styles.detailItem}>
           <Feather name="map-pin" size={14} color={Colors.textSecondary} />
@@ -113,7 +113,8 @@ const OrderCard = ({ order, onPress, onStatusUpdate }) => {
         <View style={styles.amountSection}>
           <Text style={styles.amountLabel}>Total Amount</Text>
           <Text style={styles.amountValue}>
-            {order.total_amount ? `$${order.total_amount.toLocaleString()}` : 'N/A'}
+            {order.total_price ? `VND ${parseInt(order.total_price).toLocaleString()}` : 
+             order.total_amount ? `VND ${parseInt(order.total_amount).toLocaleString()}` : 'N/A'}
           </Text>
         </View>
         
