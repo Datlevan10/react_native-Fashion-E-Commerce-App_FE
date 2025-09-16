@@ -69,18 +69,6 @@ export default function AdminDashboardScreen({ navigation }) {
         apiService.getTopProducts(5),
       ]);
 
-      // Log each API response to debug
-      console.log("=== API Responses Debug ===");
-      console.log("1. customersRes:", JSON.stringify(customersRes, null, 2));
-      console.log("2. staffRes:", JSON.stringify(staffRes, null, 2));
-      console.log("3. productsRes:", JSON.stringify(productsRes, null, 2));
-      console.log("4. categoriesRes:", JSON.stringify(categoriesRes, null, 2));
-      console.log("5. cartsRes:", JSON.stringify(cartsRes, null, 2));
-      console.log("6. activeCartsRes:", JSON.stringify(activeCartsRes, null, 2));
-      console.log("7. ordersRes:", JSON.stringify(ordersRes, null, 2));
-      console.log("8. recentOrdersRes:", JSON.stringify(recentOrdersRes, null, 2));
-      console.log("9. topProductsRes:", JSON.stringify(topProductsRes, null, 2));
-      console.log("=========================");
 
       // Safely access data with multiple fallbacks
       const safeGetValue = (obj, path, defaultValue = 0) => {
@@ -103,12 +91,12 @@ export default function AdminDashboardScreen({ navigation }) {
         totalCategories: safeGetValue(categoriesRes, 'data.data.total', 0),
         totalCarts: safeGetValue(cartsRes, 'data.data.total', 0),
         activeCarts: safeGetValue(activeCartsRes, 'data.data.active', 0),
-        todayOrders: safeGetValue(ordersRes, 'data.data.today', 0) || safeGetValue(ordersRes, 'data.today', 0),
-        weekOrders: safeGetValue(ordersRes, 'data.data.week', 0) || safeGetValue(ordersRes, 'data.week', 0),
-        monthOrders: safeGetValue(ordersRes, 'data.data.month', 0) || safeGetValue(ordersRes, 'data.month', 0),
-        todayRevenue: safeGetValue(ordersRes, 'data.data.todayRevenue', 0) || safeGetValue(ordersRes, 'data.todayRevenue', 0),
-        weekRevenue: safeGetValue(ordersRes, 'data.data.weekRevenue', 0) || safeGetValue(ordersRes, 'data.weekRevenue', 0),
-        monthRevenue: safeGetValue(ordersRes, 'data.data.monthRevenue', 0) || safeGetValue(ordersRes, 'data.monthRevenue', 0),
+        todayOrders: safeGetValue(ordersRes, 'data.today', 0),
+        weekOrders: safeGetValue(ordersRes, 'data.week', 0),
+        monthOrders: safeGetValue(ordersRes, 'data.month', 0),
+        todayRevenue: safeGetValue(ordersRes, 'data.todayRevenue', 0),
+        weekRevenue: safeGetValue(ordersRes, 'data.weekRevenue', 0),
+        monthRevenue: safeGetValue(ordersRes, 'data.monthRevenue', 0),
       });
 
       setRecentOrders(safeGetValue(recentOrdersRes, 'data.orders', []) || safeGetValue(recentOrdersRes, 'data.data', []));
