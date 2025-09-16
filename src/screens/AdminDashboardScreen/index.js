@@ -76,12 +76,12 @@ export default function AdminDashboardScreen({ navigation }) {
         totalCategories: categoriesRes.data.data.total || 0,
         totalCarts: cartsRes.data.data.total || 0,
         activeCarts: activeCartsRes.data.data.active || 0,
-        todayOrders: ordersRes.data.today || 0,
-        weekOrders: ordersRes.data.week || 0,
-        monthOrders: ordersRes.data.month || 0,
-        todayRevenue: ordersRes.data.todayRevenue || 0,
-        weekRevenue: ordersRes.data.weekRevenue || 0,
-        monthRevenue: ordersRes.data.monthRevenue || 0,
+        todayOrders: ordersRes.data.data.today || 0,
+        weekOrders: ordersRes.data.data.week || 0,
+        monthOrders: ordersRes.data.data.month || 0,
+        todayRevenue: ordersRes.data.data.todayRevenue || 0,
+        weekRevenue: ordersRes.data.data.weekRevenue || 0,
+        monthRevenue: ordersRes.data.data.monthRevenue || 0,
       });
 
       setRecentOrders(recentOrdersRes.data.orders || []);
