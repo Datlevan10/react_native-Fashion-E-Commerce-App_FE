@@ -56,7 +56,7 @@ const OrderFilters = ({ filters, onFiltersChange, onClose }) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Status Filter */}
         <View style={styles.filterSection}>
-          <Text style={styles.filterLabel}>Order Status</Text>
+          <Text style={styles.filterLabel}>Trạng thái đơn hàng</Text>
           <View style={styles.optionsContainer}>
             {statusOptions.map((option) => (
               <TouchableOpacity
@@ -82,7 +82,7 @@ const OrderFilters = ({ filters, onFiltersChange, onClose }) => {
 
         {/* Date Range Filter */}
         <View style={styles.filterSection}>
-          <Text style={styles.filterLabel}>Date Range</Text>
+          <Text style={styles.filterLabel}>Phạm vi ngày</Text>
           <View style={styles.optionsContainer}>
             {dateRangeOptions.map((option) => (
               <TouchableOpacity
@@ -108,7 +108,7 @@ const OrderFilters = ({ filters, onFiltersChange, onClose }) => {
 
         {/* Sort Options */}
         <View style={styles.filterSection}>
-          <Text style={styles.filterLabel}>Sort By</Text>
+          <Text style={styles.filterLabel}>Sắp xếp theo</Text>
           <View style={styles.optionsContainer}>
             {sortOptions.map((option) => (
               <TouchableOpacity

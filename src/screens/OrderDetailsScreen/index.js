@@ -89,11 +89,11 @@ const OrderDetailsScreen = ({ navigation, route }) => {
 
   const getStatusSteps = (currentStatus) => {
     const allSteps = [
-      { key: 'pending', label: 'Order Placed', icon: 'check-circle' },
-      { key: 'confirmed', label: 'Confirmed', icon: 'check-circle' },
-      { key: 'processing', label: 'Processing', icon: 'settings' },
-      { key: 'shipped', label: 'Shipped', icon: 'truck' },
-      { key: 'delivered', label: 'Delivered', icon: 'package' }
+      { key: 'pending', label: 'Đơn hàng đã đặt', icon: 'check-circle' },
+      { key: 'confirmed', label: 'Đã xác nhận', icon: 'check-circle' },
+      { key: 'processing', label: 'Xử lý', icon: 'settings' },
+      { key: 'shipped', label: 'Đã vận chuyển', icon: 'truck' },
+      { key: 'delivered', label: 'Đã giao hàng', icon: 'package' }
     ];
 
     const statusOrder = ['pending', 'confirmed', 'processing', 'shipped', 'delivered'];
@@ -158,7 +158,7 @@ const OrderDetailsScreen = ({ navigation, route }) => {
     
     return (
       <View style={styles.statusTracker}>
-        <Text style={styles.sectionTitle}>Order Status</Text>
+        <Text style={styles.sectionTitle}>Trạng thái đơn hàng</Text>
         <View style={styles.statusContainer}>
           {steps.map((step, index) => (
             <View key={step.key} style={styles.statusStep}>
@@ -198,29 +198,29 @@ const OrderDetailsScreen = ({ navigation, route }) => {
 
     return (
       <View style={styles.infoSection}>
-        <Text style={styles.sectionTitle}>Order Information</Text>
+        <Text style={styles.sectionTitle}>Thông tin đặt hàng</Text>
         <View style={styles.infoCard}>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Order ID:</Text>
+            <Text style={styles.infoLabel}>Mã đơn hàng:</Text>
             <Text style={styles.infoValue}>{orderDetails.order_id}</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Order Date:</Text>
+            <Text style={styles.infoLabel}>Ngày đặt hàng:</Text>
             <Text style={styles.infoValue}>{formatDate(orderDetails.order_date)}</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Payment Method:</Text>
+            <Text style={styles.infoLabel}>Phương thức thanh toán:</Text>
             <Text style={styles.infoValue}>{orderDetails.payment_method || 'Not specified'}</Text>
           </View>
           {orderDetails.shipping_address && (
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Shipping Address:</Text>
+              <Text style={styles.infoLabel}>Địa chỉ giao hàng:</Text>
               <Text style={styles.infoValue}>{orderDetails.shipping_address}</Text>
             </View>
           )}
           {orderDetails.notes && (
             <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Notes:</Text>
+              <Text style={styles.infoLabel}>Ghi chú:</Text>
               <Text style={styles.infoValue}>{orderDetails.notes}</Text>
             </View>
           )}
@@ -233,15 +233,15 @@ const OrderDetailsScreen = ({ navigation, route }) => {
     if (!orderDetails?.order_items || orderDetails.order_items.length === 0) {
       return (
         <View style={styles.infoSection}>
-          <Text style={styles.sectionTitle}>Order Items</Text>
-          <Text style={styles.noItemsText}>No items found for this order</Text>
+          <Text style={styles.sectionTitle}>Đặt hàng các mặt hàng</Text>
+          <Text style={styles.noItemsText}>Không tìm thấy mục nào cho đơn hàng này</Text>
         </View>
       );
     }
 
     return (
       <View style={styles.infoSection}>
-        <Text style={styles.sectionTitle}>Order Items</Text>
+        <Text style={styles.sectionTitle}>Đặt hàng các mặt hàng</Text>
         {orderDetails.order_items.map((item, index) => (
           <View key={index} style={styles.orderItem}>
             <View style={styles.itemImageContainer}>
@@ -263,11 +263,11 @@ const OrderDetailsScreen = ({ navigation, route }) => {
                 {item.product?.product_name || 'Product Name'}
               </Text>
               <View style={styles.itemSpecs}>
-                <Text style={styles.itemSpec}>Qty: {item.quantity}</Text>
-                <Text style={styles.itemSpec}>Price: {formatPrice(item.unit_price)}</Text>
+                <Text style={styles.itemSpec}>Số lượng: {item.quantity}</Text>
+                <Text style={styles.itemSpec}>Giá: {formatPrice(item.unit_price)}</Text>
               </View>
               <Text style={styles.itemTotal}>
-                Total: {formatPrice(item.total_price)}
+              Tổng cộng: {formatPrice(item.total_price)}
               </Text>
             </View>
           </View>
@@ -284,23 +284,23 @@ const OrderDetailsScreen = ({ navigation, route }) => {
 
     return (
       <View style={styles.infoSection}>
-        <Text style={styles.sectionTitle}>Price Summary</Text>
+        <Text style={styles.sectionTitle}>Tóm tắt giá</Text>
         <View style={styles.priceCard}>
           <View style={styles.priceRow}>
-            <Text style={styles.priceLabel}>Subtotal:</Text>
+            <Text style={styles.priceLabel}>Tổng phụ:</Text>
             <Text style={styles.priceValue}>{formatPrice(subtotal)}</Text>
           </View>
           
           {orderDetails.shipping_fee && parseFloat(orderDetails.shipping_fee) > 0 && (
             <View style={styles.priceRow}>
-              <Text style={styles.priceLabel}>Shipping Fee:</Text>
+              <Text style={styles.priceLabel}>Phí vận chuyển:</Text>
               <Text style={styles.priceValue}>{formatPrice(orderDetails.shipping_fee)}</Text>
             </View>
           )}
           
           {discount > 0 && (
             <View style={styles.priceRow}>
-              <Text style={styles.priceLabel}>Discount ({discount}%):</Text>
+              <Text style={styles.priceLabel}>Giảm giá ({discount}%):</Text>
               <Text style={[styles.priceValue, { color: '#4CAF50' }]}>
                 -{formatPrice(subtotal * (discount / 100))}
               </Text>
@@ -308,7 +308,7 @@ const OrderDetailsScreen = ({ navigation, route }) => {
           )}
           
           <View style={[styles.priceRow, styles.totalRow]}>
-            <Text style={styles.totalLabel}>Total:</Text>
+            <Text style={styles.totalLabel}>Tổng cộng:</Text>
             <Text style={styles.totalValue}>{formatPrice(orderDetails.total_price)}</Text>
           </View>
         </View>
@@ -322,7 +322,7 @@ const OrderDetailsScreen = ({ navigation, route }) => {
       <Text style={styles.errorTitle}>Something went wrong</Text>
       <Text style={styles.errorText}>{error}</Text>
       <TouchableOpacity onPress={fetchOrderDetails} style={styles.retryButton}>
-        <Text style={styles.retryText}>Try Again</Text>
+        <Text style={styles.retryText}>Thử lại</Text>
       </TouchableOpacity>
     </View>
   );
@@ -330,7 +330,7 @@ const OrderDetailsScreen = ({ navigation, route }) => {
   const renderLoading = () => (
     <View style={styles.loadingContainer}>
       <ActivityIndicator size="large" color={Colors.blackColor} />
-      <Text style={styles.loadingText}>Loading order details...</Text>
+      <Text style={styles.loadingText}>Đang tải thông tin chi tiết đơn hàng...</Text>
     </View>
   );
 
@@ -345,7 +345,7 @@ const OrderDetailsScreen = ({ navigation, route }) => {
           >
             <Feather name="arrow-left" size={24} color={Colors.blackColor} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Order Details</Text>
+          <Text style={styles.headerTitle}>Chi tiết đơn hàng</Text>
           <TouchableOpacity onPress={fetchOrderDetails} disabled={loading}>
             <Feather 
               name="refresh-cw" 
