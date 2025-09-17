@@ -55,7 +55,7 @@ export default function CustomerManagementScreen({ navigation }) {
     } catch (error) {
       console.error("Error fetching customers data:", error);
       console.log("Response error:", error.response?.data);
-      Alert.alert("Error", "Failed to fetch customers data. Please try again.");
+      Alert.alert("Lỗi", "Không thể tải dữ liệu khách hàng. Vui lòng thử lại.");
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -91,12 +91,12 @@ export default function CustomerManagementScreen({ navigation }) {
 
   const handleUpdateCustomerStatus = async (customerId, newStatus) => {
     Alert.alert(
-      "Confirm Status Change",
-      `Are you sure you want to ${newStatus} this customer?`,
+      "Xác nhận thay đổi trạng thái",
+      `Bạn có chắc chắn muốn ${newStatus === 'active' ? 'kích hoạt' : 'vô hiệu hóa'} khách hàng này?`,
       [
-        { text: "Cancel", style: "cancel" },
+        { text: "Hủy", style: "cancel" },
         {
-          text: "Confirm",
+          text: "Xác nhận",
           onPress: async () => {
             try {
               await apiService.updateCustomerStatus(customerId, newStatus);
@@ -106,10 +106,10 @@ export default function CustomerManagementScreen({ navigation }) {
                   ? { ...customer, status: newStatus }
                   : customer;
               }));
-              Alert.alert("Success", `Customer ${newStatus} successfully`);
+              Alert.alert("Thành công", `Đã ${newStatus === 'active' ? 'kích hoạt' : 'vô hiệu hóa'} khách hàng thành công`);
             } catch (error) {
               console.error("Error updating customer status:", error);
-              Alert.alert("Error", "Failed to update customer status");
+              Alert.alert("Lỗi", "Không thể cập nhật trạng thái khách hàng");
             }
           },
         },
@@ -186,9 +186,9 @@ export default function CustomerManagementScreen({ navigation }) {
   const renderEmptyList = () => (
     <View style={styles.emptyContainer}>
       <Feather name="users" size={64} color={Colors.textSecondary} />
-      <Text style={styles.emptyTitle}>No Customers Found</Text>
+      <Text style={styles.emptyTitle}>Không tìm thấy khách hàng</Text>
       <Text style={styles.emptySubtitle}>
-        {searchQuery ? "Try adjusting your search criteria" : "No customers registered yet"}
+        {searchQuery ? "Thử điều chỉnh tiêu chí tìm kiếm" : "Chưa có khách hàng đăng ký"}
       </Text>
     </View>
   );

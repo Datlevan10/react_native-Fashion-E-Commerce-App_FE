@@ -55,7 +55,7 @@ const CategoryManagementScreen = () => {
       }
     } catch (error) {
       console.error('Error fetching categories:', error);
-      Alert.alert('Error', 'Failed to load categories');
+      Alert.alert('Lỗi', 'Không thể tải danh mục');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -71,7 +71,7 @@ const CategoryManagementScreen = () => {
       const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
       
       if (permissionResult.granted === false) {
-        Alert.alert('Permission Required', 'Please grant camera roll permissions to upload images.');
+        Alert.alert('Yêu cầu quyền truy cập', 'Vui lòng cấp quyền truy cập thư viện ảnh để tải ảnh lên.');
         return;
       }
 
@@ -87,7 +87,7 @@ const CategoryManagementScreen = () => {
       }
     } catch (error) {
       console.error('Error picking image:', error);
-      Alert.alert('Error', 'Failed to pick image');
+      Alert.alert('Lỗi', 'Không thể chọn ảnh');
     }
   };
 
@@ -119,13 +119,13 @@ const CategoryManagementScreen = () => {
 
   const validateForm = () => {
     if (!formData.category_name.trim()) {
-      Alert.alert('Validation Error', 'Category name is required');
+      Alert.alert('Lỗi xác thực', 'Tên danh mục là bắt buộc');
       return false;
     }
     // For creating new category, image is required
     // For editing, image is optional if category already has one
     if (!editingCategory && !selectedImage) {
-      Alert.alert('Validation Error', 'Category image is required');
+      Alert.alert('Lỗi xác thực', 'Ảnh danh mục là bắt buộc');
       return false;
     }
     return true;
@@ -193,15 +193,15 @@ const CategoryManagementScreen = () => {
         // Close modal and show success message
         setModalVisible(false);
         Alert.alert(
-          'Success',
-          `Category ${editingCategory ? 'updated' : 'created'} successfully`
+          'Thành công',
+          `${editingCategory ? 'Cập nhật' : 'Tạo'} danh mục thành công`
         );
       }
     } catch (error) {
       console.error('Error submitting category:', error);
       console.log('Error details:', error.response?.data);
       
-      let errorMessage = 'Failed to save category';
+      let errorMessage = 'Không thể lưu danh mục';
       if (error.response?.data?.error) {
         // Handle validation errors
         const errors = error.response.data.error;
@@ -213,7 +213,7 @@ const CategoryManagementScreen = () => {
         errorMessage = error.response.data.message;
       }
       
-      Alert.alert('Error', errorMessage);
+      Alert.alert('Lỗi', errorMessage);
     } finally {
       setLoading(false);
     }
@@ -221,12 +221,12 @@ const CategoryManagementScreen = () => {
 
   const handleDeleteCategory = (category) => {
     Alert.alert(
-      'Confirm Delete',
-      `Are you sure you want to delete "${category.category_name}"?\n\nNote: This will also affect all products in this category.`,
+      'Xác nhận xóa',
+      `Bạn có chắc chắn muốn xóa "${category.category_name}"?\n\nLưu ý: Điều này cũng sẽ ảnh hưởng đến tất cả sản phẩm trong danh mục này.`,
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Hủy', style: 'cancel' },
         {
-          text: 'Delete',
+          text: 'Xóa',
           style: 'destructive',
           onPress: async () => {
             try {
@@ -238,20 +238,20 @@ const CategoryManagementScreen = () => {
                 await fetchCategories(true);
                 
                 Alert.alert(
-                  'Success',
-                  'Category deleted successfully'
+                  'Thành công',
+                  'Xóa danh mục thành công'
                 );
               }
             } catch (error) {
               console.error('Error deleting category:', error);
               console.log('Error details:', error.response?.data);
               
-              let errorMessage = 'Failed to delete category';
+              let errorMessage = 'Không thể xóa danh mục';
               if (error.response?.data?.message) {
                 errorMessage = error.response.data.message;
               }
               
-              Alert.alert('Error', errorMessage);
+              Alert.alert('Lỗi', errorMessage);
             } finally {
               setLoading(false);
             }
@@ -299,7 +299,7 @@ const CategoryManagementScreen = () => {
                 {item.category_name}
               </Text>
               <Text style={styles.categoryDescription} numberOfLines={2}>
-                {item.description || 'No description'}
+                {item.description || 'Không có mô tả'}
               </Text>
               <View style={styles.categoryMeta}>
                 {hasChildren && (

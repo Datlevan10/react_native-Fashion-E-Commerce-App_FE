@@ -18,6 +18,7 @@ import CategoryManagementScreen from '../screens/CategoryManagementScreen';
 import CartManagementScreen from '../screens/CartManagementScreen';
 import OrderManagementScreen from '../screens/OrderManagementScreen';
 import AdminOrderDetailsScreen from '../screens/AdminOrderDetailsScreen';
+import CustomerDetailsScreen from '../screens/CustomerDetailsScreen';
 import ReportsScreen from '../screens/ReportsScreen';
 
 const Stack = createStackNavigator();
@@ -267,6 +268,13 @@ const AdminWithDrawer = () => {
           component={AdminOrderDetailsScreen}
           options={{
             title: 'Chi tiết đơn hàng',
+          }}
+        />
+        <Stack.Screen
+          name="CustomerDetailsScreen"
+          component={CustomerDetailsScreen}
+          options={{
+            title: 'Chi tiết khách hàng',
           }}
         />
         <Stack.Screen

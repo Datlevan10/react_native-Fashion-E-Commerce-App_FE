@@ -35,10 +35,14 @@ export default function StaffManagementScreen({ navigation }) {
     try {
       setLoading(true);
       const response = await apiService.getAllStaff();
-      setStaff(response.data.staff || []);
+      // Handle different possible response structures
+      const responseData = response.data;
+      const staffList = responseData.staff || responseData.data || responseData || [];
+      setStaff(Array.isArray(staffList) ? staffList : []);
     } catch (error) {
       console.error("Error fetching staff data:", error);
-      Alert.alert("Error", "Failed to fetch staff data. Please try again.");
+      console.log("Response error:", error.response?.data);
+      Alert.alert("Lỗi", "Không thể tải dữ liệu nhân viên. Vui lòng thử lại.");
     } finally {
       setLoading(false);
     }
@@ -67,21 +71,21 @@ export default function StaffManagementScreen({ navigation }) {
 
   const handleDeleteStaff = async (staffId) => {
     Alert.alert(
-      "Confirm Delete",
-      "Are you sure you want to delete this staff member?",
+      "Xác nhận xóa",
+      "Bạn có chắc chắn muốn xóa nhân viên này?",
       [
-        { text: "Cancel", style: "cancel" },
+        { text: "Hủy", style: "cancel" },
         {
-          text: "Delete",
+          text: "Xóa",
           style: "destructive",
           onPress: async () => {
             try {
               await apiService.deleteStaff(staffId);
               setStaff(staff.filter((s) => s.id !== staffId));
-              Alert.alert("Success", "Staff member deleted successfully");
+              Alert.alert("Thành công", "Đã xóa nhân viên thành công");
             } catch (error) {
               console.error("Error deleting staff:", error);
-              Alert.alert("Error", "Failed to delete staff member");
+              Alert.alert("Lỗi", "Không thể xóa nhân viên");
             }
           },
         },
@@ -111,7 +115,7 @@ export default function StaffManagementScreen({ navigation }) {
         >
           <Feather name="arrow-left" size={24} color={Colors.whiteColor} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Staff Management</Text>
+        <Text style={styles.headerTitle}>Quản lý nhân viên</Text>
         <TouchableOpacity
           style={styles.addButton}
           onPress={() => navigation.navigate("AddStaffScreen")}
@@ -124,7 +128,7 @@ export default function StaffManagementScreen({ navigation }) {
         <Feather name="search" size={20} color={Colors.textSecondary} />
         <TextInput
           style={styles.searchInput}
-          placeholder="Search staff by name, email, role, or department..."
+          placeholder="Tìm kiếm nhân viên theo tên, email, vai trò hoặc phòng ban..."
           placeholderTextColor={Colors.textSecondary}
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -139,19 +143,19 @@ export default function StaffManagementScreen({ navigation }) {
       <View style={styles.statsContainer}>
         <View style={styles.statCard}>
           <Text style={styles.statValue}>{staff.length}</Text>
-          <Text style={styles.statLabel}>Total Staff</Text>
+          <Text style={styles.statLabel}>Tổng nhân viên</Text>
         </View>
         <View style={styles.statCard}>
           <Text style={styles.statValue}>
             {staff.filter((s) => s.status === "active").length}
           </Text>
-          <Text style={styles.statLabel}>Active</Text>
+          <Text style={styles.statLabel}>Hoạt động</Text>
         </View>
         <View style={styles.statCard}>
           <Text style={styles.statValue}>
             {new Set(staff.map((s) => s.department)).size}
           </Text>
-          <Text style={styles.statLabel}>Departments</Text>
+          <Text style={styles.statLabel}>Phòng ban</Text>
         </View>
       </View>
     </View>
@@ -160,13 +164,13 @@ export default function StaffManagementScreen({ navigation }) {
   const renderEmptyList = () => (
     <View style={styles.emptyContainer}>
       <Feather name="users" size={64} color={Colors.textSecondary} />
-      <Text style={styles.emptyTitle}>No Staff Found</Text>
+      <Text style={styles.emptyTitle}>Không tìm thấy nhân viên</Text>
       <Text style={styles.emptySubtitle}>
-        {searchQuery ? "Try adjusting your search criteria" : "Add your first staff member to get started"}
+        {searchQuery ? "Thử điều chỉnh tiêu chí tìm kiếm" : "Thêm nhân viên đầu tiên để bắt đầu"}
       </Text>
       {!searchQuery && (
         <CustomButton
-          title="Add Staff Member"
+          title="Thêm nhân viên"
           onPress={() => navigation.navigate("AddStaffScreen")}
           style={styles.emptyButton}
         />

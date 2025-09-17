@@ -87,7 +87,7 @@ export default function OrderManagementScreen({ navigation }) {
     } catch (error) {
       console.error("Error fetching orders data:", error);
       console.error("Error response:", error.response?.data);
-      Alert.alert("Error", "Failed to fetch orders data. Please try again.");
+      Alert.alert("Lỗi", "Không thể tải dữ liệu đơn hàng. Vui lòng thử lại.");
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -122,12 +122,12 @@ export default function OrderManagementScreen({ navigation }) {
 
   const handleUpdateOrderStatus = async (orderId, newStatus) => {
     Alert.alert(
-      "Confirm Status Update",
-      `Are you sure you want to update this order to ${newStatus}?`,
+      "Xác nhận cập nhật trạng thái",
+      `Bạn có chắc chắn muốn cập nhật đơn hàng này thành ${newStatus}?`,
       [
-        { text: "Cancel", style: "cancel" },
+        { text: "Hủy", style: "cancel" },
         {
-          text: "Update",
+          text: "Cập nhật",
           onPress: async () => {
             try {
               await apiService.updateOrderStatusAdmin(orderId, newStatus);
@@ -136,10 +136,10 @@ export default function OrderManagementScreen({ navigation }) {
                   ? { ...order, status: newStatus }
                   : order
               ));
-              Alert.alert("Success", "Order status updated successfully");
+              Alert.alert("Thành công", "Cập nhật trạng thái đơn hàng thành công");
             } catch (error) {
               console.error("Error updating order status:", error);
-              Alert.alert("Error", "Failed to update order status");
+              Alert.alert("Lỗi", "Không thể cập nhật trạng thái đơn hàng");
             }
           },
         },
