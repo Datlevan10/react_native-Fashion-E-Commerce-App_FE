@@ -159,7 +159,6 @@ const WriteReviewModal = ({
       animationOut="zoomOut"
       useNativeDriver={true}
       onBackdropPress={onClose}
-      onBackButtonPress={onClose}
     >
       <KeyboardAvoidingView
         style={styles.overlay}

@@ -13,25 +13,28 @@ import Colors from '../../styles/Color';
 const SettingsScreen = ({ navigation }) => {
   const settingSections = [
     {
-      title: 'Account Settings',
+      title: 'Cài đặt tài khoản',
       items: [
         {
           id: 'profile',
-          title: 'Edit Profile',
+          title: 'Chỉnh sửa hồ sơ',
           icon: 'user',
           onPress: () => navigation.navigate('DetailProfileScreen'),
           showArrow: true,
         },
         {
           id: 'changePassword',
-          title: 'Change Password',
+          title: 'Đổi mật khẩu',
           icon: 'lock',
-          onPress: () => navigation.navigate('ChangePasswordScreen'),
+          onPress: () => {
+            console.log('Navigating to ChangePasswordScreen');
+            navigation.navigate('ChangePasswordScreen');
+          },
           showArrow: true,
         },
         {
           id: 'privacy',
-          title: 'Privacy & Security',
+          title: 'Quyền riêng tư & Bảo mật',
           icon: 'shield',
           onPress: () => console.log('Privacy pressed'),
           showArrow: true,
@@ -39,11 +42,11 @@ const SettingsScreen = ({ navigation }) => {
       ],
     },
     {
-      title: 'Notifications',
+      title: 'Thông báo',
       items: [
         {
           id: 'push',
-          title: 'Push Notifications',
+          title: 'Thông báo đẩy',
           icon: 'bell',
           onPress: () => console.log('Notifications pressed'),
           showArrow: true,
@@ -51,18 +54,18 @@ const SettingsScreen = ({ navigation }) => {
       ],
     },
     {
-      title: 'Support',
+      title: 'Hỗ trợ',
       items: [
         {
           id: 'help',
-          title: 'Help & FAQ',
+          title: 'Trợ giúp & Câu hỏi thường gặp',
           icon: 'help-circle',
           onPress: () => console.log('Help pressed'),
           showArrow: true,
         },
         {
           id: 'contact',
-          title: 'Contact Us',
+          title: 'Liên hệ chúng tôi',
           icon: 'mail',
           onPress: () => console.log('Contact pressed'),
           showArrow: true,
@@ -123,8 +126,8 @@ const SettingsScreen = ({ navigation }) => {
 
         {/* App Info */}
         <View style={styles.appInfoContainer}>
-          <Text style={styles.appName}>Fashion E-Commerce App</Text>
-          <Text style={styles.appVersion}>Version 1.0.0</Text>
+          <Text style={styles.appName}>Happy-Field App</Text>
+          <Text style={styles.appVersion}>Phiên bản 1.0.0</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

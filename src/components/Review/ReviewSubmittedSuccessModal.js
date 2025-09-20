@@ -28,7 +28,6 @@ const ReviewSubmittedSuccessModal = ({
       animationOut="zoomOut"
       useNativeDriver={true}
       onBackdropPress={onClose}
-      onBackButtonPress={onClose}
       onModalShow={() => confettiRef.current?.start()}
     >
       <View style={styles.overlay}>

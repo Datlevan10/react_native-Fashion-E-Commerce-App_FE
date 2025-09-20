@@ -14,6 +14,7 @@ import Colors from "../../styles/Color";
 import CustomHandleButton from "../../components/Button/CustomHandleButton";
 import apiService from "../../api/ApiService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 const ChangePasswordScreen = ({ navigation }) => {
   const [oldPassword, setOldPassword] = useState("");
@@ -31,6 +32,8 @@ const ChangePasswordScreen = ({ navigation }) => {
   };
 
   const handleChangePassword = async () => {
+    console.log('=== Bắt đầu quá trình đổi mật khẩu ===');
+    
     // Validation
     if (!oldPassword || !newPassword || !confirmPassword) {
       Alert.alert("Lỗi", "Vui lòng nhập đầy đủ thông tin");
@@ -58,16 +61,38 @@ const ChangePasswordScreen = ({ navigation }) => {
     try {
       setLoading(true);
       
-      // Get customer ID from AsyncStorage
-      const customerInfo = await AsyncStorage.getItem('customerInfo');
-      if (!customerInfo) {
+      // Get customer ID from AsyncStorage or SecureStore
+      console.log('Tìm kiếm thông tin khách hàng...');
+      let customerId = null;
+      
+      // Try to get from SecureStore first
+      const secureCustomerId = await SecureStore.getItemAsync('customer_id');
+      if (secureCustomerId) {
+        customerId = secureCustomerId;
+        console.log('Tìm thấy customer_id từ SecureStore:', customerId);
+      } else {
+        // Try AsyncStorage
+        const customerInfo = await AsyncStorage.getItem('customerInfo');
+        if (customerInfo) {
+          const customer = JSON.parse(customerInfo);
+          customerId = customer.customer_id || customer.id;
+          console.log('Tìm thấy customer_id từ AsyncStorage:', customerId);
+        }
+      }
+      
+      if (!customerId) {
+        console.error('Không tìm thấy customer_id');
         Alert.alert("Lỗi", "Không tìm thấy thông tin khách hàng. Vui lòng đăng nhập lại");
         navigation.navigate('LoginScreen');
         return;
       }
 
-      const customer = JSON.parse(customerInfo);
-      const customerId = customer.customer_id || customer.id;
+      // Log request data
+      console.log('Gửi yêu cầu đổi mật khẩu với:', {
+        customer_id: customerId,
+        old_password: '***',
+        new_password: '***'
+      });
 
       // Call API to update password
       const response = await apiService.updateCustomerPassword(
@@ -75,18 +100,27 @@ const ChangePasswordScreen = ({ navigation }) => {
         oldPassword,
         newPassword
       );
+      
+      console.log('Phản hồi API:', {
+        status: response.status,
+        data: response.data
+      });
 
       if (response.data.message === 'Password updated successfully') {
+        console.log('Đổi mật khẩu thành công!');
         Alert.alert(
           "Thành công",
           "Đổi mật khẩu thành công. Vui lòng đăng nhập lại",
           [
             {
               text: "OK",
-              onPress: () => {
+              onPress: async () => {
                 // Clear stored data and navigate to login
-                AsyncStorage.removeItem('customerInfo');
-                AsyncStorage.removeItem('authToken');
+                console.log('Xóa dữ liệu lưu trữ và chuyển đến màn hình đăng nhập');
+                await AsyncStorage.removeItem('customerInfo');
+                await AsyncStorage.removeItem('authToken');
+                await SecureStore.deleteItemAsync('customer_id');
+                await SecureStore.deleteItemAsync('access_token');
                 navigation.reset({
                   index: 0,
                   routes: [{ name: 'LoginScreen' }],
@@ -97,7 +131,11 @@ const ChangePasswordScreen = ({ navigation }) => {
         );
       }
     } catch (error) {
-      console.error("Error updating password:", error);
+      console.error("Lỗi khi đổi mật khẩu:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
       
       if (error.response?.data?.error_code === 'OLD_PASSWORD_INVALID') {
         Alert.alert("Lỗi", "Mật khẩu cũ không đúng");
@@ -109,6 +147,7 @@ const ChangePasswordScreen = ({ navigation }) => {
       }
     } finally {
       setLoading(false);
+      console.log('=== Kết thúc quá trình đổi mật khẩu ===');
     }
   };
 

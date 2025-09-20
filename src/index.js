@@ -22,6 +22,7 @@ import SettingsScreen from "./screens/ProfileScreen/SettingsScreen";
 import MyOrderScreen from "./screens/ProfileScreen/MyOrderScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen/ForgotPasswordScreen";
+import ChangePasswordScreen from "./screens/ChangePasswordScreen/ChangePasswordScreen";
 import CheckoutScreen from "./screens/CheckoutScreen";
 import OrderScreen from "./screens/OrderScreen";
 import TrackingDetailScreen from "./screens/CheckoutScreen/TrackingDetailScreen";
@@ -343,6 +344,11 @@ export default function App() {
             <Stack.Screen
               name="SettingsScreen"
               component={SettingsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ChangePasswordScreen"
+              component={ChangePasswordScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen
