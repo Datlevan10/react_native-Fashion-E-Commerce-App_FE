@@ -130,15 +130,17 @@ export default function OrderManagementScreen({ navigation }) {
           text: "Cập nhật",
           onPress: async () => {
             try {
-              await apiService.updateOrderStatusAdmin(orderId, newStatus);
-              setOrders(orders.map(order => 
-                order.id === orderId 
-                  ? { ...order, status: newStatus }
-                  : order
-              ));
+              await apiService.updateOrderStatus(orderId, newStatus);
+              setOrders(orders.map(order => {
+                const currentOrderId = order.order_id || order.id;
+                return currentOrderId === orderId 
+                  ? { ...order, order_status: newStatus }
+                  : order;
+              }));
               Alert.alert("Thành công", "Cập nhật trạng thái đơn hàng thành công");
             } catch (error) {
               console.error("Error updating order status:", error);
+              console.error("Error response:", error.response?.data);
               Alert.alert("Lỗi", "Không thể cập nhật trạng thái đơn hàng");
             }
           },

@@ -27,7 +27,8 @@ export default function CustomerDetailsScreen({ route, navigation }) {
     try {
       setLoading(true);
       const response = await apiService.getCustomerById(customerId);
-      setCustomer(response.data);
+      const customerData = response.data.data || response.data;
+      setCustomer(customerData);
     } catch (error) {
       console.error("Error fetching customer details:", error);
       Alert.alert("Lỗi", "Không thể tải thông tin khách hàng");
@@ -37,28 +38,6 @@ export default function CustomerDetailsScreen({ route, navigation }) {
     }
   };
 
-  const handleUpdateStatus = async (newStatus) => {
-    Alert.alert(
-      "Xác nhận thay đổi",
-      `Bạn có chắc chắn muốn ${newStatus === 'active' ? 'kích hoạt' : 'vô hiệu hóa'} khách hàng này?`,
-      [
-        { text: "Hủy", style: "cancel" },
-        {
-          text: "Xác nhận",
-          onPress: async () => {
-            try {
-              await apiService.updateCustomerStatus(customerId, newStatus);
-              setCustomer({ ...customer, status: newStatus });
-              Alert.alert("Thành công", `Đã ${newStatus === 'active' ? 'kích hoạt' : 'vô hiệu hóa'} khách hàng`);
-            } catch (error) {
-              console.error("Error updating customer status:", error);
-              Alert.alert("Lỗi", "Không thể cập nhật trạng thái khách hàng");
-            }
-          },
-        },
-      ]
-    );
-  };
 
   if (loading) {
     return (
@@ -145,6 +124,11 @@ export default function CustomerDetailsScreen({ route, navigation }) {
                 value={`${(customer.total_spent || 0).toLocaleString('vi-VN')}đ`} 
                 color={Colors.success} 
               />
+              <StatCard 
+                title="Điểm tích lũy" 
+                value={customer.loyalty_points || 0} 
+                color={Colors.warning} 
+              />
             </View>
           </View>
 
@@ -190,26 +174,46 @@ export default function CustomerDetailsScreen({ route, navigation }) {
               value={customer.created_at ? new Date(customer.created_at).toLocaleDateString('vi-VN') : null}
               iconColor={Colors.textSecondary}
             />
+            <InfoRow 
+              icon="edit" 
+              label="Cập nhật lần cuối" 
+              value={customer.updated_at ? new Date(customer.updated_at).toLocaleDateString('vi-VN') : null}
+              iconColor={Colors.info}
+            />
+          </View>
+
+          <View style={styles.infoCard}>
+            <Text style={styles.sectionTitle}>Thông tin thanh toán</Text>
+            <InfoRow 
+              icon="credit-card" 
+              label="Phương thức thanh toán ưa thích" 
+              value={customer.preferred_payment_method || "Chưa có thông tin"}
+              iconColor={Colors.primary}
+            />
+            <InfoRow 
+              icon="dollar-sign" 
+              label="Giá trị đơn hàng trung bình" 
+              value={customer.average_order_value ? `${customer.average_order_value.toLocaleString('vi-VN')}đ` : "Chưa có thông tin"}
+              iconColor={Colors.success}
+            />
+            <InfoRow 
+              icon="shopping-cart" 
+              label="Lần mua hàng gần nhất" 
+              value={customer.last_order_date ? new Date(customer.last_order_date).toLocaleDateString('vi-VN') : "Chưa có thông tin"}
+              iconColor={Colors.warning}
+            />
+          </View>
+
+          <View style={styles.infoCard}>
+            <Text style={styles.sectionTitle}>Ghi chú</Text>
+            <View style={styles.notesContainer}>
+              <Text style={styles.notesText}>
+                {customer.notes || "Không có ghi chú"}
+              </Text>
+            </View>
           </View>
 
           <View style={styles.actionButtons}>
-            <TouchableOpacity
-              style={[
-                styles.actionButton,
-                { backgroundColor: customer.status === 'active' ? Colors.error : Colors.success }
-              ]}
-              onPress={() => handleUpdateStatus(customer.status === 'active' ? 'inactive' : 'active')}
-            >
-              <Feather 
-                name={customer.status === 'active' ? 'user-x' : 'user-check'} 
-                size={20} 
-                color={Colors.whiteColor} 
-              />
-              <Text style={styles.actionButtonText}>
-                {customer.status === 'active' ? 'Vô hiệu hóa' : 'Kích hoạt'}
-              </Text>
-            </TouchableOpacity>
-
             <TouchableOpacity
               style={[styles.actionButton, { backgroundColor: Colors.primary }]}
               onPress={() => navigation.navigate('OrderManagement', { customerId })}
@@ -328,6 +332,7 @@ const styles = StyleSheet.create({
     padding: 12,
     marginHorizontal: 4,
     borderTopWidth: 3,
+    minWidth: 100,
   },
   statTitle: {
     fontSize: 12,
@@ -381,7 +386,7 @@ const styles = StyleSheet.create({
   },
   actionButtons: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     marginBottom: 20,
   },
   actionButton: {
@@ -398,5 +403,16 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: Colors.whiteColor,
     marginLeft: 8,
+  },
+  notesContainer: {
+    backgroundColor: Colors.backgroundLight,
+    borderRadius: 8,
+    padding: 12,
+    minHeight: 60,
+  },
+  notesText: {
+    fontSize: 14,
+    color: Colors.textPrimary,
+    lineHeight: 20,
   },
 });

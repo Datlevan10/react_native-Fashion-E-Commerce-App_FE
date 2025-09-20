@@ -179,6 +179,15 @@ const updateCustomer = async (customerId, data, hasImages = false) => {
   return api.put(`/customers/${customerId}`, data, { headers });
 };
 
+// Update customer password
+const updateCustomerPassword = async (customerId, oldPassword, newPassword) => {
+  return api.post('/customers/auth/update-password', {
+    customer_id: customerId,
+    old_password: oldPassword,
+    new_password: newPassword
+  });
+};
+
 // Cart, Cart Detail
 const addProductToCart = async (productData) => {
   return api.post("/carts", productData);
@@ -579,7 +588,7 @@ const getCustomerOrders = async (customerId) => {
 
 // Update order status - Updated to match backend route
 const updateOrderStatus = async (orderId, status) => {
-  return api.put(`/orders/${orderId}/status`, { status });
+  return api.put(`/orders/${orderId}/status`, { order_status: status });
 };
 
 // Get order details
@@ -614,12 +623,12 @@ const deleteStaff = async (staffId) => {
 };
 
 // Customer Management APIs
-const getAllCustomers = async (page = 1, limit = 20) => {
-  return api.get(`/customers?page=${page}&limit=${limit}`);
+const getAllCustomers = async () => {
+  return api.get('/customers');
 };
 
 const getCustomerById = async (customerId) => {
-  return api.get(`/admin/customers/${customerId}`);
+  return api.get(`/customers/${customerId}`);
 };
 
 const updateCustomerStatus = async (customerId, status) => {
@@ -768,17 +777,6 @@ const getProductCountsForOrders = async (orders) => {
   }
 };
 
-// ============ ORDER MANAGEMENT APIs ============
-// Update order status (for admin use)
-const updateOrderStatusAdmin = async (orderId, status) => {
-  try {
-    const response = await api.put(`/orders/${orderId}/status`, { status });
-    return response;
-  } catch (error) {
-    console.error("Error updating order status (admin):", error);
-    throw error;
-  }
-};
 
 // Cancel order (for customer use)
 const cancelOrderCustomer = async (orderId) => {
@@ -859,6 +857,7 @@ export default {
   addProductToFavorite,
   getInfoCustomerByCustomerId,
   updateCustomer,
+  updateCustomerPassword,
   getFavoriteProductByCustomerId,
   removeProductFromFavorite,
   getNotification,
@@ -899,12 +898,10 @@ export default {
   createStaff,
   updateStaff,
   deleteStaff,
-  getAllCustomers,
   getCustomerById,
   updateCustomerStatus,
   getAllOrders,
   getOrderById,
-
   hideNotification,
   reportReview,
   // Admin APIs
@@ -915,17 +912,7 @@ export default {
   getOrderStatistics,
   getRecentOrders,
   getTopProducts,
-  getAllStaff,
-  getStaffById,
-  createStaff,
-  updateStaff,
-  deleteStaff,
   getAllCustomers,
-  getCustomerById,
-  updateCustomerStatus,
-  getAllOrders,
-  getOrderById,
-  updateOrderStatus,
   // Product Management APIs
   getAllProductsAdmin,
   createProduct,
@@ -945,7 +932,6 @@ export default {
   getOrderDetailById,
   getProductCountsForOrders,
   // Order Management APIs
-  updateOrderStatusAdmin,
   cancelOrderCustomer,
   cancelOrderAdmin,
 }

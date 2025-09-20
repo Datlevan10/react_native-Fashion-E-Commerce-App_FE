@@ -21,12 +21,10 @@ export default function CustomerManagementScreen({ navigation }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     fetchCustomersData();
-  }, [currentPage]);
+  }, []);
 
   useEffect(() => {
     filterCustomers();
@@ -34,24 +32,14 @@ export default function CustomerManagementScreen({ navigation }) {
 
   const fetchCustomersData = async () => {
     try {
-      setLoading(currentPage === 1);
-      const response = await apiService.getAllCustomers(currentPage, 20);
+      setLoading(true);
+      const response = await apiService.getAllCustomers();
       
       // Handle different possible response structures
       const responseData = response.data;
-      const newCustomers = responseData.data || responseData.customers || responseData || [];
+      const customers = responseData.data || responseData.customers || responseData || [];
       
-      if (currentPage === 1) {
-        setCustomers(newCustomers);
-      } else {
-        setCustomers(prev => [...prev, ...newCustomers]);
-      }
-      
-      // Handle pagination info
-      const totalPages = responseData.totalPages || 
-                        responseData.last_page || 
-                        Math.ceil((responseData.total || newCustomers.length) / 20) || 1;
-      setTotalPages(totalPages);
+      setCustomers(customers);
     } catch (error) {
       console.error("Error fetching customers data:", error);
       console.log("Response error:", error.response?.data);
@@ -64,15 +52,9 @@ export default function CustomerManagementScreen({ navigation }) {
 
   const handleRefresh = async () => {
     setRefreshing(true);
-    setCurrentPage(1);
     await fetchCustomersData();
   };
 
-  const loadMoreCustomers = () => {
-    if (currentPage < totalPages && !loading) {
-      setCurrentPage(prev => prev + 1);
-    }
-  };
 
   const filterCustomers = () => {
     if (!searchQuery.trim()) {
@@ -89,33 +71,6 @@ export default function CustomerManagementScreen({ navigation }) {
     setFilteredCustomers(filtered);
   };
 
-  const handleUpdateCustomerStatus = async (customerId, newStatus) => {
-    Alert.alert(
-      "Xác nhận thay đổi trạng thái",
-      `Bạn có chắc chắn muốn ${newStatus === 'active' ? 'kích hoạt' : 'vô hiệu hóa'} khách hàng này?`,
-      [
-        { text: "Hủy", style: "cancel" },
-        {
-          text: "Xác nhận",
-          onPress: async () => {
-            try {
-              await apiService.updateCustomerStatus(customerId, newStatus);
-              setCustomers(customers.map(customer => {
-                const currentId = customer.id || customer.customer_id;
-                return currentId === customerId 
-                  ? { ...customer, status: newStatus }
-                  : customer;
-              }));
-              Alert.alert("Thành công", `Đã ${newStatus === 'active' ? 'kích hoạt' : 'vô hiệu hóa'} khách hàng thành công`);
-            } catch (error) {
-              console.error("Error updating customer status:", error);
-              Alert.alert("Lỗi", "Không thể cập nhật trạng thái khách hàng");
-            }
-          },
-        },
-      ]
-    );
-  };
 
   const renderCustomerCard = ({ item }) => {
     const customerId = item.id || item.customer_id;
@@ -126,7 +81,6 @@ export default function CustomerManagementScreen({ navigation }) {
         onPress={() =>
           navigation.navigate("CustomerDetailsScreen", { customerId })
         }
-        onStatusChange={(status) => handleUpdateCustomerStatus(customerId, status)}
       />
     );
   };
@@ -173,15 +127,6 @@ export default function CustomerManagementScreen({ navigation }) {
     </View>
   );
 
-  const renderFooter = () => {
-    if (!loading || currentPage === 1) return null;
-    
-    return (
-      <View style={styles.loadingFooter}>
-        <Text style={styles.loadingText}>Loading more customers...</Text>
-      </View>
-    );
-  };
 
   const renderEmptyList = () => (
     <View style={styles.emptyContainer}>
@@ -207,13 +152,10 @@ export default function CustomerManagementScreen({ navigation }) {
           keyExtractor={(item) => (item.id || item.customer_id).toString()}
           ListHeaderComponent={renderHeader}
           ListEmptyComponent={!loading ? renderEmptyList : null}
-          ListFooterComponent={renderFooter}
           contentContainerStyle={styles.listContainer}
           showsVerticalScrollIndicator={false}
           refreshing={refreshing}
           onRefresh={handleRefresh}
-          onEndReached={loadMoreCustomers}
-          onEndReachedThreshold={0.1}
         />
       </SafeAreaView>
     </LinearGradient>
@@ -297,14 +239,6 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 12,
-    color: Colors.textSecondary,
-  },
-  loadingFooter: {
-    padding: 20,
-    alignItems: "center",
-  },
-  loadingText: {
-    fontSize: 14,
     color: Colors.textSecondary,
   },
   emptyContainer: {

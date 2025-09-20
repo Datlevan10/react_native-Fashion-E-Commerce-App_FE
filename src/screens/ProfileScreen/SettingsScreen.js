@@ -23,6 +23,13 @@ const SettingsScreen = ({ navigation }) => {
           showArrow: true,
         },
         {
+          id: 'changePassword',
+          title: 'Change Password',
+          icon: 'lock',
+          onPress: () => navigation.navigate('ChangePasswordScreen'),
+          showArrow: true,
+        },
+        {
           id: 'privacy',
           title: 'Privacy & Security',
           icon: 'shield',

@@ -50,12 +50,38 @@ export default function ProductDetailScreen({ route, navigation }) {
   ] = useState(false);
   const [submittedReviewData, setSubmittedReviewData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [cartItemCount, setCartItemCount] = useState(0);
 
   useEffect(() => {
     const fetchCustomerId = async () => {
       const customerId = await SecureStore.getItemAsync("customer_id");
       setCustomerId(customerId);
     };
+
+    const fetchCartItemCount = async () => {
+      try {
+        const storedCustomerId = await SecureStore.getItemAsync("customer_id");
+        if (!storedCustomerId) {
+          setCartItemCount(0);
+          return;
+        }
+
+        const response = await apiService.getProductInCartDetailByCustomerId(storedCustomerId);
+        
+        if (response.status === 200 && response.data?.data) {
+          const cartItems = response.data.data;
+          setCartItemCount(Array.isArray(cartItems) ? cartItems.length : 0);
+        } else {
+          setCartItemCount(0);
+        }
+      } catch (error) {
+        console.log('Error fetching cart count:', error);
+        setCartItemCount(0);
+      }
+    };
+
+    // Make fetchCartItemCount accessible outside useEffect
+    window.refreshCartCount = fetchCartItemCount;
 
     const checkIfFavorite = async () => {
       const customerId = await SecureStore.getItemAsync("customer_id");
@@ -120,6 +146,7 @@ export default function ProductDetailScreen({ route, navigation }) {
           loadStoreName(),
           getReviewsByProductId(),
           getAllReviews(),
+          fetchCartItemCount(),
         ]);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -131,7 +158,22 @@ export default function ProductDetailScreen({ route, navigation }) {
     };
 
     fetchData();
-  }, []);
+
+    // Set up interval to refresh cart count periodically
+    const interval = setInterval(() => {
+      fetchCartItemCount();
+    }, 5000); // Refresh every 5 seconds
+
+    // Focus listener to refresh cart when screen is focused
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchCartItemCount();
+    });
+
+    return () => {
+      clearInterval(interval);
+      unsubscribe();
+    };
+  }, [navigation]);
 
   const reloadReviews = async () => {
     try {
@@ -225,6 +267,19 @@ export default function ProductDetailScreen({ route, navigation }) {
 
       if (addResponse.status === 201 || addResponse.status === 200) {
         Alert.alert("Thành công", "Sản phẩm đã được thêm vào giỏ hàng");
+        // Refresh cart count after successfully adding item
+        const fetchCartItemCount = async () => {
+          try {
+            const response = await apiService.getProductInCartDetailByCustomerId(customerId);
+            if (response.status === 200 && response.data?.data) {
+              const cartItems = response.data.data;
+              setCartItemCount(Array.isArray(cartItems) ? cartItems.length : 0);
+            }
+          } catch (error) {
+            console.log('Error refreshing cart count:', error);
+          }
+        };
+        fetchCartItemCount();
       } else {
         Alert.alert(
           "Error",
@@ -280,7 +335,7 @@ export default function ProductDetailScreen({ route, navigation }) {
           <TouchableOpacity onPress={() => navigation.navigate("CartScreen")}>
             <IconWithBadge
               name="shopping-bag"
-              badgeCount={3}
+              badgeCount={cartItemCount}
               size={25}
               color={Colors.blackColor}
             />
