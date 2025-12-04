@@ -11,9 +11,12 @@ export default function WelcomeScreen({ navigation }) {
     const loadStoreLogo = async () => {
       try {
         const response = await apiService.getStores();
-        if (response && response.data.data && response.data.data[1]) {
+        // console.log("DATA", response.data.data);
+        if (response && response.data.data && response.data.data[0]) {
+          const logoUrl = `${API_BASE_URL}${response.data.data[0].logo_url}`;
+          // console.log("Logo URL:", logoUrl);
           setLogoSource({
-            uri: `${API_BASE_URL}${response.data.data[1].logo_url}`,
+            uri: logoUrl,
           });
         }
       } catch (error) {
@@ -45,7 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.whiteBgColor,
   },
   logo: {
-    width: 150,
-    height: 150,
+    width: 350,
+    height: 350,
   },
 });

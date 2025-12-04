@@ -43,341 +43,363 @@ import apiService from "./api/ApiService";
 const Stack = createStackNavigator();
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isChecking, setIsChecking] = useState(true);
-  const [appState, setAppState] = useState(AppState.currentState);
-  const [showWelcome, setShowWelcome] = useState(true);
-  const backgroundTime = useRef(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isChecking, setIsChecking] = useState(true);
+    const [appState, setAppState] = useState(AppState.currentState);
+    const [showWelcome, setShowWelcome] = useState(true);
+    const backgroundTime = useRef(null);
 
-  // Deep linking configuration for ZaloPay
-  const linking = {
-    prefixes: ['demozpdk://', 'happyfield://'],
-    config: {
-      screens: {
-        OrderScreen: 'order',
-        MyOrdersScreen: 'orders',
-        HomeScreen: 'home',
-      },
-    },
-  };
-
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const token = await SecureStore.getItemAsync("access_token");
-        const expiryTime = await SecureStore.getItemAsync(
-          "access_token_expiry"
-        );
-        // console.log("Checking login status...");
-        // console.log("Access Token:", token);
-        // console.log("Expiry Time:", expiryTime);
-
-        if (token && expiryTime && Date.now() < parseInt(expiryTime, 10)) {
-          setIsLoggedIn(true);
-          api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        } else {
-          await SecureStore.deleteItemAsync("access_token");
-          await SecureStore.deleteItemAsync("refresh_token");
-          await SecureStore.deleteItemAsync("access_token_expiry");
-          setIsLoggedIn(false);
-        }
-      } catch (error) {
-        console.error("Error checking login status:", error);
-      } finally {
-        setIsChecking(false);
-      }
+    // Deep linking configuration for ZaloPay
+    const linking = {
+        prefixes: ["demozpdk://", "happyfield://"],
+        config: {
+            screens: {
+                OrderScreen: "order",
+                MyOrdersScreen: "orders",
+                HomeScreen: "home",
+            },
+        },
     };
 
-    const initializePaymentMethods = async () => {
-      try {
-        console.log('Initializing payment methods...');
-        const response = await apiService.initializePaymentMethods();
-        console.log('Payment methods initialized successfully:', response.data);
-      } catch (error) {
-        console.log('Payment methods already exist or initialization failed:', error.message);
-        // This is okay - methods might already be initialized
-      }
-    };
+    useEffect(() => {
+        const checkLoginStatus = async () => {
+            try {
+                const token = await SecureStore.getItemAsync("access_token");
+                const expiryTime = await SecureStore.getItemAsync(
+                    "access_token_expiry"
+                );
+                // console.log("Checking login status...");
+                // console.log("Access Token:", token);
+                // console.log("Expiry Time:", expiryTime);
 
-    checkLoginStatus();
-    
-    // Initialize payment methods on app startup
-    initializePaymentMethods();
+                if (
+                    token &&
+                    expiryTime &&
+                    Date.now() < parseInt(expiryTime, 10)
+                ) {
+                    setIsLoggedIn(true);
+                    api.defaults.headers.common[
+                        "Authorization"
+                    ] = `Bearer ${token}`;
+                } else {
+                    await SecureStore.deleteItemAsync("access_token");
+                    await SecureStore.deleteItemAsync("refresh_token");
+                    await SecureStore.deleteItemAsync("access_token_expiry");
+                    setIsLoggedIn(false);
+                }
+            } catch (error) {
+                console.error("Error checking login status:", error);
+            } finally {
+                setIsChecking(false);
+            }
+        };
 
-    // Handle deep linking for ZaloPay payment results
-    const handleDeepLink = (url) => {
-      console.log('Deep link received:', url);
-      if (url && url.includes('demozpdk://')) {
-        const paymentResult = ZaloPayService.parsePaymentResult(url);
-        console.log('Payment result:', paymentResult);
-        
-        // You can dispatch navigation or update global state here
-        // For now, we'll let the OrderScreen handle the result
-      }
-    };
+        const initializePaymentMethods = async () => {
+            try {
+                console.log("Initializing payment methods...");
+                const response = await apiService.initializePaymentMethods();
+                // console.log(
+                //     "Payment methods initialized successfully:",
+                //     response.data
+                // );
+            } catch (error) {
+                console.log(
+                    "Payment methods already exist or initialization failed:",
+                    error.message
+                );
+                // This is okay - methods might already be initialized
+            }
+        };
 
-    // Listen for deep links
-    const linkingListener = Linking.addEventListener('url', ({ url }) => {
-      handleDeepLink(url);
-    });
+        checkLoginStatus();
 
-    // Check if app was opened via deep link
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        handleDeepLink(url);
-      }
-    });
+        // Initialize payment methods on app startup
+        initializePaymentMethods();
 
-    const appStateListener = AppState.addEventListener(
-      "change",
-      handleAppStateChange
-    );
+        // Handle deep linking for ZaloPay payment results
+        const handleDeepLink = (url) => {
+            console.log("Deep link received:", url);
+            if (url && url.includes("demozpdk://")) {
+                const paymentResult = ZaloPayService.parsePaymentResult(url);
+                console.log("Payment result:", paymentResult);
 
-    setAppState(AppState.currentState);
+                // You can dispatch navigation or update global state here
+                // For now, we'll let the OrderScreen handle the result
+            }
+        };
 
-    const welcomeTimer = setTimeout(() => setShowWelcome(false), 5000);
-
-    return () => {
-      linkingListener.remove();
-      appStateListener.remove();
-      clearTimeout(welcomeTimer);
-    };
-  }, []);
-
-  const handleAppStateChange = async (nextAppState) => {
-    console.log("AppState changed from", appState, "to", nextAppState);
-
-    if (appState.match(/inactive|background/) && nextAppState === "active") {
-      const lastExitTime = await AsyncStorage.getItem("lastExitTime");
-      console.log("Last exit time retrieved:", lastExitTime);
-
-      const timeInBackground =
-        Date.now() - (lastExitTime ? parseInt(lastExitTime) : Date.now());
-
-      console.log(
-        `App was in background for ${timeInBackground / 1000} seconds`
-      );
-
-      if (timeInBackground > 60000) {
-        console.log("Session expired, logging out...");
-        await handleLogout(setIsLoggedIn);
-        alert("Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.");
-      }
-    } else if (nextAppState.match(/inactive|background/)) {
-      const currentTime = Date.now();
-      console.log(
-        "Saving currentTime to AsyncStorage before background:",
-        currentTime
-      );
-
-      await AsyncStorage.setItem("lastExitTime", currentTime.toString())
-        .then(() => {
-          console.log("Saved lastExitTime successfully.");
-        })
-        .catch((error) => {
-          console.error("Error saving lastExitTime:", error);
+        // Listen for deep links
+        const linkingListener = Linking.addEventListener("url", ({ url }) => {
+            handleDeepLink(url);
         });
+
+        // Check if app was opened via deep link
+        Linking.getInitialURL().then((url) => {
+            if (url) {
+                handleDeepLink(url);
+            }
+        });
+
+        const appStateListener = AppState.addEventListener(
+            "change",
+            handleAppStateChange
+        );
+
+        setAppState(AppState.currentState);
+
+        const welcomeTimer = setTimeout(() => setShowWelcome(false), 5000);
+
+        return () => {
+            linkingListener.remove();
+            appStateListener.remove();
+            clearTimeout(welcomeTimer);
+        };
+    }, []);
+
+    const handleAppStateChange = async (nextAppState) => {
+        console.log("AppState changed from", appState, "to", nextAppState);
+
+        if (
+            appState.match(/inactive|background/) &&
+            nextAppState === "active"
+        ) {
+            const lastExitTime = await AsyncStorage.getItem("lastExitTime");
+            console.log("Last exit time retrieved:", lastExitTime);
+
+            const timeInBackground =
+                Date.now() -
+                (lastExitTime ? parseInt(lastExitTime) : Date.now());
+
+            console.log(
+                `App was in background for ${timeInBackground / 1000} seconds`
+            );
+
+            if (timeInBackground > 60000) {
+                console.log("Session expired, logging out...");
+                await handleLogout(setIsLoggedIn);
+                alert("Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.");
+            }
+        } else if (nextAppState.match(/inactive|background/)) {
+            const currentTime = Date.now();
+            console.log(
+                "Saving currentTime to AsyncStorage before background:",
+                currentTime
+            );
+
+            await AsyncStorage.setItem("lastExitTime", currentTime.toString())
+                .then(() => {
+                    console.log("Saved lastExitTime successfully.");
+                })
+                .catch((error) => {
+                    console.error("Error saving lastExitTime:", error);
+                });
+        }
+
+        setAppState(nextAppState);
+    };
+
+    if (isChecking) {
+        return null;
     }
 
-    setAppState(nextAppState);
-  };
+    return (
+        <NavigationContainer linking={linking}>
+            <UserInactivity
+                timeForInactivity={1 * 60 * 1000}
+                onAction={async (isActive) => {
+                    if (isActive) {
+                        const token = await SecureStore.getItemAsync(
+                            "access_token"
+                        );
+                        const expiryTime = await SecureStore.getItemAsync(
+                            "access_token_expiry"
+                        );
 
-  if (isChecking) {
-    return null;
-  }
+                        if (!token || Date.now() >= parseInt(expiryTime, 10)) {
+                            try {
+                                const refreshToken =
+                                    await SecureStore.getItemAsync(
+                                        "refresh_token"
+                                    );
+                                if (refreshToken) {
+                                    const { data } = await api.post(
+                                        "/customers/auth/refresh-token",
+                                        {
+                                            refresh_token: refreshToken,
+                                        }
+                                    );
+                                    const { access_token, expires_in } = data;
+                                    const newExpiryTime =
+                                        Date.now() + expires_in * 1000;
 
-  return (
-    <NavigationContainer linking={linking}>
-      <UserInactivity
-        timeForInactivity={1 * 60 * 1000}
-        onAction={async (isActive) => {
-            if (isActive) {
-              const token = await SecureStore.getItemAsync("access_token");
-              const expiryTime = await SecureStore.getItemAsync(
-                "access_token_expiry"
-              );
+                                    await SecureStore.setItemAsync(
+                                        "access_token",
+                                        access_token
+                                    );
+                                    await SecureStore.setItemAsync(
+                                        "access_token_expiry",
+                                        newExpiryTime.toString()
+                                    );
+                                } else {
+                                    setIsLoggedIn(false);
+                                }
+                            } catch (error) {
+                                console.error("Error refreshing token:", error);
+                                setIsLoggedIn(false);
+                            }
+                        }
+                    }
+                }}
+            >
+                <Stack.Navigator
+                    initialRouteName={
+                        showWelcome
+                            ? "WelcomeScreen"
+                            : isLoggedIn
+                            ? "HomeScreen"
+                            : "UserTypeSelectionScreen"
+                    }
+                >
+                    {/* Welcome & Auth Screens */}
+                    <Stack.Screen
+                        name="WelcomeScreen"
+                        component={WelcomeScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="UserTypeSelectionScreen"
+                        component={UserTypeSelectionScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="LoginScreen"
+                        component={LoginScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="StaffLoginScreen"
+                        component={StaffLoginScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="AdminLoginScreen"
+                        component={AdminLoginScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="AdminDrawer"
+                        component={AdminDrawerNavigator}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="RegisterScreen"
+                        component={RegisterScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="ForgotPasswordScreen"
+                        component={ForgotPasswordScreen}
+                        options={{ headerShown: false }}
+                    />
 
-              if (!token || Date.now() >= parseInt(expiryTime, 10)) {
-                try {
-                  const refreshToken = await SecureStore.getItemAsync(
-                    "refresh_token"
-                  );
-                  if (refreshToken) {
-                    const { data } = await api.post(
-                      "/customers/auth/refresh-token",
-                      {
-                        refresh_token: refreshToken,
-                      }
-                    );
-                    const { access_token, expires_in } = data;
-                    const newExpiryTime = Date.now() + expires_in * 1000;
-
-                    await SecureStore.setItemAsync(
-                      "access_token",
-                      access_token
-                    );
-                    await SecureStore.setItemAsync(
-                      "access_token_expiry",
-                      newExpiryTime.toString()
-                    );
-                  } else {
-                    setIsLoggedIn(false);
-                  }
-                } catch (error) {
-                  console.error("Error refreshing token:", error);
-                  setIsLoggedIn(false);
-                }
-              }
-            }
-          }}
-        >
-          <Stack.Navigator
-            initialRouteName={
-              showWelcome ? "WelcomeScreen" : 
-              isLoggedIn ? "HomeScreen" : 
-              "UserTypeSelectionScreen"
-            }
-          >
-            {/* Welcome & Auth Screens */}
-            <Stack.Screen
-              name="WelcomeScreen"
-              component={WelcomeScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="UserTypeSelectionScreen"
-              component={UserTypeSelectionScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="LoginScreen"
-              component={LoginScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="StaffLoginScreen"
-              component={StaffLoginScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="AdminLoginScreen"
-              component={AdminLoginScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="AdminDrawer"
-              component={AdminDrawerNavigator}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="RegisterScreen"
-              component={RegisterScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ForgotPasswordScreen"
-              component={ForgotPasswordScreen}
-              options={{ headerShown: false }}
-            />
-            
-            {/* Main App Screens */}
-            <Stack.Screen
-              name="HomeScreen"
-              component={HomeScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ExploreScreen"
-              component={ExploreScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="CategoryProductsScreen"
-              component={CategoryProductsScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ProductDetailScreen"
-              component={ProductDetailScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="CartScreen"
-              component={CartScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="CheckoutScreen"
-              component={CheckoutScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="OrderScreen"
-              component={OrderScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="TrackingDetailScreen"
-              component={TrackingDetailScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="WishlistScreen"
-              component={WishlistScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ProfileScreen"
-              component={ProfileScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ManagerProfileScreen"
-              component={ManagerProfileScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="DetailProfileScreen"
-              component={DetailProfileScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="SettingsScreen"
-              component={SettingsScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ChangePasswordScreen"
-              component={ChangePasswordScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="MyOrdersScreen"
-              component={MyOrdersScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="MyOrderScreen"
-              component={MyOrderScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="OrderDetailsScreen"
-              component={OrderDetailsScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ZaloPayTestScreen"
-              component={ZaloPayTestScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ZaloPayQRScreen"
-              component={ZaloPayQRScreen}
-              options={{ headerShown: false }}
-            />
-          </Stack.Navigator>
-        </UserInactivity>
-    </NavigationContainer>
-  );
+                    {/* Main App Screens */}
+                    <Stack.Screen
+                        name="HomeScreen"
+                        component={HomeScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="ExploreScreen"
+                        component={ExploreScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="CategoryProductsScreen"
+                        component={CategoryProductsScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="ProductDetailScreen"
+                        component={ProductDetailScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="CartScreen"
+                        component={CartScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="CheckoutScreen"
+                        component={CheckoutScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="OrderScreen"
+                        component={OrderScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="TrackingDetailScreen"
+                        component={TrackingDetailScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="WishlistScreen"
+                        component={WishlistScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="ProfileScreen"
+                        component={ProfileScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="ManagerProfileScreen"
+                        component={ManagerProfileScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="DetailProfileScreen"
+                        component={DetailProfileScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="SettingsScreen"
+                        component={SettingsScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="ChangePasswordScreen"
+                        component={ChangePasswordScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="MyOrdersScreen"
+                        component={MyOrdersScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="MyOrderScreen"
+                        component={MyOrderScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="OrderDetailsScreen"
+                        component={OrderDetailsScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="ZaloPayTestScreen"
+                        component={ZaloPayTestScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="ZaloPayQRScreen"
+                        component={ZaloPayQRScreen}
+                        options={{ headerShown: false }}
+                    />
+                </Stack.Navigator>
+            </UserInactivity>
+        </NavigationContainer>
+    );
 }

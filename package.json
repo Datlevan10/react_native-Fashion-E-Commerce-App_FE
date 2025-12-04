@@ -50,7 +50,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@expo/cli": "^0.24.20"
+    "@expo/cli": "^0.24.20",
+    "baseline-browser-mapping": "^2.9.2"
   },
   "private": true
 }

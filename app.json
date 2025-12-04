@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "Happy-Field App",
+    "name": "Computer store App",
     "slug": "fashion-e-commerce-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "happyfield",
+    "scheme": "computer-store",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -14,14 +14,14 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.happyfield.ecommerce"
+      "bundleIdentifier": "com.computer-store.ecommerce"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.happyfield.ecommerce",
+      "package": "com.computer-store.ecommerce",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -30,7 +30,7 @@
               "scheme": "demozpdk"
             },
             {
-              "scheme": "happyfield"
+              "scheme": "computer-store"
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]
