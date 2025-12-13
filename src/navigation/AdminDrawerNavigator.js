@@ -143,7 +143,7 @@ const CustomDrawerContent = ({ navigation, onClose }) => {
           <MaterialIcons name="admin-panel-settings" size={40} color={Colors.whiteColor} />
         </View>
         <Text style={styles.adminName}>Bảng quản trị</Text>
-        <Text style={styles.adminEmail}>Happy-Field App</Text>
+        <Text style={styles.adminEmail}>Computer Store App</Text>
       </View>
 
       {/* Menu Items */}

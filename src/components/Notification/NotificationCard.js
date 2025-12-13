@@ -11,8 +11,51 @@ const NotificationCard = ({
   notificationId,
   onPress,
   onDelete,
+  navigation,
 }) => {
   const [isSwiping, setIsSwiping] = useState(false);
+
+  const handleImagePress = async () => {
+    if (relatedData?.productId && navigation) {
+      try {
+        // Fetch product details
+        const apiService = require("../../api/ApiService").default;
+        const API_BASE_URL = require("../../configs/config").default;
+        
+        const response = await apiService.getProductByProductId(relatedData.productId);
+        const item = response.data.data;
+        
+        const product = {
+          productId: item.product_id,
+          productImage: {
+            uri: `${API_BASE_URL}${item.image[0].url}`,
+          },
+          imageArr: item.image.map(
+            (img) => `${API_BASE_URL}${img.url}`
+          ),
+          categoryName: item.category_name,
+          averageReview: item.average_review,
+          totalReview: item.total_review,
+          productName: item.product_name,
+          description: item.description,
+          oldPrice: item.old_price,
+          newPrice: item.new_price,
+          colorArr: item.color.map((color) => `${color.color_code}`),
+          sizeArr: item.size.map((size) => `${size.size}`),
+          variant: item.variant || [],
+        };
+        
+        navigation.navigate("ProductDetailScreen", {
+          product,
+          images: product.imageArr,
+          colors: product.colorArr,
+          sizes: product.sizeArr,
+        });
+      } catch (error) {
+        console.error("Error navigating to product:", error);
+      }
+    }
+  };
 
   const renderRightActions = () => (
     <View style={styles.deleteContainer}>
@@ -36,14 +79,14 @@ const NotificationCard = ({
             isSwiping && styles.cardWithoutRightBorder,
           ]}
         >
-          <View>
+          <TouchableOpacity onPress={handleImagePress}>
             <View style={styles.imageContainer}>
               <Image
                 source={{ uri: relatedData.images[0] }}
                 style={styles.image}
               />
             </View>
-          </View>
+          </TouchableOpacity>
           <View style={styles.textContainer}>
             <Text style={styles.message}>
               {message} <Text style={styles.timeAgo}>• {timeAgo}</Text>
