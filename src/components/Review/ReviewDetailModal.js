@@ -91,6 +91,7 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
           totalReview: productDetails.total_review,
           colorArr: productDetails.color.map((color) => `${color.color_code}`),
           sizeArr: productDetails.size.map((size) => `${size.size}`),
+          variant: productDetails.variant || [],
         },
         images: productDetails.image.map((img) => `${API_BASE_URL}${img.url}`),
         colors: productDetails.color.map((color) => `${color.color_code}`),

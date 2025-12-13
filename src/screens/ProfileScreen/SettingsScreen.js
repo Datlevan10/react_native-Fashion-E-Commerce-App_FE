@@ -126,7 +126,7 @@ const SettingsScreen = ({ navigation }) => {
 
         {/* App Info */}
         <View style={styles.appInfoContainer}>
-          <Text style={styles.appName}>Happy-Field App</Text>
+          <Text style={styles.appName}>Computer Store App</Text>
           <Text style={styles.appVersion}>Phiên bản 1.0.0</Text>
         </View>
       </ScrollView>

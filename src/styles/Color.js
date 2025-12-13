@@ -49,6 +49,9 @@ const Colors = {
   disabled: "#e0e0e0",
   overlay: "rgba(0, 0, 0, 0.5)",
   lightGrayColor: "#e0e0e0",
+
+
+  radius: "12px"
 };
 
 export default Colors;

@@ -12,7 +12,7 @@ export default function SizeSelector({ sizes, onSizeSelect }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Khối lượng</Text>
+      <Text style={styles.label}>Màn hình</Text>
       <View style={styles.sizeRow}>
         {sizes.map((size, index) => (
           <TouchableOpacity

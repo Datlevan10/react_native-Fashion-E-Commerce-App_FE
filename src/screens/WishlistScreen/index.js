@@ -69,6 +69,7 @@ export default function WishlistScreen({ navigation }) {
           newPrice: item.new_price,
           colorArr: item.color.map((color) => `${color.color_code}`),
           sizeArr: item.size.map((size) => `${size.size}`),
+          variant: item.variant || [],
           storeName: item.store_name || "Unknown Store",
         }));
 

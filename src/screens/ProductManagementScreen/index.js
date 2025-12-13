@@ -482,7 +482,7 @@ const ProductManagementScreen = () => {
 
           {/* Sizes and Colors */}
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Khối lượnglượng (1kg : 1, 700g : 700  ... phân cách bằng dấu phẩy)</Text>
+            <Text style={styles.inputLabel}>Kích thước màn hình (14 inch : 17, 17.3 inch : 17.3  ... phân cách bằng dấu phẩy)</Text>
             <TextInput
               style={styles.textInput}
               value={formData.sizes}
