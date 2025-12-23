@@ -129,42 +129,35 @@ export default function AdminDashboardScreen({ navigation }) {
       icon: "shopping-bag",
       iconType: "Feather",
       color: Colors.primary,
-      onPress: () => navigation.navigate("OrderManagementScreen"),
+      onPress: () => navigation.navigate("OrderManagement"),
     },
     {
       title: "Quản lý nhân viên",
       icon: "users",
       iconType: "Feather",
       color: Colors.secondary,
-      onPress: () => navigation.navigate("StaffManagementScreen"),
+      onPress: () => navigation.navigate("StaffManagement"),
     },
     {
       title: "Khách hàng",
       icon: "user-friends",
       iconType: "FontAwesome5",
       color: Colors.warning,
-      onPress: () => navigation.navigate("CustomerManagementScreen"),
+      onPress: () => navigation.navigate("CustomerManagement"),
     },
     {
       title: "Các sản phẩm",
       icon: "package",
       iconType: "Feather",
       color: Colors.blueProduct,
-      onPress: () => navigation.navigate("ProductManagementScreen"),
+      onPress: () => navigation.navigate("ProductManagement"),
     },
     {
       title: "Báo cáo",
       icon: "bar-chart",
       iconType: "Feather",
       color: "#9c27b0",
-      onPress: () => navigation.navigate("ReportsScreen"),
-    },
-    {
-      title: "Cài đặt",
-      icon: "settings",
-      iconType: "Feather",
-      color: Colors.textSecondary,
-      onPress: () => navigation.navigate("AdminSettingsScreen"),
+      onPress: () => navigation.navigate("Reports"),
     },
   ];
 
@@ -332,7 +325,7 @@ export default function AdminDashboardScreen({ navigation }) {
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Đơn hàng gần đây</Text>
               <TouchableOpacity
-                onPress={() => navigation.navigate("OrderManagementScreen")}
+                onPress={() => navigation.navigate("OrderManagement")}
               >
                 <Text style={styles.viewAllText}>Xem tất cả</Text>
               </TouchableOpacity>
