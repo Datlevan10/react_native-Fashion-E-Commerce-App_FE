@@ -263,7 +263,7 @@ export default function ProductDetailScreen({ route, navigation }) {
         selectedSize
     ) => {
         if (!selectedSize) {
-            Alert.alert("Lỗi", "Vui lòng chọn size và thử lại");
+            Alert.alert("Lỗi", "Vui lòng chọn kích thước màn hình và thử lại");
             return;
         }
 

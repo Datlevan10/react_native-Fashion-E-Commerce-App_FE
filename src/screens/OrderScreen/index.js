@@ -89,7 +89,7 @@ const OrderScreen = ({ navigation, route }) => {
 
     const validateOrderData = () => {
         if (!orderData.shipping_address.trim()) {
-            Alert.alert("Validation Error", "Please enter shipping address");
+            Alert.alert("Lỗi xác thực", "Vui lòng nhập địa chỉ giao hàng");
             return false;
         }
         if (!orderData.shipping_city.trim()) {
@@ -97,19 +97,22 @@ const OrderScreen = ({ navigation, route }) => {
             return false;
         }
         if (!orderData.shipping_phone.trim()) {
-            Alert.alert("Validation Error", "Please enter shipping phone");
+            Alert.alert(
+                "Lỗi xác thực",
+                "Vui lòng nhập số điện thoại giao hàng"
+            );
             return false;
         }
         if (!orderData.shipping_method) {
-            Alert.alert("Validation Error", "Please select a shipping method");
+            Alert.alert("Lỗi xác thực", "Vui lòng chọn phương thức vận chuyển");
             return false;
         }
         if (!orderData.payment_method) {
-            Alert.alert("Validation Error", "Please select a payment method");
+            Alert.alert("Lỗi xác thực", "Vui lòng chọn phương thức thanh toán");
             return false;
         }
         if (orderItems.length === 0) {
-            Alert.alert("Validation Error", "No items in cart");
+            Alert.alert("Lỗi xác thực", "Không có mặt hàng nào trong giỏ hàng");
             return false;
         }
         return true;
@@ -165,12 +168,18 @@ const OrderScreen = ({ navigation, route }) => {
     const handleRegularOrder = async (orderPayload) => {
         const response = await apiService.createOrder(orderPayload);
 
+        // Log the actual response structure for debugging
+        console.log(
+            "Order creation response:",
+            JSON.stringify(response.data, null, 2)
+        );
+
         if (response.status === 201 || response.status === 200) {
+            const orderId = response.data?.data?.order?.order_id || "N/A";
+
             Alert.alert(
                 "Đã đặt hàng thành công!",
-                `Đơn hàng của bạn đã được tạo. Mã đơn hàng: ${
-                    response.data.order_id || "N/A"
-                }`,
+                `Đơn hàng của bạn đã được tạo. Mã đơn hàng: ${orderId}`,
                 [
                     {
                         text: "Tiếp tục mua sắm",
@@ -187,7 +196,7 @@ const OrderScreen = ({ navigation, route }) => {
             const orderResponse = await apiService.createOrder(orderPayload);
 
             if (orderResponse.status === 201 || orderResponse.status === 200) {
-                const orderId = orderResponse.data.order_id;
+                const orderId = orderResponse.data?.data?.order?.order_id || "N/A";
                 const totalAmountWithShipping = totalAmount + shippingFee;
 
                 // Prepare ZaloPay payment info
