@@ -19,6 +19,7 @@ import {
     AntDesign,
 } from "react-native-vector-icons";
 import * as SecureStore from "expo-secure-store";
+import * as Clipboard from 'expo-clipboard';
 import Colors from "../../styles/Color";
 import apiService from "../../api/ApiService";
 import API_BASE_URL from "../../configs/config";
@@ -124,6 +125,19 @@ const OrderScreen = ({ navigation, route }) => {
         try {
             setLoading(true);
 
+            // Validate cart exists and has items
+            if (!cartId) {
+                throw new Error('Giỏ hàng không tồn tại');
+            }
+
+            if (!orderItems || orderItems.length === 0) {
+                throw new Error('Giỏ hàng trống. Vui lòng thêm sản phẩm vào giỏ hàng');
+            }
+
+            if (!customerId) {
+                throw new Error('Vui lòng đăng nhập để tiếp tục');
+            }
+
             // Use the simplified backend API format based on your test
             const orderPayload = {
                 cart_id: cartId,
@@ -166,7 +180,13 @@ const OrderScreen = ({ navigation, route }) => {
     };
 
     const handleRegularOrder = async (orderPayload) => {
+        console.log('Creating order with payload:', orderPayload);
         const response = await apiService.createOrder(orderPayload);
+
+        // Check if order creation was successful
+        if (!response || !response.data) {
+            throw new Error('Order creation failed - no response data');
+        }
 
         // Log the actual response structure for debugging
         console.log(
@@ -175,7 +195,14 @@ const OrderScreen = ({ navigation, route }) => {
         );
 
         if (response.status === 201 || response.status === 200) {
-            const orderId = response.data?.data?.order?.order_id || "N/A";
+            const orderData = response.data?.data;
+            const orderId = orderData?.order?.order_id || "N/A";
+            const paymentTransaction = orderData?.payment_transaction;
+            
+            // Log payment transaction if available
+            if (paymentTransaction) {
+                console.log('Payment transaction created:', paymentTransaction);
+            }
 
             Alert.alert(
                 "Đã đặt hàng thành công!",
@@ -187,50 +214,158 @@ const OrderScreen = ({ navigation, route }) => {
                     },
                 ]
             );
+        } else {
+            // Handle non-success status codes
+            const errorMessage = response.data?.message || 
+                               response.data?.error || 
+                               `Order creation failed with status ${response.status}`;
+            throw new Error(errorMessage);
         }
     };
 
     const handleZaloPayPayment = async (orderPayload) => {
         try {
-            // First create the order
+            // Create order with ZaloPay payment method
+            console.log('Creating ZaloPay order with payload:', orderPayload);
             const orderResponse = await apiService.createOrder(orderPayload);
 
+            // Check if order creation was successful
+            if (!orderResponse || !orderResponse.data) {
+                throw new Error('Order creation failed - no response data');
+            }
+
+            console.log('Order response:', JSON.stringify(orderResponse.data, null, 2));
+
             if (orderResponse.status === 201 || orderResponse.status === 200) {
-                const orderId = orderResponse.data?.data?.order?.order_id || "N/A";
+                const orderData = orderResponse.data?.data;
+                const order = orderData?.order;
+                const paymentTransaction = orderData?.payment_transaction;
+                
+                const orderId = order?.order_id;
+                if (!orderId) {
+                    throw new Error('Order created but no order ID received');
+                }
+                
+                console.log('Order created successfully with ID:', orderId);
+                console.log('Payment transaction:', paymentTransaction);
+                
+                // Get ZaloPay URL from the order response (backend creates it automatically)
+                const zaloPayUrl = paymentTransaction?.order_url || 
+                                  paymentTransaction?.gateway_response?.order_url;
+                const appTransId = paymentTransaction?.app_trans_id || 
+                                  paymentTransaction?.gateway_response?.app_trans_id;
+                
+                if (!zaloPayUrl) {
+                    console.error('No ZaloPay URL in response:', paymentTransaction);
+                    throw new Error('ZaloPay payment URL not received from backend');
+                }
+                
+                console.log('ZaloPay URL received:', zaloPayUrl);
+                console.log('App Trans ID:', appTransId);
+                
                 const totalAmountWithShipping = totalAmount + shippingFee;
-
-                // Prepare ZaloPay payment info
-                const zaloPayInfo = {
-                    amount: totalAmountWithShipping,
-                    description: `Thanh toán đơn hàng #${orderId}`,
-                    orderId: orderId,
-                    customerId: customerId,
-                };
-
-                // Process ZaloPay payment
-                const paymentResult = await ZaloPayService.createPayment(
-                    zaloPayInfo
-                );
-
-                if (paymentResult.success) {
-                    // Navigate to QR code display screen
-                    navigation.navigate("ZaloPayQRScreen", {
+                
+                // Store app_trans_id for status polling
+                if (appTransId) {
+                    await SecureStore.setItemAsync('current_zalopay_transaction', appTransId);
+                }
+                
+                // Open ZaloPay app with the URL from backend
+                console.log('Opening ZaloPay URL...');
+                const openResult = await ZaloPayService.openPayment(zaloPayUrl);
+                
+                if (openResult.success) {
+                    // Navigate to payment status screen
+                    navigation.navigate("ZaloPayStatusScreen", {
                         orderId: orderId,
+                        appTransId: appTransId,
                         amount: totalAmountWithShipping,
-                        orderUrl: paymentResult.order_url,
-                        zpTransToken: paymentResult.zp_trans_token,
                         description: `Thanh toán đơn hàng #${orderId}`,
                     });
                 } else {
-                    throw new Error(
-                        paymentResult.error ||
-                            "Không thể tạo thanh toán ZaloPay"
+                    console.error('Failed to open ZaloPay URL:', openResult.error);
+                    
+                    // Convert to QR URL for display
+                    const qrDisplayUrl = zaloPayUrl.replace('openinapp', 'pay/v2/qr');
+                    
+                    Alert.alert(
+                        "Chọn phương thức thanh toán",
+                        "ZaloPay Sandbox không thể mở tự động. Vui lòng chọn:",
+                        [
+                            {
+                                text: "Mở trong trình duyệt (xem QR)",
+                                onPress: () => {
+                                    console.log('Opening QR display URL:', qrDisplayUrl);
+                                    Linking.openURL(qrDisplayUrl);
+                                }
+                            },
+                            {
+                                text: "Sao chép link gốc",
+                                onPress: async () => {
+                                    await Clipboard.setStringAsync(zaloPayUrl);
+                                    Alert.alert(
+                                        "Đã sao chép", 
+                                        "Link thanh toán đã được sao chép.\n\nDán vào trình duyệt hoặc ứng dụng ZaloPay Sandbox."
+                                    );
+                                }
+                            },
+                            {
+                                text: "Thử lại với link gốc",
+                                onPress: () => Linking.openURL(zaloPayUrl)
+                            },
+                            {
+                                text: "Hủy",
+                                style: "cancel"
+                            }
+                        ]
                     );
                 }
+            } else {
+                // Handle non-success status codes
+                const errorMessage = orderResponse.data?.message || 
+                                   orderResponse.data?.error || 
+                                   `Order creation failed with status ${orderResponse.status}`;
+                throw new Error(errorMessage);
             }
         } catch (error) {
             console.error("ZaloPay payment error:", error);
-            throw error; // Re-throw to be handled by the main createOrder function
+            console.error("Error details:", error.response?.data);
+            
+            // Check for specific error cases
+            let errorMessage = "Không thể tạo thanh toán ZaloPay";
+            
+            if (error.message?.includes('not found') || error.message?.includes('404')) {
+                errorMessage = "Đơn hàng chưa sẵn sàng. Vui lòng thử lại sau vài giây.";
+            } else if (error.message?.includes('already')) {
+                errorMessage = "Giỏ hàng đã được thanh toán";
+            } else if (error.response?.status === 404) {
+                errorMessage = "Đơn hàng không tồn tại hoặc chưa được xử lý xong";
+            } else if (error.response?.data?.message) {
+                errorMessage = error.response.data.message;
+            } else if (error.message) {
+                errorMessage = error.message;
+            }
+            
+            Alert.alert(
+                "Lỗi thanh toán",
+                errorMessage,
+                [
+                    {
+                        text: "Thử lại",
+                        onPress: async () => {
+                            // Retry with longer delay
+                            console.log('Retrying payment creation...');
+                            setLoading(true);
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                            createOrder();
+                        },
+                    },
+                    {
+                        text: "Quay lại giỏ hàng",
+                        onPress: () => navigation.navigate("CartScreen"),
+                    },
+                ]
+            );
         }
     };
 
