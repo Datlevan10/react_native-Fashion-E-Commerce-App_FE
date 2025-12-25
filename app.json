@@ -14,7 +14,15 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.computer-store.ecommerce"
+      "bundleIdentifier": "com.computer-store.ecommerce",
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": [
+          "zalopay",
+          "zalopay-sandbox",
+          "zalo",
+          "demozpdk"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {

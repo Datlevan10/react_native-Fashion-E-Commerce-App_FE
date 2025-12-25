@@ -227,7 +227,7 @@ export default function ProductDetailScreen({ route, navigation }) {
             const response = await apiService.addProductToFavorite(productData);
             if (response.status === 201) {
                 setIsFavorite(true);
-                Alert.alert("Success", "Product added to wishlist.");
+                Alert.alert("Thành công", "Sản phẩm đã được thêm vào danh sách yêu thích.");
             } else {
                 Alert.alert(
                     "Error",
@@ -400,12 +400,12 @@ export default function ProductDetailScreen({ route, navigation }) {
                         <TouchableOpacity
                             onPress={() =>
                                 ShowAlertWithTitleContentAndTwoActions(
-                                    "Notification",
-                                    "Add product to wishlist?",
+                                    "Thông báo",
+                                    "Thêm sản phẩm vào danh sách yêu thích?",
                                     handleAddToWishlist,
                                     () =>
                                         console.log(
-                                            "User cancelled adding product to wishlist"
+                                            "Người dùng đã hủy thêm sản phẩm vào danh sách yêu thích."
                                         )
                                 )
                             }

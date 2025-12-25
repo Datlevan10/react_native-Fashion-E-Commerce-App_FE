@@ -678,24 +678,16 @@ const getProductReport = async (startDate, endDate) => {
 
 // ============ ZALOPAY PAYMENT APIs ============
 
-// Initialize payment methods (one-time setup)
-const initializePaymentMethods = async () => {
-  return api.post("/payments/initialize");
-};
-
-// Create ZaloPay payment order
+// Create ZaloPay payment order via backend
 const createZaloPayPayment = async (paymentData) => {
+  // Backend expects: order_id, amount, description
   return api.post("/payments/zalopay/create", paymentData);
 };
 
-// Query ZaloPay payment status
+// Query ZaloPay payment status from backend
 const queryZaloPayStatus = async (appTransId) => {
+  // Backend expects app_trans_id in request body
   return api.post("/payments/zalopay/query", { app_trans_id: appTransId });
-};
-
-// Handle ZaloPay callback (for backend verification)
-const verifyZaloPayCallback = async (callbackData) => {
-  return api.post("/payments/zalopay/callback", callbackData);
 };
 
 // ============ ORDER DETAILS APIs ============
@@ -922,10 +914,8 @@ export default {
   getCustomerReport,
   getProductReport,
   // ZaloPay APIs
-  initializePaymentMethods,
   createZaloPayPayment,
   queryZaloPayStatus,
-  verifyZaloPayCallback,
   // Order Details APIs
   getAllOrderDetails,
   getOrderDetailsByOrderId,

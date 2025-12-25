@@ -164,13 +164,13 @@ export default function CartScreen({ navigation }) {
                         (item) => item.cart_detail_id !== cartDetailId
                     )
                 );
-                Alert.alert("Success", "Item removed from cart");
+                Alert.alert("Thành công", "Sản phẩm đã được xóa khỏi giỏ hàng");
             } else {
-                Alert.alert("Error", "Failed to remove item");
+                Alert.alert("Lỗi", "Không thể xóa sản phẩm khỏi giỏ hàng");
             }
         } catch (error) {
-            console.error("Error removing item:", error);
-            Alert.alert("Error", "Failed to remove item from cart");
+            console.error("Lỗi khi xóa sản phẩm:", error);
+            Alert.alert("Lỗi", "Không thể xóa sản phẩm khỏi giỏ hàng");
         }
     };
 
@@ -455,7 +455,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.whiteColor,
         paddingHorizontal: 20,
         paddingTop: 20,
-        paddingBottom: 32,
+        paddingBottom: 0,
         borderTopWidth: 1,
         borderTopColor: "#e9ecef",
         shadowColor: "#000",

@@ -94,27 +94,7 @@ export default function App() {
             }
         };
 
-        const initializePaymentMethods = async () => {
-            try {
-                console.log("Initializing payment methods...");
-                const response = await apiService.initializePaymentMethods();
-                // console.log(
-                //     "Payment methods initialized successfully:",
-                //     response.data
-                // );
-            } catch (error) {
-                console.log(
-                    "Payment methods already exist or initialization failed:",
-                    error.message
-                );
-                // This is okay - methods might already be initialized
-            }
-        };
-
         checkLoginStatus();
-
-        // Initialize payment methods on app startup
-        initializePaymentMethods();
 
         // Handle deep linking for ZaloPay payment results
         const handleDeepLink = (url) => {
