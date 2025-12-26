@@ -26,6 +26,7 @@ export default function CartScreen({ navigation }) {
     const [error, setError] = useState(null);
     const [refreshing, setRefreshing] = useState(false);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [selectedItems, setSelectedItems] = useState([]);
 
     useEffect(() => {
         fetchCartData();
@@ -33,7 +34,7 @@ export default function CartScreen({ navigation }) {
 
     useEffect(() => {
         calculateTotalPrice();
-    }, [cartItems]);
+    }, [cartItems, selectedItems]);
 
     const fetchCartData = async () => {
         try {
@@ -78,6 +79,10 @@ export default function CartScreen({ navigation }) {
                     cart_id: customerCartId || item.cart_id, // Use fetched cart_id or item's cart_id if available
                 }));
                 setCartItems(itemsWithCartId);
+                // Initialize all items as selected by default
+                setSelectedItems(
+                    itemsWithCartId.map((item) => item.cart_detail_id)
+                );
                 // If we don't have cartId yet, try to get it from first item
                 if (
                     !customerCartId &&
@@ -107,7 +112,11 @@ export default function CartScreen({ navigation }) {
 
     const calculateTotalPrice = () => {
         const total = cartItems.reduce((sum, item) => {
-            return sum + parseFloat(item.total_price || 0);
+            // Only calculate price for selected items
+            if (selectedItems.includes(item.cart_detail_id)) {
+                return sum + parseFloat(item.total_price || 0);
+            }
+            return sum;
         }, 0);
         setTotalPrice(total);
     };
@@ -164,6 +173,10 @@ export default function CartScreen({ navigation }) {
                         (item) => item.cart_detail_id !== cartDetailId
                     )
                 );
+                // Also remove from selected items
+                setSelectedItems((prevSelected) =>
+                    prevSelected.filter((id) => id !== cartDetailId)
+                );
                 Alert.alert("Thành công", "Sản phẩm đã được xóa khỏi giỏ hàng");
             } else {
                 Alert.alert("Lỗi", "Không thể xóa sản phẩm khỏi giỏ hàng");
@@ -174,16 +187,36 @@ export default function CartScreen({ navigation }) {
         }
     };
 
+    const handleToggleItem = (cartDetailId) => {
+        setSelectedItems((prev) => {
+            if (prev.includes(cartDetailId)) {
+                return prev.filter((id) => id !== cartDetailId);
+            } else {
+                return [...prev, cartDetailId];
+            }
+        });
+    };
+
+    const handleToggleAll = () => {
+        if (selectedItems.length === cartItems.length) {
+            // If all selected, deselect all
+            setSelectedItems([]);
+        } else {
+            // Select all
+            setSelectedItems(cartItems.map((item) => item.cart_detail_id));
+        }
+    };
+
     const handleRefresh = () => {
         setRefreshing(true);
         fetchCartData();
     };
 
     const handleCheckout = () => {
-        if (cartItems.length === 0) {
+        if (selectedItems.length === 0) {
             Alert.alert(
-                "Cart Empty",
-                "Please add items to cart before checkout"
+                "Chưa chọn sản phẩm",
+                "Vui lòng chọn ít nhất một sản phẩm để thanh toán"
             );
             return;
         }
@@ -196,8 +229,12 @@ export default function CartScreen({ navigation }) {
             return;
         }
 
-        // Navigate to OrderScreen with cart items
-        const orderItems = cartItems.map((item) => ({
+        // Navigate to OrderScreen with only selected cart items
+        const selectedCartItems = cartItems.filter((item) =>
+            selectedItems.includes(item.cart_detail_id)
+        );
+
+        const orderItems = selectedCartItems.map((item) => ({
             cart_detail_id: item.cart_detail_id,
             product_id: item.product_id,
             product_name: item.product_name,
@@ -314,17 +351,55 @@ export default function CartScreen({ navigation }) {
                                 onRefresh={handleRefresh}
                             >
                                 <View style={styles.itemsHeader}>
-                                    <Text style={styles.itemsCount}>
-                                        {cartItems.length} sản phẩm
-                                        {cartItems.length !== 1 ? "s" : ""}{" "}
-                                        trong giỏ hàng
-                                    </Text>
+                                    <View style={styles.headerRow}>
+                                        <TouchableOpacity
+                                            style={styles.selectAllContainer}
+                                            onPress={handleToggleAll}
+                                        >
+                                            <View
+                                                style={[
+                                                    styles.checkbox,
+                                                    selectedItems.length ===
+                                                        cartItems.length &&
+                                                        cartItems.length > 0 &&
+                                                        styles.checkboxSelected,
+                                                ]}
+                                            >
+                                                {selectedItems.length ===
+                                                    cartItems.length &&
+                                                    cartItems.length > 0 && (
+                                                        <MaterialIcons
+                                                            name="check"
+                                                            size={16}
+                                                            color={
+                                                                Colors.whiteColor
+                                                            }
+                                                        />
+                                                    )}
+                                            </View>
+                                            <Text style={styles.selectAllText}>
+                                                Chọn tất cả
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <Text style={styles.itemsCount}>
+                                            {selectedItems.length}/
+                                            {cartItems.length} sản phẩm
+                                        </Text>
+                                    </View>
                                 </View>
 
                                 {cartItems.map((item) => (
                                     <ModernCartItem
                                         key={item.cart_detail_id}
                                         item={item}
+                                        isSelected={selectedItems.includes(
+                                            item.cart_detail_id
+                                        )}
+                                        onToggleSelect={() =>
+                                            handleToggleItem(
+                                                item.cart_detail_id
+                                            )
+                                        }
                                         onQuantityChange={handleQuantityChange}
                                         onRemove={handleRemoveItem}
                                         onSizeChange={(
@@ -443,10 +518,39 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingVertical: 16,
     },
-    itemsCount: {
+    headerRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    selectAllContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    checkbox: {
+        width: 22,
+        height: 22,
+        borderRadius: 4,
+        borderWidth: 2,
+        borderColor: Colors.darkGray,
+        backgroundColor: Colors.whiteColor,
+        marginRight: 10,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    checkboxSelected: {
+        backgroundColor: Colors.blackColor,
+        borderColor: Colors.blackColor,
+    },
+    selectAllText: {
         fontSize: 16,
         fontWeight: "600",
         color: Colors.blackColor,
+    },
+    itemsCount: {
+        fontSize: 14,
+        fontWeight: "500",
+        color: Colors.darkGray,
     },
     bottomSpacing: {
         height: 20,
