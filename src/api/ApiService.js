@@ -85,12 +85,27 @@ const createCategory = async (categoryData) => {
   });
 };
 
-const updateCategory = async (categoryId, categoryData, hasImage = false) => {
-  const headers = hasImage 
-    ? { "Content-Type": "multipart/form-data" }
-    : { "Content-Type": "application/json" };
+// Update category - supports both JSON and FormData with image upload
+// For image upload: pass FormData object with image_category field
+// For JSON update: pass regular object
+const updateCategory = async (categoryId, categoryData) => {
+  // Check if we're dealing with FormData or regular JSON
+  const isFormData = categoryData instanceof FormData;
+  
+  if (isFormData) {
+    // Add _method field for PUT request simulation
+    categoryData.append('_method', 'PUT');
     
-  return api.put(`/categories/${categoryId}`, categoryData, { headers });
+    // Use POST with _method override for FormData
+    return api.post(`/categories/${categoryId}`, categoryData, {
+      headers: { "Content-Type": "multipart/form-data" }
+    });
+  } else {
+    // Regular JSON update without image
+    return api.put(`/categories/${categoryId}`, categoryData, {
+      headers: { "Content-Type": "application/json" }
+    });
+  }
 };
 
 const deleteCategory = async (categoryId) => {
@@ -651,6 +666,13 @@ const createProduct = async (productData) => {
   });
 };
 
+// Debug endpoint to test what's being received
+const testProductUpload = async (productData) => {
+  return api.post("/products/test-upload", productData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
 const updateProduct = async (productId, productData, hasImages = false) => {
   const headers = hasImages 
     ? { "Content-Type": "multipart/form-data" }
@@ -908,6 +930,7 @@ export default {
   // Product Management APIs
   getAllProductsAdmin,
   createProduct,
+  testProductUpload,
   updateProduct,
   deleteProduct,
   getSalesReport,

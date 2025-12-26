@@ -19,6 +19,7 @@
         "LSApplicationQueriesSchemes": [
           "zalopay",
           "zalopay-sandbox",
+          "zalopayqc",
           "zalo",
           "demozpdk"
         ]
@@ -36,6 +37,12 @@
           "data": [
             {
               "scheme": "demozpdk"
+            },
+            {
+              "scheme": "zalopayqc"
+            },
+            {
+              "scheme": "zalopay-sandbox"
             },
             {
               "scheme": "computer-store"

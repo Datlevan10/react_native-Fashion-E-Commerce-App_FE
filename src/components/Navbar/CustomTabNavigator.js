@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
+import * as SecureStore from "expo-secure-store";
 import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import IconWithBadge from "../Navbar/IconWithBadge";
@@ -24,6 +25,31 @@ const CustomTabNavigator = ({
   const navigation = useNavigation();
   const [logoSource, setLogoSource] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [cartItemCount, setCartItemCount] = useState(0);
+
+  const fetchCartItemCount = async () => {
+    try {
+      const storedCustomerId = await SecureStore.getItemAsync("customer_id");
+      if (!storedCustomerId) {
+        setCartItemCount(0);
+        return;
+      }
+
+      const response = await apiService.getProductInCartDetailByCustomerId(
+        storedCustomerId
+      );
+
+      if (response.status === 200 && response.data?.data) {
+        const cartItems = response.data.data;
+        setCartItemCount(Array.isArray(cartItems) ? cartItems.length : 0);
+      } else {
+        setCartItemCount(0);
+      }
+    } catch (error) {
+      console.log("Error fetching cart count:", error);
+      setCartItemCount(0);
+    }
+  };
 
   useEffect(() => {
     const loadStoreLogo = async () => {
@@ -42,7 +68,21 @@ const CustomTabNavigator = ({
     };
 
     loadStoreLogo();
+    fetchCartItemCount();
+    
+    // Set up interval to refresh cart count periodically
+    const interval = setInterval(fetchCartItemCount, 30000); // Refresh every 30 seconds
+    
+    return () => clearInterval(interval);
   }, []);
+  
+  // Listen for navigation events to refresh cart count
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchCartItemCount();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <Tab.Navigator
@@ -93,7 +133,7 @@ const CustomTabNavigator = ({
               >
                 <IconWithBadge
                   name="shopping-bag"
-                  badgeCount={3}
+                  badgeCount={cartItemCount}
                   size={25}
                   color={Colors.blackColor}
                   style={styles.headerRightIcon}
