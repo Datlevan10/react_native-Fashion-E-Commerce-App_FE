@@ -145,6 +145,8 @@ const OrderScreen = ({ navigation, route }) => {
                 payment_method: orderData.payment_method,
                 shipping_address: `${orderData.shipping_address}, ${orderData.shipping_city}`,
                 discount: 0, // Default discount
+                // Include cart_detail_ids to specify which items to include in the order
+                cart_detail_ids: orderItems.map(item => item.cart_detail_id),
             };
 
             // Add optional fields if provided
@@ -158,6 +160,8 @@ const OrderScreen = ({ navigation, route }) => {
             console.log("Creating order with payload:", orderPayload);
             console.log("Cart ID being used:", cartId);
             console.log("Customer ID being used:", customerId);
+            console.log("Selected cart_detail_ids:", orderPayload.cart_detail_ids);
+            console.log("Number of selected items:", orderPayload.cart_detail_ids?.length || 0);
 
             // Handle different payment methods
             if (orderData.payment_method === "zalopay") {
@@ -307,13 +311,29 @@ const OrderScreen = ({ navigation, route }) => {
                 try {
                     await Linking.openURL(zaloPayUrl);
                     
-                    // Navigate to payment status screen to track the payment
-                    navigation.navigate("ZaloPayStatusScreen", {
-                        orderId: orderId,
-                        appTransId: appTransId,
-                        amount: totalAmountWithShipping,
-                        description: `Thanh toán đơn hàng #${orderId}`,
-                    });
+                    // Show success alert and navigate back to cart
+                    Alert.alert(
+                        "Đặt hàng thành công!",
+                        `Đơn hàng #${orderId} đã được tạo thành công.\n\nBạn sẽ được chuyển đến ZaloPay để thanh toán.`,
+                        [
+                            {
+                                text: "OK",
+                                onPress: () => {
+                                    // Navigate back to cart screen
+                                    navigation.navigate("CartScreen");
+                                }
+                            }
+                        ]
+                    );
+                    
+                    // Optional: Navigate to payment status screen if you want to track the payment
+                    // Uncomment if ZaloPayStatusScreen is properly configured
+                    // navigation.navigate("ZaloPayStatusScreen", {
+                    //     orderId: orderId,
+                    //     appTransId: appTransId,
+                    //     amount: totalAmountWithShipping,
+                    //     description: `Thanh toán đơn hàng #${orderId}`,
+                    // });
                 } catch (linkError) {
                     console.error("Error opening ZaloPay URL:", linkError);
                     Alert.alert(
