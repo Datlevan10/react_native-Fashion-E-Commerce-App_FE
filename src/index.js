@@ -31,6 +31,7 @@ import MyOrdersScreen from "./screens/MyOrdersScreen";
 import OrderDetailsScreen from "./screens/OrderDetailsScreen";
 import ZaloPayTestScreen from "./screens/TestingScreen/ZaloPayTestScreen";
 import ZaloPayQRScreen from "./screens/ZaloPayQRScreen";
+import ZaloPayStatusScreen from "./screens/ZaloPayStatusScreen";
 
 import UserInactivity from "react-native-user-inactivity";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -376,6 +377,11 @@ export default function App() {
                     <Stack.Screen
                         name="ZaloPayQRScreen"
                         component={ZaloPayQRScreen}
+                        options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                        name="ZaloPayStatusScreen"
+                        component={ZaloPayStatusScreen}
                         options={{ headerShown: false }}
                     />
                 </Stack.Navigator>
