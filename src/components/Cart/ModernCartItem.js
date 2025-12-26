@@ -17,6 +17,8 @@ const { width } = Dimensions.get("window");
 
 export default function ModernCartItem({
     item,
+    isSelected = true,
+    onToggleSelect,
     onQuantityChange,
     onSizeChange,
     onRemove,
@@ -71,7 +73,33 @@ export default function ModernCartItem({
         : require("../../../assets/image/default_image.jpg");
 
     return (
-        <View style={styles.container}>
+        <View
+            style={[
+                styles.container,
+                !isSelected && styles.unselectedContainer,
+            ]}
+        >
+            <TouchableOpacity
+                style={styles.checkboxContainer}
+                onPress={onToggleSelect}
+                activeOpacity={0.6}
+            >
+                <View
+                    style={[
+                        styles.checkbox,
+                        isSelected && styles.checkboxSelected,
+                    ]}
+                >
+                    {isSelected && (
+                        <MaterialIcons
+                            name="check"
+                            size={14}
+                            color={Colors.whiteColor}
+                        />
+                    )}
+                </View>
+            </TouchableOpacity>
+
             <View style={styles.imageContainer}>
                 <Image
                     source={imageSource}
@@ -205,10 +233,32 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 8,
         elevation: 5,
+        alignItems: "center",
+    },
+    unselectedContainer: {
+        opacity: 0.7,
+        backgroundColor: "#f8f9fa",
+    },
+    checkboxContainer: {
+        marginRight: 6,
+        padding: 4,
+    },
+    checkbox: {
+        width: 20,
+        height: 20,
+        borderRadius: 4,
+        borderWidth: 2,
+        borderColor: Colors.darkGray,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    checkboxSelected: {
+        backgroundColor: Colors.blackColor,
+        borderColor: Colors.blackColor,
     },
     imageContainer: {
-        width: 90,
-        height: 90,
+        width: 80,
+        height: 80,
         borderRadius: 8,
         overflow: "hidden",
         backgroundColor: Colors.lightGray,
