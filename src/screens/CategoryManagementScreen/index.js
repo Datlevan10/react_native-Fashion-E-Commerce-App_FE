@@ -180,7 +180,7 @@ const CategoryManagementScreen = () => {
       let response;
       if (editingCategory) {
         // Update existing category
-        response = await apiService.updateCategory(editingCategory.category_id, dataToSend, hasImage);
+        response = await apiService.updateCategory(editingCategory.category_id, dataToSend);
       } else {
         // Create new category (always uses FormData because image is required)
         response = await apiService.createCategory(dataToSend);

@@ -270,53 +270,33 @@ const OrderScreen = ({ navigation, route }) => {
                     await SecureStore.setItemAsync('current_zalopay_transaction', appTransId);
                 }
                 
-                // Open ZaloPay app with the URL from backend
-                console.log('Opening ZaloPay URL...');
-                const openResult = await ZaloPayService.openPayment(zaloPayUrl);
-                
-                if (openResult.success) {
-                    // Navigate to payment status screen
+                // Open ZaloPay URL directly using system-level navigation
+                // This allows the OS to properly route to ZaloPay QC app
+                console.log('Opening ZaloPay URL in system browser...');
+                try {
+                    await Linking.openURL(zaloPayUrl);
+                    
+                    // Navigate to payment status screen to track the payment
                     navigation.navigate("ZaloPayStatusScreen", {
                         orderId: orderId,
                         appTransId: appTransId,
                         amount: totalAmountWithShipping,
                         description: `Thanh toán đơn hàng #${orderId}`,
                     });
-                } else {
-                    console.error('Failed to open ZaloPay URL:', openResult.error);
-                    
-                    // Convert to QR URL for display
-                    const qrDisplayUrl = zaloPayUrl.replace('openinapp', 'pay/v2/qr');
-                    
+                } catch (linkError) {
+                    console.error("Error opening ZaloPay URL:", linkError);
                     Alert.alert(
-                        "Chọn phương thức thanh toán",
-                        "ZaloPay Sandbox không thể mở tự động. Vui lòng chọn:",
+                        "Không thể mở ZaloPay",
+                        "Vui lòng cài đặt ứng dụng ZaloPay QC hoặc ZaloPay Sandbox để thanh toán",
                         [
-                            {
-                                text: "Mở trong trình duyệt (xem QR)",
-                                onPress: () => {
-                                    console.log('Opening QR display URL:', qrDisplayUrl);
-                                    Linking.openURL(qrDisplayUrl);
-                                }
-                            },
-                            {
-                                text: "Sao chép link gốc",
+                            { 
+                                text: "Sao chép link",
                                 onPress: async () => {
                                     await Clipboard.setStringAsync(zaloPayUrl);
-                                    Alert.alert(
-                                        "Đã sao chép", 
-                                        "Link thanh toán đã được sao chép.\n\nDán vào trình duyệt hoặc ứng dụng ZaloPay Sandbox."
-                                    );
+                                    Alert.alert("Đã sao chép", "Link thanh toán đã được sao chép");
                                 }
                             },
-                            {
-                                text: "Thử lại với link gốc",
-                                onPress: () => Linking.openURL(zaloPayUrl)
-                            },
-                            {
-                                text: "Hủy",
-                                style: "cancel"
-                            }
+                            { text: "OK" }
                         ]
                     );
                 }

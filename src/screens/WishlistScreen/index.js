@@ -25,6 +25,7 @@ export default function WishlistScreen({ navigation }) {
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [cartItemCount, setCartItemCount] = useState(0);
 
   const loadStoreName = async () => {
     try {
@@ -34,6 +35,30 @@ export default function WishlistScreen({ navigation }) {
       }
     } catch (error) {
       console.error("Failed to load store name:", error);
+    }
+  };
+
+  const fetchCartItemCount = async () => {
+    try {
+      const storedCustomerId = await SecureStore.getItemAsync("customer_id");
+      if (!storedCustomerId) {
+        setCartItemCount(0);
+        return;
+      }
+
+      const response = await apiService.getProductInCartDetailByCustomerId(
+        storedCustomerId
+      );
+
+      if (response.status === 200 && response.data?.data) {
+        const cartItems = response.data.data;
+        setCartItemCount(Array.isArray(cartItems) ? cartItems.length : 0);
+      } else {
+        setCartItemCount(0);
+      }
+    } catch (error) {
+      console.log("Error fetching cart count:", error);
+      setCartItemCount(0);
     }
   };
 
@@ -88,6 +113,7 @@ export default function WishlistScreen({ navigation }) {
   const onRefresh = () => {
     setIsRefreshing(true);
     loadWishlist();
+    fetchCartItemCount();
   };
 
   const handleRemoveFromWishlist = async (productFavoriteId) => {
@@ -114,7 +140,16 @@ export default function WishlistScreen({ navigation }) {
   useEffect(() => {
     loadStoreName();
     loadWishlist();
+    fetchCartItemCount();
   }, []);
+
+  // Listen for focus event to refresh cart count when screen is focused
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchCartItemCount();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   if (loading) {
     return (
@@ -151,7 +186,7 @@ export default function WishlistScreen({ navigation }) {
             <View style={styles.micContainer}>
               <IconWithBadge
                 name="shopping-bag"
-                badgeCount={3}
+                badgeCount={cartItemCount}
                 size={24}
                 color="#333"
                 // style={styles.micIcon}

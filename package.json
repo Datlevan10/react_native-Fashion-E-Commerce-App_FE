@@ -25,6 +25,8 @@
     "expo-av": "^15.0.1",
     "expo-checkbox": "~4.1.4",
     "expo-clipboard": "~7.1.5",
+    "expo-document-picker": "^14.0.8",
+    "expo-image-manipulator": "^14.0.8",
     "expo-image-picker": "~16.1.4",
     "expo-linear-gradient": "~14.1.5",
     "expo-secure-store": "~14.2.4",
@@ -46,6 +48,7 @@
     "react-native-svg": "^15.11.2",
     "react-native-user-inactivity": "^1.2.0",
     "react-native-vector-icons": "^10.2.0",
+    "react-native-webview": "^13.16.0",
     "react-native-worklets": "^0.5.1"
   },
   "devDependencies": {
