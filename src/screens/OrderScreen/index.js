@@ -225,9 +225,32 @@ const OrderScreen = ({ navigation, route }) => {
 
     const handleZaloPayPayment = async (orderPayload) => {
         try {
+            // Log current authentication state before creating order
+            const currentAccessToken = await SecureStore.getItemAsync('access_token');
+            const currentRefreshToken = await SecureStore.getItemAsync('refresh_token');
+            const currentCustomerId = await SecureStore.getItemAsync('customer_id');
+            console.log('Auth state before order creation:', {
+                hasAccessToken: !!currentAccessToken,
+                hasRefreshToken: !!currentRefreshToken,
+                customerId: currentCustomerId,
+                tokenPrefix: currentAccessToken?.substring(0, 20) + '...'
+            });
+            
             // Create order with ZaloPay payment method
             console.log('Creating ZaloPay order with payload:', orderPayload);
             const orderResponse = await apiService.createOrder(orderPayload);
+            
+            // Log auth state after API call
+            const postCallAccessToken = await SecureStore.getItemAsync('access_token');
+            const postCallRefreshToken = await SecureStore.getItemAsync('refresh_token');
+            const postCallCustomerId = await SecureStore.getItemAsync('customer_id');
+            console.log('Auth state after order API call:', {
+                hasAccessToken: !!postCallAccessToken,
+                hasRefreshToken: !!postCallRefreshToken,
+                customerId: postCallCustomerId,
+                tokenPrefix: postCallAccessToken?.substring(0, 20) + '...',
+                responseStatus: orderResponse?.status
+            });
 
             // Check if order creation was successful
             if (!orderResponse || !orderResponse.data) {
@@ -269,6 +292,14 @@ const OrderScreen = ({ navigation, route }) => {
                 if (appTransId) {
                     await SecureStore.setItemAsync('current_zalopay_transaction', appTransId);
                 }
+                
+                // Check auth state before navigation
+                const preNavAccessToken = await SecureStore.getItemAsync('access_token');
+                const preNavCustomerId = await SecureStore.getItemAsync('customer_id');
+                console.log('Auth state before ZaloPay navigation:', {
+                    hasAccessToken: !!preNavAccessToken,
+                    customerId: preNavCustomerId
+                });
                 
                 // Open ZaloPay URL directly using system-level navigation
                 // This allows the OS to properly route to ZaloPay QC app

@@ -1,5 +1,6 @@
 import { Alert, Linking } from 'react-native';
 import apiService from '../api/ApiService';
+import * as SecureStore from 'expo-secure-store';
 
 class ZaloPayService {
   constructor() {
@@ -165,9 +166,17 @@ class ZaloPayService {
     try {
       console.log('ZaloPayService: Querying status for app_trans_id:', appTransId);
       
+      // Check auth state before making API call
+      const accessToken = await SecureStore.getItemAsync('access_token');
+      console.log('Has access token before query:', !!accessToken);
+      
       const response = await apiService.queryZaloPayStatus(appTransId);
       
       console.log('ZaloPayService: Status response:', response.data);
+      
+      // Check auth state after API call
+      const postAccessToken = await SecureStore.getItemAsync('access_token');
+      console.log('Has access token after query:', !!postAccessToken);
       
       // Handle different possible response formats
       const status = response.data?.status || response.data?.payment_status || 'pending';
@@ -181,6 +190,17 @@ class ZaloPayService {
     } catch (error) {
       console.error('ZaloPayService: Error querying payment status:', error);
       console.error('ZaloPayService: Status error details:', error.response?.data);
+      
+      // Check if auth was lost
+      const hasToken = await SecureStore.getItemAsync('access_token');
+      console.log('Has token after query error:', !!hasToken);
+      
+      // Don't retry if it's a 401 error - let the interceptor handle it
+      if (error.response?.status === 401) {
+        console.log('Got 401 in payment status query - auth may be lost');
+        // Stop polling to prevent further 401 errors
+        this.stopPolling();
+      }
       
       return {
         success: false,

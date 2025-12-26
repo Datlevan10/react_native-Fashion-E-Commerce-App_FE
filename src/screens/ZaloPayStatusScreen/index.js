@@ -13,6 +13,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons, Feather } from '@expo/vector-icons';
 import Colors from '../../styles/Color';
 import ZaloPayService from '../../services/ZaloPayService';
+import * as SecureStore from 'expo-secure-store';
 
 const ZaloPayStatusScreen = ({ navigation, route }) => {
   const { orderId, appTransId, amount, description } = route.params;
@@ -95,18 +96,34 @@ const ZaloPayStatusScreen = ({ navigation, route }) => {
     setStatusMessage(statusUpdate.message || ZaloPayService.getStatusMessage(statusUpdate.status));
   };
 
-  const handlePaymentSuccess = () => {
+  const handlePaymentSuccess = async () => {
+    // Check auth state when payment succeeds
+    const accessToken = await SecureStore.getItemAsync('access_token');
+    const customerId = await SecureStore.getItemAsync('customer_id');
+    console.log('Auth state on payment success:', {
+      hasAccessToken: !!accessToken,
+      customerId: customerId
+    });
+    
     Alert.alert(
       'Thanh toán thành công!',
       `Đơn hàng #${orderId} đã được thanh toán thành công.`,
       [
         {
           text: 'Xem đơn hàng',
-          onPress: () => navigation.navigate('OrderDetailsScreen', { orderId }),
+          onPress: async () => {
+            const preNavToken = await SecureStore.getItemAsync('access_token');
+            console.log('Has token before OrderDetailsScreen nav:', !!preNavToken);
+            navigation.navigate('OrderDetailsScreen', { orderId });
+          },
         },
         {
           text: 'Về trang chủ',
-          onPress: () => navigation.navigate('HomeScreen'),
+          onPress: async () => {
+            const preNavToken = await SecureStore.getItemAsync('access_token');
+            console.log('Has token before HomeScreen nav:', !!preNavToken);
+            navigation.navigate('HomeScreen');
+          },
         },
       ]
     );

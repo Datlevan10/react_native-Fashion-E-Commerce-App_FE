@@ -19,6 +19,8 @@ import { Feather, MaterialIcons } from "react-native-vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import * as DocumentPicker from "expo-document-picker";
+import SimpleColorPicker from "../../components/ColorPicker/SimpleColorPicker";
+import WheelColorPicker from "../../components/ColorPicker/WheelColorPicker";
 import Colors from "../../styles/Color";
 import apiService from "../../api/ApiService";
 import API_BASE_URL from "../../configs/config";
@@ -49,6 +51,9 @@ const ProductManagementScreen = () => {
         is_featured: false,
     });
     const [selectedImages, setSelectedImages] = useState([]);
+    const [isColorPickerVisible, setIsColorPickerVisible] = useState(false);
+    const [isWheelColorPickerVisible, setIsWheelColorPickerVisible] =
+        useState(false);
 
     useEffect(() => {
         fetchProducts();
@@ -256,7 +261,7 @@ const ProductManagementScreen = () => {
             colors: colorsString,
             variants: variantsString,
             note: product.note || "",
-            quantity_in_stock: "", // Keep UI field but don't use backend value
+            quantity_in_stock: product.quantity_in_stock?.toString() || "",
             is_featured: false, // Keep UI field but don't use backend value
         });
         setSelectedImages([]);
@@ -294,6 +299,18 @@ const ProductManagementScreen = () => {
             Alert.alert("Validation Error", "Category is required");
             return false;
         }
+        // Validate quantity_in_stock if provided
+        if (
+            formData.quantity_in_stock &&
+            (isNaN(formData.quantity_in_stock) ||
+                parseInt(formData.quantity_in_stock) < 0)
+        ) {
+            Alert.alert(
+                "Validation Error",
+                "Số lượng trong kho phải là số không âm"
+            );
+            return false;
+        }
         if (!editingProduct && selectedImages.length === 0) {
             Alert.alert("Validation Error", "At least one image is required");
             return false;
@@ -314,11 +331,19 @@ const ProductManagementScreen = () => {
                 // Use FormData for create (always) or update with new images
                 const formDataToSend = new FormData();
 
-                // Append basic form fields (exclude quantity_in_stock and is_featured - not in backend)
+                // Append basic form fields
                 formDataToSend.append("product_name", formData.product_name);
                 formDataToSend.append("description", formData.description);
                 formDataToSend.append("category_id", formData.category_id);
                 formDataToSend.append("new_price", formData.new_price);
+
+                // Add quantity_in_stock if provided
+                if (formData.quantity_in_stock) {
+                    formDataToSend.append(
+                        "quantity_in_stock",
+                        formData.quantity_in_stock
+                    );
+                }
 
                 if (formData.old_price) {
                     formDataToSend.append("old_price", formData.old_price);
@@ -428,6 +453,14 @@ const ProductManagementScreen = () => {
                     category_id: formData.category_id,
                     new_price: formData.new_price,
                 };
+
+                // Add quantity_in_stock if provided
+                if (formData.quantity_in_stock) {
+                    dataToSend.quantity_in_stock = parseInt(
+                        formData.quantity_in_stock,
+                        10
+                    );
+                }
 
                 if (formData.old_price) {
                     dataToSend.old_price = formData.old_price;
@@ -713,6 +746,25 @@ const ProductManagementScreen = () => {
                         </View>
                     </View>
 
+                    {/* Quantity in Stock */}
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.inputLabel}>
+                            Số lượng trong kho
+                        </Text>
+                        <TextInput
+                            style={styles.textInput}
+                            value={formData.quantity_in_stock}
+                            onChangeText={(text) =>
+                                setFormData({
+                                    ...formData,
+                                    quantity_in_stock: text,
+                                })
+                            }
+                            placeholder="0"
+                            keyboardType="numeric"
+                        />
+                    </View>
+
                     {/* Category */}
                     <View style={styles.inputContainer}>
                         <Text style={styles.inputLabel}>Danh mục *</Text>
@@ -778,14 +830,74 @@ const ProductManagementScreen = () => {
                         <Text style={styles.inputLabel}>
                             Màu sắc (phân cách bằng dấu phẩy, dùng mã hex với #)
                         </Text>
-                        <TextInput
-                            style={styles.textInput}
-                            value={formData.colors}
-                            onChangeText={(text) =>
-                                setFormData({ ...formData, colors: text })
-                            }
-                            placeholder="#303030, #2C76CA"
-                        />
+                        <View style={styles.colorInputRow}>
+                            <TextInput
+                                style={[
+                                    styles.textInput,
+                                    styles.colorTextInput,
+                                ]}
+                                value={formData.colors}
+                                onChangeText={(text) =>
+                                    setFormData({ ...formData, colors: text })
+                                }
+                                placeholder="Nhấn nút bảng màu để chọn"
+                                editable={true}
+                            />
+                            <TouchableOpacity
+                                style={[
+                                    styles.colorPickerButton,
+                                    { backgroundColor: Colors.primary },
+                                ]}
+                                onPress={() =>
+                                    setIsWheelColorPickerVisible(true)
+                                }
+                            >
+                                <MaterialIcons
+                                    name="palette"
+                                    size={20}
+                                    color={Colors.whiteColor}
+                                />
+                            </TouchableOpacity>
+                            {formData.colors && (
+                                <TouchableOpacity
+                                    style={styles.clearColorsButton}
+                                    onPress={() =>
+                                        setFormData({ ...formData, colors: "" })
+                                    }
+                                >
+                                    <MaterialIcons
+                                        name="clear"
+                                        size={24}
+                                        color={Colors.danger}
+                                    />
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                        {formData.colors && (
+                            <View style={styles.colorPreviewContainer}>
+                                {formData.colors
+                                    .split(",")
+                                    .map((color, index) => {
+                                        const trimmedColor = color.trim();
+                                        const isValidColor =
+                                            /^#[0-9A-Fa-f]{6}$/.test(
+                                                trimmedColor
+                                            );
+                                        return isValidColor ? (
+                                            <View
+                                                key={index}
+                                                style={[
+                                                    styles.colorPreviewBox,
+                                                    {
+                                                        backgroundColor:
+                                                            trimmedColor,
+                                                    },
+                                                ]}
+                                            />
+                                        ) : null;
+                                    })}
+                            </View>
+                        )}
                     </View>
 
                     <View style={styles.inputContainer}>
@@ -870,6 +982,34 @@ const ProductManagementScreen = () => {
                     </View>
                 </ScrollView>
             </SafeAreaView>
+
+            {/* Simple Color Picker */}
+            <SimpleColorPicker
+                visible={isColorPickerVisible}
+                onClose={() => setIsColorPickerVisible(false)}
+                onSelectColor={(color) => {
+                    // Add color to the list if not already present
+                    const currentColors = formData.colors
+                        ? formData.colors.split(",").map((c) => c.trim())
+                        : [];
+                    if (!currentColors.includes(color)) {
+                        const newColors = [...currentColors, color].join(", ");
+                        setFormData({ ...formData, colors: newColors });
+                    }
+                    setIsColorPickerVisible(false);
+                }}
+            />
+
+            {/* Wheel Color Picker */}
+            <WheelColorPicker
+                visible={isWheelColorPickerVisible}
+                onClose={() => setIsWheelColorPickerVisible(false)}
+                initialColors={formData.colors}
+                onSelectColor={(colors) => {
+                    setFormData({ ...formData, colors: colors });
+                    setIsWheelColorPickerVisible(false);
+                }}
+            />
         </Modal>
     );
 
@@ -1090,6 +1230,41 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: Colors.blackColor,
         backgroundColor: Colors.whiteColor,
+    },
+    colorInputRow: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    colorTextInput: {
+        flex: 1,
+        marginRight: 10,
+    },
+    colorPickerButton: {
+        borderRadius: 8,
+        padding: 10,
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: 5,
+    },
+    clearColorsButton: {
+        marginLeft: 10,
+        padding: 12,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    colorPreviewContainer: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        marginTop: 10,
+    },
+    colorPreviewBox: {
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        marginRight: 8,
+        marginBottom: 5,
+        borderWidth: 1,
+        borderColor: Colors.lightGray,
     },
     textArea: {
         height: 100,

@@ -14,7 +14,12 @@ const api = axios.create({
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
-        console.log("Error details:", error.response?.data);
+        console.log("API Error intercepted:", {
+            status: error.response?.status,
+            url: error.config?.url,
+            method: error.config?.method,
+            data: error.response?.data
+        });
         const originalRequest = error.config;
 
         if (
@@ -22,6 +27,7 @@ api.interceptors.response.use(
             error.response.status === 401 &&
             !originalRequest._retry
         ) {
+            console.log('401 Error detected - attempting token refresh');
             originalRequest._retry = true;
 
             try {
@@ -88,14 +94,17 @@ api.interceptors.response.use(
                 return api(originalRequest);
             } catch (refreshError) {
                 console.log(
-                    "Refresh token error:",
+                    "CRITICAL: Token refresh failed - clearing all tokens:",
                     refreshError.response?.data
                 );
+                console.log('Stack trace for logout:', new Error().stack);
                 // Clear both admin and customer tokens
                 await SecureStore.deleteItemAsync("access_token");
                 await SecureStore.deleteItemAsync("refresh_token");
                 await SecureStore.deleteItemAsync("admin_access_token");
                 await SecureStore.deleteItemAsync("admin_refresh_token");
+                await SecureStore.deleteItemAsync("customer_id");
+                console.log('All tokens cleared due to refresh failure');
             }
         }
 
