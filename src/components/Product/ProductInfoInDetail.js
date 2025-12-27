@@ -2,7 +2,9 @@ import React from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { STORE_NAME_MAP } from "../../constants/storeName";
+import Colors from "../../styles/Color";
 
 const ProductInfoInDetail = ({
     storeName,
@@ -11,6 +13,7 @@ const ProductInfoInDetail = ({
     productName,
     oldPrice,
     newPrice,
+    productQuantity,
 }) => {
     return (
         <View style={styles.container}>
@@ -36,6 +39,24 @@ const ProductInfoInDetail = ({
                 <Text style={styles.oldPrice}>
                     {new Intl.NumberFormat("vi-VN").format(oldPrice)} VND
                 </Text>
+            </View>
+            <View style={styles.stockInfo}>
+                {productQuantity > 0 ? (
+                    <Text style={[styles.stockText, styles.inStock]}>
+                        Còn {productQuantity} sản phẩm trong kho
+                    </Text>
+                ) : (
+                    <View style={styles.outOfStockContainer}>
+                        <MaterialIcons
+                            name="error-outline"
+                            size={20}
+                            color={Colors.whiteBgColor}
+                        />
+                        <Text style={[styles.stockText, styles.outOfStock]}>
+                            Đã hết hàng
+                        </Text>
+                    </View>
+                )}
             </View>
         </View>
     );
@@ -98,6 +119,33 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "500",
         color: "#ed1b41",
+    },
+    stockInfo: {
+        marginVertical: 5,
+    },
+    stockText: {
+        fontSize: 16,
+        fontWeight: "500",
+    },
+    inStock: {
+        backgroundColor: "#69AE69",
+        width: 200,
+        borderRadius: 12,
+        padding: 4,
+        color: Colors.whiteColor
+    },
+    outOfStock: {
+        color: Colors.whiteColor,
+        fontSize: 16,
+        marginLeft: 5,
+    },
+    outOfStockContainer: {
+        flexDirection: "row",
+        width: 120,
+        borderRadius: 12,
+        padding: 4,
+        alignItems: "center",
+        backgroundColor: "#DE7070",
     },
 });
 

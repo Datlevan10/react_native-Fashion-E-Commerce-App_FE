@@ -100,6 +100,7 @@ export default function WishlistScreen({ navigation }) {
           ),
           variant: item.variant || [],
           storeName: item.store_name || "Unknown Store",
+          quantityInStock: item.quantity_in_stock || 0,
         }));
 
         setWishlist(processedWishlist);
@@ -229,6 +230,7 @@ export default function WishlistScreen({ navigation }) {
                       images: product.imageArr,
                       colors: product.colorArr,
                       sizes: product.sizeArr,
+                      quantityInStock: product.quantityInStock,
                     })
                   }
                   onRemove={() =>
