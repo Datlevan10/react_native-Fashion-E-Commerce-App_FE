@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Dimensions,
+  RefreshControl,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons, FontAwesome5, Feather } from "@expo/vector-icons";
@@ -34,18 +35,29 @@ export default function AdminDashboardScreen({ navigation }) {
     todayRevenue: 0,
     weekRevenue: 0,
     monthRevenue: 0,
+    totalOrders: 0,
+    pendingOrders: 0,
+    confirmedOrders: 0,
+    shippedOrders: 0,
+    deliveredOrders: 0,
+    cancelledOrders: 0,
   });
   const [recentOrders, setRecentOrders] = useState([]);
   const [topProducts, setTopProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
   }, []);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = async (isRefreshing = false) => {
     try {
-      setLoading(true);
+      if (isRefreshing) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
       // Fetch all dashboard metrics
       const [
         customersRes,
@@ -65,7 +77,7 @@ export default function AdminDashboardScreen({ navigation }) {
         apiService.getTotalCarts(),
         apiService.getActiveCarts(),
         apiService.getOrderStatistics(),
-        // apiService.getRecentOrders(10),
+        apiService.getRecentOrders(10),
         apiService.getTopProducts(5),
       ]);
 
@@ -97,6 +109,12 @@ export default function AdminDashboardScreen({ navigation }) {
         todayRevenue: safeGetValue(ordersRes, 'data.todayRevenue', 0),
         weekRevenue: safeGetValue(ordersRes, 'data.weekRevenue', 0),
         monthRevenue: safeGetValue(ordersRes, 'data.monthRevenue', 0),
+        totalOrders: safeGetValue(ordersRes, 'data.total', 0),
+        pendingOrders: safeGetValue(ordersRes, 'data.pending', 0),
+        confirmedOrders: safeGetValue(ordersRes, 'data.confirmed', 0),
+        shippedOrders: safeGetValue(ordersRes, 'data.shipped', 0),
+        deliveredOrders: safeGetValue(ordersRes, 'data.delivered', 0),
+        cancelledOrders: safeGetValue(ordersRes, 'data.cancelled', 0),
       });
 
       setRecentOrders(safeGetValue(recentOrdersRes, 'data.orders', []) || safeGetValue(recentOrdersRes, 'data.data', []));
@@ -117,9 +135,16 @@ export default function AdminDashboardScreen({ navigation }) {
         todayRevenue: 0,
         weekRevenue: 0,
         monthRevenue: 0,
+        totalOrders: 0,
+        pendingOrders: 0,
+        confirmedOrders: 0,
+        shippedOrders: 0,
+        deliveredOrders: 0,
+        cancelledOrders: 0,
       });
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
@@ -180,7 +205,18 @@ export default function AdminDashboardScreen({ navigation }) {
       end={{ x: 0, y: 0.8 }}
     >
       <SafeAreaView style={styles.safeArea}>
-        <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        <ScrollView 
+          style={styles.scrollView} 
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => fetchDashboardData(true)}
+              colors={[Colors.primary]}
+              tintColor={Colors.primary}
+            />
+          }
+        >
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Bảng điều khiển</Text>

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Colors from "../../styles/Color";
 
@@ -72,13 +72,12 @@ const RecentOrdersList = ({ orders = [] }) => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={orders}
-        renderItem={renderOrderItem}
-        keyExtractor={(item) => (item.order_id || item.id || Math.random()).toString()}
-        showsVerticalScrollIndicator={false}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-      />
+      {orders.map((item, index) => (
+        <View key={item.order_id || item.id || index}>
+          {renderOrderItem({ item })}
+          {index < orders.length - 1 && <View style={styles.separator} />}
+        </View>
+      ))}
     </View>
   );
 };
