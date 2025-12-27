@@ -136,8 +136,12 @@ const ExploreScreen = ({ navigation }) => {
                     description: item.description,
                     oldPrice: item.old_price,
                     newPrice: item.new_price,
-                    colorArr: item.color.map((color) => `${color.color_code}`),
-                    sizeArr: item.size.map((size) => `${size.size}`),
+                    colorArr: item.color.map((color) => 
+                        typeof color === 'string' ? color : `${color.color_code}`
+                    ),
+                    sizeArr: item.size.map((size) => 
+                        typeof size === 'string' ? size : `${size.size}`
+                    ),
                     variant: item.variant || [],
                 }))
             );
@@ -180,8 +184,12 @@ const ExploreScreen = ({ navigation }) => {
                     description: item.description,
                     oldPrice: item.old_price,
                     newPrice: item.new_price,
-                    colorArr: item.color.map((color) => `${color.color_code}`),
-                    sizeArr: item.size.map((size) => `${size.size}`),
+                    colorArr: item.color.map((color) => 
+                        typeof color === 'string' ? color : `${color.color_code}`
+                    ),
+                    sizeArr: item.size.map((size) => 
+                        typeof size === 'string' ? size : `${size.size}`
+                    ),
                     variant: item.variant || [],
                 }))
             );
@@ -221,8 +229,12 @@ const ExploreScreen = ({ navigation }) => {
                     description: item.description,
                     oldPrice: item.old_price,
                     newPrice: item.new_price,
-                    colorArr: item.color.map((color) => `${color.color_code}`),
-                    sizeArr: item.size.map((size) => `${size.size}`),
+                    colorArr: item.color.map((color) => 
+                        typeof color === 'string' ? color : `${color.color_code}`
+                    ),
+                    sizeArr: item.size.map((size) => 
+                        typeof size === 'string' ? size : `${size.size}`
+                    ),
                     variant: item.variant || [],
                 }))
             );
@@ -262,8 +274,12 @@ const ExploreScreen = ({ navigation }) => {
                     description: item.description,
                     oldPrice: item.old_price,
                     newPrice: item.new_price,
-                    colorArr: item.color.map((color) => `${color.color_code}`),
-                    sizeArr: item.size.map((size) => `${size.size}`),
+                    colorArr: item.color.map((color) => 
+                        typeof color === 'string' ? color : `${color.color_code}`
+                    ),
+                    sizeArr: item.size.map((size) => 
+                        typeof size === 'string' ? size : `${size.size}`
+                    ),
                     variant: item.variant || [],
                 }))
             );
@@ -306,8 +322,12 @@ const ExploreScreen = ({ navigation }) => {
                     description: item.description,
                     oldPrice: item.old_price,
                     newPrice: item.new_price,
-                    colorArr: item.color.map((color) => `${color.color_code}`),
-                    sizeArr: item.size.map((size) => `${size.size}`),
+                    colorArr: item.color.map((color) => 
+                        typeof color === 'string' ? color : `${color.color_code}`
+                    ),
+                    sizeArr: item.size.map((size) => 
+                        typeof size === 'string' ? size : `${size.size}`
+                    ),
                     variant: item.variant || [],
                 }))
             );

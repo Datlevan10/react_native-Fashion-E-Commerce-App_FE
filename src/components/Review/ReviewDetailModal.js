@@ -89,13 +89,21 @@ const ReviewDetailModal = ({ visible, onClose, review }) => {
           newPrice: productDetails.new_price,
           averageReview: productDetails.average_review,
           totalReview: productDetails.total_review,
-          colorArr: productDetails.color.map((color) => `${color.color_code}`),
-          sizeArr: productDetails.size.map((size) => `${size.size}`),
+          colorArr: productDetails.color.map((color) => 
+            typeof color === 'string' ? color : `${color.color_code}`
+          ),
+          sizeArr: productDetails.size.map((size) => 
+            typeof size === 'string' ? size : `${size.size}`
+          ),
           variant: productDetails.variant || [],
         },
         images: productDetails.image.map((img) => `${API_BASE_URL}${img.url}`),
-        colors: productDetails.color.map((color) => `${color.color_code}`),
-        sizes: productDetails.size.map((size) => `${size.size}`),
+        colors: productDetails.color.map((color) => 
+          typeof color === 'string' ? color : `${color.color_code}`
+        ),
+        sizes: productDetails.size.map((size) => 
+          typeof size === 'string' ? size : `${size.size}`
+        ),
       });
     } catch (error) {
       console.error("Failed to load product details:", error);
