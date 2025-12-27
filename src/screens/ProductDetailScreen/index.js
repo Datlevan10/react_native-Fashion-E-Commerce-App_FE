@@ -34,7 +34,10 @@ const { width, height } = Dimensions.get("window");
 export default function ProductDetailScreen({ route, navigation }) {
     const [storeName, setStoreName] = useState("");
     const [customerId, setCustomerId] = useState(null);
-    const { product, images, colors, sizes } = route.params;
+    const { product, images, colors, sizes, quantityInStock } = route.params;
+    const [productQuantity, setProductQuantity] = useState(
+        quantityInStock || product.quantityInStock || 0
+    );
 
     // Sample variant data - replace with actual data from API or route params
     const productVariants = product.variant || [
@@ -227,7 +230,10 @@ export default function ProductDetailScreen({ route, navigation }) {
             const response = await apiService.addProductToFavorite(productData);
             if (response.status === 201) {
                 setIsFavorite(true);
-                Alert.alert("Thành công", "Sản phẩm đã được thêm vào danh sách yêu thích.");
+                Alert.alert(
+                    "Thành công",
+                    "Sản phẩm đã được thêm vào danh sách yêu thích."
+                );
             } else {
                 Alert.alert(
                     "Error",
@@ -269,6 +275,12 @@ export default function ProductDetailScreen({ route, navigation }) {
 
         if (!customerId) {
             Alert.alert("Error", "Please login to add products to cart.");
+            return;
+        }
+
+        // Check stock availability
+        if (productQuantity <= 0) {
+            Alert.alert("Hết hàng", "Sản phẩm này hiện tại đã hết hàng.");
             return;
         }
 
@@ -396,6 +408,7 @@ export default function ProductDetailScreen({ route, navigation }) {
                             productName={product.productName}
                             oldPrice={product.oldPrice.toString()}
                             newPrice={product.newPrice.toString()}
+                            productQuantity={productQuantity}
                         />
                         <TouchableOpacity
                             onPress={() =>

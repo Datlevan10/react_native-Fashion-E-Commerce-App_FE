@@ -100,13 +100,16 @@ export default function HomeContentScreen({ navigation }) {
                     description: item.description,
                     oldPrice: item.old_price,
                     newPrice: item.new_price,
-                    colorArr: item.color.map((color) => 
-                        typeof color === 'string' ? color : `${color.color_code}`
+                    colorArr: item.color.map((color) =>
+                        typeof color === "string"
+                            ? color
+                            : `${color.color_code}`
                     ),
-                    sizeArr: item.size.map((size) => 
-                        typeof size === 'string' ? size : `${size.size}`
+                    sizeArr: item.size.map((size) =>
+                        typeof size === "string" ? size : `${size.size}`
                     ),
                     variant: item.variant || [],
+                    quantityInStock: item.quantity_in_stock || 0,
                 }))
             );
         } catch (error) {
@@ -216,6 +219,7 @@ export default function HomeContentScreen({ navigation }) {
                                     images: product.imageArr,
                                     colors: product.colorArr,
                                     sizes: product.sizeArr,
+                                    quantityInStock: product.quantityInStock,
                                 })
                             }
                             cardWidth={Dimensions.get("window").width * 0.5}

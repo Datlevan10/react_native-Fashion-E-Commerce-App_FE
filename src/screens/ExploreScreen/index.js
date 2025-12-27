@@ -143,6 +143,7 @@ const ExploreScreen = ({ navigation }) => {
                         typeof size === 'string' ? size : `${size.size}`
                     ),
                     variant: item.variant || [],
+                    quantityInStock: item.quantity_in_stock || 0,
                 }))
             );
         } catch (error) {
@@ -191,6 +192,7 @@ const ExploreScreen = ({ navigation }) => {
                         typeof size === 'string' ? size : `${size.size}`
                     ),
                     variant: item.variant || [],
+                    quantityInStock: item.quantity_in_stock || 0,
                 }))
             );
         } catch (error) {
@@ -236,6 +238,7 @@ const ExploreScreen = ({ navigation }) => {
                         typeof size === 'string' ? size : `${size.size}`
                     ),
                     variant: item.variant || [],
+                    quantityInStock: item.quantity_in_stock || 0,
                 }))
             );
         } catch (error) {
@@ -281,6 +284,7 @@ const ExploreScreen = ({ navigation }) => {
                         typeof size === 'string' ? size : `${size.size}`
                     ),
                     variant: item.variant || [],
+                    quantityInStock: item.quantity_in_stock || 0,
                 }))
             );
         } catch (error) {
@@ -329,6 +333,7 @@ const ExploreScreen = ({ navigation }) => {
                         typeof size === 'string' ? size : `${size.size}`
                     ),
                     variant: item.variant || [],
+                    quantityInStock: item.quantity_in_stock || 0,
                 }))
             );
         } catch (error) {
@@ -537,6 +542,7 @@ const ExploreScreen = ({ navigation }) => {
                                                     images: product.imageArr,
                                                     colors: product.colorArr,
                                                     sizes: product.sizeArr,
+                                                    quantityInStock: product.quantityInStock,
                                                 }
                                             )
                                         }
