@@ -349,14 +349,15 @@ const ProductManagementScreen = () => {
                     formDataToSend.append("old_price", formData.old_price);
                 }
 
-                // Handle sizes - convert to array and append each individually
+                // Handle sizes - convert to array of objects with size property
                 if (formData.sizes) {
                     const sizesArray = formData.sizes
                         .split(",")
                         .map((item) => item.trim())
                         .filter(Boolean);
+                    // Send as objects in the format backend expects: {"size": "value"}
                     sizesArray.forEach((size, index) => {
-                        formDataToSend.append(`size[${index}]`, size);
+                        formDataToSend.append(`size[${index}][size]`, size);
                     });
                 }
 
@@ -374,8 +375,9 @@ const ProductManagementScreen = () => {
                         })
                         .filter(Boolean);
 
+                    // Send as objects in the format backend expects: {"color_code": "#value"}
                     colorsArray.forEach((color, index) => {
-                        formDataToSend.append(`color[]`, color);
+                        formDataToSend.append(`color[${index}][color_code]`, color);
                     });
                 }
 
@@ -441,8 +443,10 @@ const ProductManagementScreen = () => {
                 console.log("FormData being sent:");
                 console.log("- product_name:", formData.product_name);
                 console.log("- category_id:", formData.category_id);
+                console.log("- sizes:", sizesArray ? sizesArray.map(s => ({ size: s })) : []);
+                console.log("- colors:", colorsArray ? colorsArray.map(c => ({ color_code: c })) : []);
                 console.log("- images count:", selectedImages.length);
-                console.log("- All images converted and ready for upload");
+                console.log("- All data formatted and ready for upload");
 
                 dataToSend = formDataToSend;
             } else {
@@ -467,18 +471,33 @@ const ProductManagementScreen = () => {
                 }
 
                 if (formData.sizes) {
+                    // Convert to array of objects with size property
                     dataToSend.size = formData.sizes
                         .split(",")
                         .map((item) => item.trim())
-                        .filter(Boolean);
+                        .filter(Boolean)
+                        .map(size => ({ size })); // Convert to object format
                 }
 
                 if (formData.colors) {
+                    // Convert to array of objects with color_code property
                     dataToSend.color = formData.colors
                         .split(",")
-                        .map((item) => item.trim())
-                        .filter(Boolean);
+                        .map((item) => {
+                            const color = item.trim();
+                            // Add # if it's a hex code without #
+                            const colorCode = color && /^[0-9A-Fa-f]{6}$/.test(color) 
+                                ? `#${color}` 
+                                : color;
+                            return { color_code: colorCode };
+                        })
+                        .filter(item => item.color_code);
                 }
+                
+                // Log the JSON data for debugging
+                console.log("JSON data being sent:");
+                console.log("- size format:", dataToSend.size);
+                console.log("- color format:", dataToSend.color);
             }
 
             let response;
