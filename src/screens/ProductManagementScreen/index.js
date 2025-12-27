@@ -331,6 +331,11 @@ const ProductManagementScreen = () => {
                 // Use FormData for create (always) or update with new images
                 const formDataToSend = new FormData();
 
+                // For updates with images, add _method field first
+                if (editingProduct && hasImages) {
+                    formDataToSend.append("_method", "PUT");
+                }
+
                 // Append basic form fields
                 formDataToSend.append("product_name", formData.product_name);
                 formDataToSend.append("description", formData.description);
@@ -349,21 +354,25 @@ const ProductManagementScreen = () => {
                     formDataToSend.append("old_price", formData.old_price);
                 }
 
-                // Handle sizes - convert to array of objects with size property
+                // Declare arrays outside to use in logging
+                let sizesArray = [];
+                let colorsArray = [];
+
+                // Handle sizes - backend expects simple array of strings
                 if (formData.sizes) {
-                    const sizesArray = formData.sizes
+                    sizesArray = formData.sizes
                         .split(",")
                         .map((item) => item.trim())
                         .filter(Boolean);
-                    // Send as objects in the format backend expects: {"size": "value"}
+                    // Send as simple array values
                     sizesArray.forEach((size, index) => {
-                        formDataToSend.append(`size[${index}][size]`, size);
+                        formDataToSend.append(`size[]`, size);
                     });
                 }
 
                 // Handle colors - ensure they have # prefix for hex codes
                 if (formData.colors) {
-                    const colorsArray = formData.colors
+                    colorsArray = formData.colors
                         .split(",")
                         .map((item) => {
                             const color = item.trim();
@@ -375,9 +384,9 @@ const ProductManagementScreen = () => {
                         })
                         .filter(Boolean);
 
-                    // Send as objects in the format backend expects: {"color_code": "#value"}
+                    // Send as simple array values - backend expects array of strings
                     colorsArray.forEach((color, index) => {
-                        formDataToSend.append(`color[${index}][color_code]`, color);
+                        formDataToSend.append(`color[]`, color);
                     });
                 }
 
@@ -441,10 +450,19 @@ const ProductManagementScreen = () => {
 
                 // Log the FormData contents for debugging
                 console.log("FormData being sent:");
+                if (editingProduct && hasImages) {
+                    console.log("- _method: PUT (for update with images)");
+                }
                 console.log("- product_name:", formData.product_name);
                 console.log("- category_id:", formData.category_id);
-                console.log("- sizes:", sizesArray ? sizesArray.map(s => ({ size: s })) : []);
-                console.log("- colors:", colorsArray ? colorsArray.map(c => ({ color_code: c })) : []);
+                console.log(
+                    "- sizes (array of strings):",
+                    sizesArray.length > 0 ? sizesArray : "No sizes"
+                );
+                console.log(
+                    "- colors (array of strings):",
+                    colorsArray.length > 0 ? colorsArray : "No colors"
+                );
                 console.log("- images count:", selectedImages.length);
                 console.log("- All data formatted and ready for upload");
 
@@ -471,29 +489,28 @@ const ProductManagementScreen = () => {
                 }
 
                 if (formData.sizes) {
-                    // Convert to array of objects with size property
+                    // Backend expects simple array of strings, not objects
                     dataToSend.size = formData.sizes
                         .split(",")
                         .map((item) => item.trim())
-                        .filter(Boolean)
-                        .map(size => ({ size })); // Convert to object format
+                        .filter(Boolean); // Just array of strings
                 }
 
                 if (formData.colors) {
-                    // Convert to array of objects with color_code property
+                    // Backend expects simple array of strings, not objects
                     dataToSend.color = formData.colors
                         .split(",")
                         .map((item) => {
                             const color = item.trim();
                             // Add # if it's a hex code without #
-                            const colorCode = color && /^[0-9A-Fa-f]{6}$/.test(color) 
-                                ? `#${color}` 
-                                : color;
-                            return { color_code: colorCode };
+                            if (color && /^[0-9A-Fa-f]{6}$/.test(color)) {
+                                return `#${color}`;
+                            }
+                            return color;
                         })
-                        .filter(item => item.color_code);
+                        .filter(Boolean); // Just array of strings
                 }
-                
+
                 // Log the JSON data for debugging
                 console.log("JSON data being sent:");
                 console.log("- size format:", dataToSend.size);
@@ -518,10 +535,10 @@ const ProductManagementScreen = () => {
                 // Close modal and show success message
                 setModalVisible(false);
                 Alert.alert(
-                    "Success",
-                    `Product ${
-                        editingProduct ? "updated" : "created"
-                    } successfully`
+                    "Thành công",
+                    `Sản phẩm ${
+                        editingProduct ? "đã cập nhật" : "tạo"
+                    } thành công`
                 );
             }
         } catch (error) {

@@ -740,6 +740,8 @@ const updateProduct = async (productId, productData, hasImages = false) => {
     // Check if we're dealing with FormData or regular JSON
     const isFormData = productData instanceof FormData || hasImages;
 
+    productData.append("_method", "PUT");
+
     if (isFormData) {
         // If productData is not already FormData, it means hasImages is true but data is JSON
         // This shouldn't happen with current implementation, but keeping for safety
@@ -752,9 +754,7 @@ const updateProduct = async (productId, productData, hasImages = false) => {
             });
         }
 
-        // Add _method field for PUT request simulation
-        productData.append("_method", "PUT");
-
+        // _method field should already be in the FormData from the caller
         // Use POST with _method override for FormData
         return api.post(`/products/${productId}`, productData, {
             headers: { "Content-Type": "multipart/form-data" },
