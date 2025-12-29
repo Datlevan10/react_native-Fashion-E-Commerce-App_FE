@@ -128,6 +128,19 @@ export default function CartScreen({ navigation }) {
                 newQuantity
             );
             if (response.status === 200 && response.data) {
+                if (response.data.stock_exceeded) {
+                    Alert.alert(
+                        "Vượt quá số lượng tồn kho",
+                        `Sản phẩm chỉ còn ${response.data.available_quantity} trong kho. Số lượng đã được cập nhật về mức tối đa có thể.`,
+                        [
+                            { 
+                                text: "Đồng ý", 
+                                style: "default"
+                            }
+                        ]
+                    );
+                }
+
                 // Update local state with backend response data
                 const updatedItem = response.data.data;
                 const cartTotal = parseFloat(response.data.cart_total);
@@ -146,19 +159,21 @@ export default function CartScreen({ navigation }) {
                     )
                 );
 
-                // Success feedback
-                console.log(
-                    `Cart item updated: Quantity ${updatedItem.quantity}, Total: ${cartTotal}`
-                );
+                // Success feedback (only log if not stock exceeded)
+                if (!response.data.stock_exceeded) {
+                    console.log(
+                        `Cart item updated: Quantity ${updatedItem.quantity}, Total: ${cartTotal}`
+                    );
+                }
             } else {
-                Alert.alert("Error", "Failed to update quantity");
+                Alert.alert("Lỗi", "Không thể cập nhật số lượng");
                 fetchCartData(); // Refresh to get correct data
             }
         } catch (error) {
             console.error("Error updating quantity:", error);
             Alert.alert(
-                "Error",
-                "Failed to update quantity. Please try again."
+                "Lỗi",
+                "Không thể cập nhật số lượng. Vui lòng thử lại."
             );
             fetchCartData(); // Refresh to get correct data
         }
