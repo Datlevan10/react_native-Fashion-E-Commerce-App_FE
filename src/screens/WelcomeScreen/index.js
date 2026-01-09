@@ -21,6 +21,7 @@ export default function WelcomeScreen({ navigation }) {
         }
       } catch (error) {
         console.error("Error loading store logo:", error);
+        // Keep default logo if API fails
       }
     };
 

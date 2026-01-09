@@ -77,20 +77,39 @@ const ReportsScreen = () => {
 
             const startDateStr = startDate.toISOString().split("T")[0];
 
-            // Fetch all reports data
-            const [salesReport, customerReport, productReport, dashboardStats] =
-                await Promise.allSettled([
-                    apiService.getSalesReport(startDateStr, endDate),
-                    apiService.getCustomerReport(startDateStr, endDate),
-                    apiService.getProductReport(startDateStr, endDate),
-                    fetchDashboardStats(),
-                ]);
+            // Fetch all reports data including new revenue API
+            const [
+                revenueReport,
+                salesReport,
+                customerReport,
+                productReport,
+                dashboardStats,
+            ] = await Promise.allSettled([
+                apiService.getOrderRevenue(startDateStr, endDate),
+                apiService.getSalesReport(startDateStr, endDate),
+                apiService.getCustomerReport(startDateStr, endDate),
+                apiService.getProductReport(startDateStr, endDate),
+                fetchDashboardStats(startDateStr, endDate),
+            ]);
 
-            // Process sales data
+            // Process revenue data from new API
             if (
+                revenueReport.status === "fulfilled" &&
+                revenueReport.value.status === 200
+            ) {
+                const revenueData = revenueReport.value.data.data;
+                setSalesData({
+                    totalRevenue: revenueData.total_revenue || 0,
+                    totalOrders: revenueData.total_orders || 0,
+                    averageOrderValue: revenueData.average_order_value || 0,
+                    growthRate: 0, // Calculate if you have previous period data
+                    revenueByStatus: revenueData.revenue_by_status || [],
+                });
+            } else if (
                 salesReport.status === "fulfilled" &&
                 salesReport.value.status === 200
             ) {
+                // Fallback to old API if new one fails
                 setSalesData(salesReport.value.data);
             }
 
@@ -123,16 +142,23 @@ const ReportsScreen = () => {
         }
     };
 
-    const fetchDashboardStats = async () => {
+    const fetchDashboardStats = async (startDateStr, endDate) => {
         try {
-            const [customersRes, staffRes, productsRes, ordersRes, cartsRes] =
-                await Promise.all([
-                    apiService.getTotalCustomers(),
-                    apiService.getTotalStaff(),
-                    apiService.getTotalProducts(),
-                    apiService.getOrderStatistics(),
-                    apiService.getTotalCarts(),
-                ]);
+            const [
+                customersRes,
+                staffRes,
+                productsRes,
+                ordersRes,
+                revenueReport,
+                cartsRes,
+            ] = await Promise.all([
+                apiService.getTotalCustomers(),
+                apiService.getTotalStaff(),
+                apiService.getTotalProducts(),
+                apiService.getOrderStatistics(),
+                apiService.getOrderRevenue(startDateStr, endDate),
+                apiService.getTotalCarts(),
+            ]);
 
             // Safely extract values
             const safeGetValue = (obj, path, defaultValue = 0) => {
@@ -147,6 +173,10 @@ const ReportsScreen = () => {
                     return defaultValue;
                 }
             };
+
+            // Extract revenue data from the new API
+            const revenueData = revenueReport?.data?.data || {};
+            const totalRevenue = revenueData.total_revenue || salesData.totalRevenue || 0;
 
             return [
                 {
@@ -192,7 +222,7 @@ const ReportsScreen = () => {
                 {
                     title: "Doanh thu",
                     value: `${new Intl.NumberFormat("vi-VN").format(
-                        salesData.totalRevenue
+                        totalRevenue
                     )} VND`,
                     icon: "dollar-sign",
                     iconType: "Feather",
@@ -348,7 +378,7 @@ const ReportsScreen = () => {
 
     const renderSalesTab = () => (
         <View style={styles.tabContent}>
-            <Text style={styles.sectionTitle}>ales Analytics</Text>
+            <Text style={styles.sectionTitle}>Sales Analytics</Text>
 
             <View style={styles.metricsContainer}>
                 <View style={styles.metricCard}>
@@ -398,6 +428,28 @@ const ReportsScreen = () => {
                     <Text style={styles.metricLabel}>Tốc độ tăng trưởng</Text>
                 </View>
             </View>
+
+            {/* Revenue breakdown by status if available */}
+            {salesData.revenueByStatus && salesData.revenueByStatus.length > 0 && (
+                <View style={styles.productSection}>
+                    <Text style={styles.subsectionTitle}>
+                        Doanh thu theo trạng thái đơn hàng
+                    </Text>
+                    {salesData.revenueByStatus.map((status, index) => (
+                        <View key={index} style={styles.productItem}>
+                            <Text style={styles.productName}>
+                                {status.order_status.toUpperCase()} ({status.count} orders)
+                            </Text>
+                            <Text style={styles.productSales}>
+                                {new Intl.NumberFormat("vi-VN").format(
+                                    parseFloat(status.revenue)
+                                )}{" "}
+                                VND
+                            </Text>
+                        </View>
+                    ))}
+                </View>
+            )}
 
             <View style={styles.chartPlaceholder}>
                 <Feather
