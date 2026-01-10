@@ -790,9 +790,25 @@ const getProductReport = async (startDate, endDate) => {
     );
 };
 
-// ============ ZALOPAY PAYMENT APIs ============
+// New Revenue Calculation API - calculates revenue in real-time from actual orders
+const getOrderRevenue = async (startDate = null, endDate = null) => {
+    let url = '/orders/revenue';
+    const params = new URLSearchParams();
+    
+    if (startDate) {
+        params.append('start_date', startDate);
+    }
+    if (endDate) {
+        params.append('end_date', endDate);
+    }
+    
+    if (params.toString()) {
+        url += `?${params.toString()}`;
+    }
+    
+    return api.get(url);
+};
 
-// Create ZaloPay payment order via backend
 const createZaloPayPayment = async (paymentData) => {
     // Backend expects: order_id, amount, description
     return api.post("/payments/zalopay/create", paymentData);
@@ -1039,6 +1055,7 @@ export default {
     getSalesReport,
     getCustomerReport,
     getProductReport,
+    getOrderRevenue,
     // ZaloPay APIs
     createZaloPayPayment,
     queryZaloPayStatus,
