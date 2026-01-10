@@ -772,6 +772,26 @@ const deleteProduct = async (productId) => {
 };
 
 // Reports APIs
+// Single Dashboard API - Use this instead of multiple individual APIs
+const getDashboardStats = async (startDate = null, endDate = null) => {
+    let url = '/admin/reports/dashboard';
+    const params = new URLSearchParams();
+    
+    if (startDate) {
+        params.append('start_date', startDate);
+    }
+    if (endDate) {
+        params.append('end_date', endDate);
+    }
+    
+    const queryString = params.toString();
+    if (queryString) {
+        url += `?${queryString}`;
+    }
+    
+    return api.get(url);
+};
+
 const getSalesReport = async (startDate, endDate) => {
     return api.get(
         `/admin/reports/sales?start_date=${startDate}&end_date=${endDate}`
@@ -1052,6 +1072,7 @@ export default {
     testProductUpload,
     updateProduct,
     deleteProduct,
+    getDashboardStats,
     getSalesReport,
     getCustomerReport,
     getProductReport,

@@ -77,22 +77,83 @@ const ReportsScreen = () => {
 
             const startDateStr = startDate.toISOString().split("T")[0];
 
-            // Fetch all reports data including new revenue API
+            // Fetch all reports data using optimized APIs
             const [
+                dashboardReport,
                 revenueReport,
                 salesReport,
                 customerReport,
                 productReport,
-                dashboardStats,
             ] = await Promise.allSettled([
+                apiService.getDashboardStats(startDateStr, endDate),
                 apiService.getOrderRevenue(startDateStr, endDate),
                 apiService.getSalesReport(startDateStr, endDate),
                 apiService.getCustomerReport(startDateStr, endDate),
                 apiService.getProductReport(startDateStr, endDate),
-                fetchDashboardStats(startDateStr, endDate),
             ]);
 
-            // Process revenue data from new API
+            // Process dashboard data for overview tab
+            if (
+                dashboardReport.status === "fulfilled" &&
+                dashboardReport.value.status === 200
+            ) {
+                const dashData = dashboardReport.value.data.data;
+                const overviewData = [
+                    {
+                        title: "Tổng số khách hàng",
+                        value: dashData.total_customers || 0,
+                        icon: "users",
+                        iconType: "Feather",
+                        color: Colors.primary,
+                        change: "+12%",
+                    },
+                    {
+                        title: "Tổng số nhân viên",
+                        value: dashData.total_staff || 0,
+                        icon: "user-friends",
+                        iconType: "FontAwesome5",
+                        color: Colors.secondary,
+                        change: "+2%",
+                    },
+                    {
+                        title: "Tổng sản phẩm",
+                        value: dashData.total_products || 0,
+                        icon: "package",
+                        iconType: "Feather",
+                        color: Colors.warning,
+                        change: "+8%",
+                    },
+                    {
+                        title: "Tổng số đơn hàng",
+                        value: dashData.total_orders || 0,
+                        icon: "shopping-bag",
+                        iconType: "Feather",
+                        color: Colors.success,
+                        change: "+25%",
+                    },
+                    {
+                        title: "Giỏ hàng đang hoạt động",
+                        value: dashData.total_carts || 0,
+                        icon: "shopping-cart",
+                        iconType: "Feather",
+                        color: Colors.info,
+                        change: "-5%",
+                    },
+                    {
+                        title: "Doanh thu",
+                        value: `${new Intl.NumberFormat("vi-VN").format(
+                            dashData.revenue?.total_revenue || 0
+                        )} VND`,
+                        icon: "dollar-sign",
+                        iconType: "Feather",
+                        color: Colors.success,
+                        change: "+18%",
+                    },
+                ];
+                setOverviewStats(overviewData);
+            }
+
+            // Process revenue data for sales tab
             if (
                 revenueReport.status === "fulfilled" &&
                 revenueReport.value.status === 200
@@ -105,20 +166,29 @@ const ReportsScreen = () => {
                     growthRate: 0, // Calculate if you have previous period data
                     revenueByStatus: revenueData.revenue_by_status || [],
                 });
-            } else if (
-                salesReport.status === "fulfilled" &&
-                salesReport.value.status === 200
-            ) {
-                // Fallback to old API if new one fails
-                setSalesData(salesReport.value.data);
             }
 
-            // Process customer data
+            // Process customer data with correct key mapping
             if (
                 customerReport.status === "fulfilled" &&
                 customerReport.value.status === 200
             ) {
-                setCustomerData(customerReport.value.data);
+                const custData = customerReport.value.data;
+                const totalCustomers = custData.summary?.total_customers || custData.totalCustomers || 0;
+                const newCustomers = custData.summary?.new_customers || custData.newCustomers || 0;
+                const returningCustomers = custData.summary?.returning_customers || custData.returningCustomers || 0;
+                
+                // Calculate retention rate client-side
+                const retentionRate = totalCustomers > 0 
+                    ? Math.round((returningCustomers / totalCustomers) * 100) 
+                    : 0;
+                
+                setCustomerData({
+                    totalCustomers,
+                    newCustomers,
+                    returningCustomers,
+                    customerRetentionRate: retentionRate,
+                });
             }
 
             // Process product data
@@ -126,12 +196,13 @@ const ReportsScreen = () => {
                 productReport.status === "fulfilled" &&
                 productReport.value.status === 200
             ) {
-                setProductData(productReport.value.data);
-            }
-
-            // Process dashboard stats
-            if (dashboardStats.status === "fulfilled") {
-                setOverviewStats(dashboardStats.value);
+                const prodData = productReport.value.data;
+                setProductData({
+                    totalProducts: prodData.totalProducts || 0,
+                    topSellingProducts: prodData.topSellingProducts || [],
+                    lowStockProducts: [], // Not available from backend yet
+                    categoryPerformance: [], // Not available from backend yet
+                });
             }
         } catch (error) {
             console.error("Error fetching reports data:", error);
@@ -142,98 +213,11 @@ const ReportsScreen = () => {
         }
     };
 
+    // This function is no longer needed as we use the single dashboard API
+    // Keeping for backwards compatibility if needed
     const fetchDashboardStats = async (startDateStr, endDate) => {
-        try {
-            const [
-                customersRes,
-                staffRes,
-                productsRes,
-                ordersRes,
-                revenueReport,
-                cartsRes,
-            ] = await Promise.all([
-                apiService.getTotalCustomers(),
-                apiService.getTotalStaff(),
-                apiService.getTotalProducts(),
-                apiService.getOrderStatistics(),
-                apiService.getOrderRevenue(startDateStr, endDate),
-                apiService.getTotalCarts(),
-            ]);
-
-            // Safely extract values
-            const safeGetValue = (obj, path, defaultValue = 0) => {
-                try {
-                    const keys = path.split(".");
-                    let value = obj;
-                    for (const key of keys) {
-                        value = value?.[key];
-                    }
-                    return value ?? defaultValue;
-                } catch (e) {
-                    return defaultValue;
-                }
-            };
-
-            // Extract revenue data from the new API
-            const revenueData = revenueReport?.data?.data || {};
-            const totalRevenue = revenueData.total_revenue || salesData.totalRevenue || 0;
-
-            return [
-                {
-                    title: "Tổng số khách hàng",
-                    value: safeGetValue(customersRes, "data.data.total", 0),
-                    icon: "users",
-                    iconType: "Feather",
-                    color: Colors.primary,
-                    change: "+12%",
-                },
-                {
-                    title: "Tổng số nhân viên",
-                    value: safeGetValue(staffRes, "data.data.total", 0),
-                    icon: "user-friends",
-                    iconType: "FontAwesome5",
-                    color: Colors.secondary,
-                    change: "+2%",
-                },
-                {
-                    title: "Tổng sản phẩm",
-                    value: safeGetValue(productsRes, "data.data.total", 0),
-                    icon: "package",
-                    iconType: "Feather",
-                    color: Colors.warning,
-                    change: "+8%",
-                },
-                {
-                    title: "Tổng số đơn hàng",
-                    value: safeGetValue(ordersRes, "data.total", 0),
-                    icon: "shopping-bag",
-                    iconType: "Feather",
-                    color: Colors.success,
-                    change: "+25%",
-                },
-                {
-                    title: "Giỏ hàng đang hoạt động",
-                    value: safeGetValue(cartsRes, "data.data.total", 0),
-                    icon: "shopping-cart",
-                    iconType: "Feather",
-                    color: Colors.info,
-                    change: "-5%",
-                },
-                {
-                    title: "Doanh thu",
-                    value: `${new Intl.NumberFormat("vi-VN").format(
-                        totalRevenue
-                    )} VND`,
-                    icon: "dollar-sign",
-                    iconType: "Feather",
-                    color: Colors.success,
-                    change: "+18%",
-                },
-            ];
-        } catch (error) {
-            console.error("Error fetching dashboard stats:", error);
-            return [];
-        }
+        console.log("fetchDashboardStats is deprecated. Use getDashboardStats API instead.");
+        return [];
     };
 
     const handleRefresh = () => {
@@ -499,7 +483,7 @@ const ReportsScreen = () => {
                     <Text style={styles.metricLabel}>Tỷ lệ giữ chân</Text>
                 </View>
             </View>
-            S
+            
             <View style={styles.chartPlaceholder}>
                 <Feather
                     name="pie-chart"
@@ -540,32 +524,7 @@ const ReportsScreen = () => {
                 )}
             </View>
 
-            <View style={styles.productSection}>
-                <Text style={styles.subsectionTitle}>
-                    Thông báo hàng sắp hết
-                </Text>
-                {productData.lowStockProducts.length === 0 ? (
-                    <Text style={styles.emptyText}>
-                        Tất cả sản phẩm đều có sẵn trong kho
-                    </Text>
-                ) : (
-                    productData.lowStockProducts.map((product, index) => (
-                        <View key={index} style={styles.productItem}>
-                            <Text style={styles.productName}>
-                                {product.name}
-                            </Text>
-                            <Text
-                                style={[
-                                    styles.productStock,
-                                    { color: Colors.error },
-                                ]}
-                            >
-                                {product.stock} left
-                            </Text>
-                        </View>
-                    ))
-                )}
-            </View>
+            {/* Low stock products section removed - not available from backend yet */}
 
             <View style={styles.chartPlaceholder}>
                 <Feather
