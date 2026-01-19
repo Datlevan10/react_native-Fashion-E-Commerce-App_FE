@@ -50,7 +50,8 @@ const ForgotPasswordScreen = ({ navigation }) => {
         onChangeText={setPhoneNumber}
         placeholder="Enter your phone number"
         prefixIcon="phone"
-        keyboardType="phone-pad"
+        keyboardType="decimal-pad"
+        maxLength={10}
       />
 
       <CustomHandleButton

@@ -46,16 +46,24 @@ export const getProductCountsForOrders = async (orders) => {
   try {
     // Create a map to store promises for each unique order_id
     const orderIds = [...new Set(orders.map(order => order.order_id || order.id).filter(Boolean))];
-    const productCountPromises = orderIds.map(async (orderId) => {
-      try {
-        const response = await api.get(`/order_details/order/${orderId}`);
-        const orderDetails = response.data.data || response.data || [];
-        return { orderId, count: orderDetails.length };
-      } catch (error) {
-        console.error(`Error fetching product count for order ${orderId}:`, error);
-        return { orderId, count: 0 };
-      }
+
+const productCountPromises = orderIds.map(async (orderId) => {
+  try {
+    const response = await api.get(`/order_details/order/${orderId}`, {
+      // Cho phép Axios coi 404 là hợp lệ, không throw error
+      validateStatus: (status) => (status >= 200 && status < 300) || status === 404,
     });
+
+    // Nếu 404 thì response.data sẽ chỉ có message, coi như không có dữ liệu
+    const orderDetails = response.data?.data || [];
+    return { orderId, count: orderDetails.length };
+  } catch (error) {
+    // Không log bất kỳ lỗi nào
+    return { orderId, count: 0 };
+  }
+});
+
+
 
     // Wait for all promises to resolve
     const productCounts = await Promise.all(productCountPromises);

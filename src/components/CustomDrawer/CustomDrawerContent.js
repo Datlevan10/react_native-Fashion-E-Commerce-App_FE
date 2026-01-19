@@ -50,13 +50,13 @@ const CustomDrawerContent = ({ navigation, onClose }) => {
       screen: 'CustomerManagement',
       color: Colors.success,
     },
-    {
-      title: 'Quản lý nhân viên',
-      icon: 'user-friends',
-      iconType: 'FontAwesome5',
-      screen: 'StaffManagement',
-      color: Colors.warning,
-    },
+    // {
+    //   title: 'Quản lý nhân viên',
+    //   icon: 'user-friends',
+    //   iconType: 'FontAwesome5',
+    //   screen: 'StaffManagement',
+    //   color: Colors.warning,
+    // },
     {
       title: 'Quản lý sản phẩm',
       icon: 'package',

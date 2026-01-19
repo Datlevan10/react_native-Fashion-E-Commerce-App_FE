@@ -156,13 +156,13 @@ export default function AdminDashboardScreen({ navigation }) {
       color: Colors.primary,
       onPress: () => navigation.navigate("OrderManagement"),
     },
-    {
-      title: "Quản lý nhân viên",
-      icon: "users",
-      iconType: "Feather",
-      color: Colors.secondary,
-      onPress: () => navigation.navigate("StaffManagement"),
-    },
+    // {
+    //   title: "Quản lý nhân viên",
+    //   icon: "users",
+    //   iconType: "Feather",
+    //   color: Colors.secondary,
+    //   onPress: () => navigation.navigate("StaffManagement"),
+    // },
     {
       title: "Khách hàng",
       icon: "user-friends",

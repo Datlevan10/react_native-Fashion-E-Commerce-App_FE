@@ -25,28 +25,28 @@ export default function HomeScreen({ navigation }) {
         name="Explore"
         component={ExploreScreen}
         options={{
-          tabBarLabel: ({ focused }) => <CustomTabLabel label="Explore" />,
+          tabBarLabel: ({ focused }) => <CustomTabLabel label="Khám phá" />,
         }}
       />
       <Tab.Screen
         name="Wishlist"
         component={WishlistScreen}
         options={{
-          tabBarLabel: ({ focused }) => <CustomTabLabel label="Wishlist" />,
+          tabBarLabel: ({ focused }) => <CustomTabLabel label="Yêu thích" />,
         }}
       />
       <Tab.Screen
         name="Notification"
         component={NotificationScreen}
         options={{
-          tabBarLabel: ({ focused }) => <CustomTabLabel label="Notification" />,
+          tabBarLabel: ({ focused }) => <CustomTabLabel label="Thông báo" />,
         }}
       />
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarLabel: ({ focused }) => <CustomTabLabel label="Profile" />,
+          tabBarLabel: ({ focused }) => <CustomTabLabel label="Cá nhân" />,
         }}
       />
     </CustomTabNavigator>

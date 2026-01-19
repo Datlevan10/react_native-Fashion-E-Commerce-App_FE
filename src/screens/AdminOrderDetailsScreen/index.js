@@ -65,14 +65,14 @@ export default function AdminOrderDetailsScreen({ navigation, route }) {
   const updateOrderStatus = async (status) => {
     try {
       setUpdating(true);
-      await ApiService.updateOrderStatusAdmin(orderId, status);
+      await ApiService.updateOrderStatus(orderId, status);
       Alert.alert(
         "Thành công", 
         `Đơn hàng đã được ${status === 'confirmed' ? 'xác nhận' : 'cập nhật trạng thái'} thành công`,
         [{ text: "OK", onPress: () => navigation.goBack() }]
       );
     } catch (error) {
-      console.error("Error updating order status (admin):", error);
+      //console.error("Error updating order status (admin):", error);
       Alert.alert("Lỗi", "Không thể cập nhật trạng thái đơn hàng");
     } finally {
       setUpdating(false);

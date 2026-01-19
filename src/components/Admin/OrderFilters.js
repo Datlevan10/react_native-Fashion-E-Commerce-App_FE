@@ -5,21 +5,21 @@ import Colors from "../../styles/Color";
 
 const OrderFilters = ({ filters, onFiltersChange, onClose }) => {
   const statusOptions = [
-    { value: "all", label: "All Status" },
-    { value: "pending", label: "Pending" },
-    { value: "confirmed", label: "Confirmed" },
-    { value: "shipped", label: "Shipped" },
-    { value: "delivered", label: "Delivered" },
-    { value: "cancelled", label: "Cancelled" },
+    { value: "all", label: "Tất cả trạng thái" },
+    { value: "pending", label: "Chưa giải quyết" },
+    { value: "confirmed", label: "Đã xác nhận" },
+    { value: "shipped", label: "Đã vận chuyển" },
+    { value: "delivered", label: "Đã giao hàng" },
+    { value: "cancelled", label: "Đã hủy" },
   ];
 
   const dateRangeOptions = [
-    { value: "all", label: "All Time" },
-    { value: "today", label: "Today" },
-    { value: "yesterday", label: "Yesterday" },
-    { value: "week", label: "This Week" },
-    { value: "month", label: "This Month" },
-    { value: "custom", label: "Custom Range" },
+    { value: "all", label: "Tất cả" },
+    { value: "today", label: "Hôm nay" },
+    { value: "yesterday", label: "Hôm qua" },
+    { value: "week", label: "Tuần này" },
+    { value: "month", label: "Tháng này" },
+    { value: "custom", label: "Tùy chỉnh" },
   ];
 
   const sortOptions = [

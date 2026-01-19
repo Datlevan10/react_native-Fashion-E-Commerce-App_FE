@@ -70,13 +70,13 @@ const AdminLayout = ({ navigation }) => {
             title: 'Quản lý khách hàng',
           }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="StaffManagement"
           component={StaffManagementScreen}
           options={{
             title: 'Quản lý nhân viên',
           }}
-        />
+        /> */}
         <Stack.Screen
           name="ProductManagement"
           component={ProductManagementScreen}

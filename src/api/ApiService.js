@@ -737,31 +737,28 @@ const testProductUpload = async (productData) => {
 };
 
 const updateProduct = async (productId, productData, hasImages = false) => {
-    // Check if we're dealing with FormData or regular JSON
     const isFormData = productData instanceof FormData || hasImages;
 
-    productData.append("_method", "PUT");
-
     if (isFormData) {
-        // If productData is not already FormData, it means hasImages is true but data is JSON
-        // This shouldn't happen with current implementation, but keeping for safety
+        // Nếu chưa phải FormData mà hasImages = true thì báo lỗi
         if (!(productData instanceof FormData)) {
-            console.error(
-                "Error: hasImages is true but productData is not FormData"
-            );
+            console.error("Error: hasImages is true but productData is not FormData");
             return api.put(`/products/${productId}`, productData, {
                 headers: { "Content-Type": "application/json" },
             });
         }
 
-        // _method field should already be in the FormData from the caller
-        // Use POST with _method override for FormData
+        // Chỉ append khi chắc chắn là FormData
+        productData.append("_method", "PUT");
+
         return api.post(`/products/${productId}`, productData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
     } else {
-        // Regular JSON update without image
-        return api.put(`/products/${productId}`, productData, {
+        // Nếu là JSON thì thêm _method bằng cách merge object
+        const payload = { ...productData, _method: "PUT" };
+
+        return api.put(`/products/${productId}`, payload, {
             headers: { "Content-Type": "application/json" },
         });
     }
@@ -882,53 +879,50 @@ const getOrderDetailById = async (orderDetailId) => {
 
 // Get product count for multiple orders efficiently
 const getProductCountsForOrders = async (orders) => {
-    try {
-        // Create a map to store promises for each unique order_id
-        const orderIds = [
-            ...new Set(
-                orders
-                    .map((order) => order.order_id || order.id)
-                    .filter(Boolean)
-            ),
-        ];
-        const productCountPromises = orderIds.map(async (orderId) => {
-            try {
-                const response = await api.get(
-                    `/order_details/order/${orderId}`
-                );
-                const orderDetails = response.data.data || response.data || [];
-                return { orderId, count: orderDetails.length };
-            } catch (error) {
-                console.error(
-                    `Error fetching product count for order ${orderId}:`,
-                    error
-                );
-                return { orderId, count: 0 };
-            }
-        });
+  try {
+    // Lấy danh sách orderId duy nhất
+    const orderIds = [
+      ...new Set(
+        orders.map((order) => order.order_id || order.id).filter(Boolean)
+      ),
+    ];
 
-        // Wait for all promises to resolve
-        const productCounts = await Promise.all(productCountPromises);
+    const productCountPromises = orderIds.map(async (orderId) => {
+      const response = await api.get(`/order_details/order/${orderId}`, {
+        // Cho phép 404 không bị coi là lỗi
+        validateStatus: (status) =>
+          (status >= 200 && status < 300) || status === 404,
+      });
 
-        // Create a map of order_id to product count
-        const countMap = {};
-        productCounts.forEach(({ orderId, count }) => {
-            countMap[orderId] = count;
-        });
+      // Nếu có data dạng mảng thì dùng, nếu không thì coi như []
+      const orderDetails = Array.isArray(response.data?.data)
+        ? response.data.data
+        : [];
 
-        // Add product_count to each order
-        return orders.map((order) => ({
-            ...order,
-            product_count: countMap[order.order_id || order.id] || 0,
-        }));
-    } catch (error) {
-        console.error("Error fetching product counts:", error);
-        // Return orders with default count of 0 if API fails
-        return orders.map((order) => ({
-            ...order,
-            product_count: 0,
-        }));
-    }
+      return { orderId, count: orderDetails.length };
+    });
+
+    // Chờ tất cả promise hoàn thành
+    const productCounts = await Promise.all(productCountPromises);
+
+    // Tạo map orderId -> count
+    const countMap = {};
+    productCounts.forEach(({ orderId, count }) => {
+      countMap[orderId] = count;
+    });
+
+    // Gắn product_count vào từng order
+    return orders.map((order) => ({
+      ...order,
+      product_count: countMap[order.order_id || order.id] || 0,
+    }));
+  } catch {
+    // Không log lỗi, chỉ trả về count = 0
+    return orders.map((order) => ({
+      ...order,
+      product_count: 0,
+    }));
+  }
 };
 
 // Cancel order (for customer use)

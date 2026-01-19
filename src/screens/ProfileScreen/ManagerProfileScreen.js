@@ -261,7 +261,8 @@ export default function ManagerProfileScreen({ navigation }) {
           onChangeText={setPhoneNumber}
           placeholder="Enter new your phone number"
           prefixIcon="phone"
-          keyboardType="phone-pad"
+          keyboardType="decimal-pad"
+          maxLength={10}
         />
         <CustomTextInput
           value={address}

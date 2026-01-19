@@ -264,7 +264,8 @@ export default function RegisterScreen({ navigation }) {
             }}
             placeholder="Nhập số điện thoại của bạn"
             prefixIcon="phone"
-            keyboardType="phone-pad"
+            keyboardType="decimal-pad"
+            maxLength={10}
           />
           {errorMessages.phoneNumber ? (
             <Text style={styles.errorText}>{errorMessages.phoneNumber}</Text>

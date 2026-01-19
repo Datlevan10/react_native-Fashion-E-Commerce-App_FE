@@ -245,7 +245,7 @@ export default function AdminLoginScreen({ navigation }) {
                         </View>
 
                         <View style={styles.otherOptions}>
-                            <TouchableOpacity
+                            {/* <TouchableOpacity
                                 style={styles.optionButton}
                                 onPress={() =>
                                     navigation.navigate("StaffLoginScreen")
@@ -259,7 +259,7 @@ export default function AdminLoginScreen({ navigation }) {
                                 <Text style={styles.optionText}>
                                     Staff Login
                                 </Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                             <TouchableOpacity
                                 style={styles.optionButton}
                                 onPress={() =>

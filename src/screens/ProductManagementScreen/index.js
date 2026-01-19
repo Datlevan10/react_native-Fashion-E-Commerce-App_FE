@@ -849,7 +849,7 @@ const ProductManagementScreen = () => {
                     {/* Sizes, Colors, and Variants */}
                     <View style={styles.inputContainer}>
                         <Text style={styles.inputLabel}>
-                            Kích thước màn hình (14 inch : 17, 17.3 inch : 17.3
+                            Kích thước màn hình (15, 15.6, 16,
                             ... phân cách bằng dấu phẩy)
                         </Text>
                         <TextInput
@@ -859,6 +859,7 @@ const ProductManagementScreen = () => {
                                 setFormData({ ...formData, sizes: text })
                             }
                             placeholder="13 inch, 15 inch"
+                            
                         />
                     </View>
 

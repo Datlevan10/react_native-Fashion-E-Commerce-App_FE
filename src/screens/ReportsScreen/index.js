@@ -312,42 +312,46 @@ const ReportsScreen = () => {
     );
 
     const renderTabSelector = () => (
-        <View style={styles.tabContainer}>
-            {[
-                { key: "overview", label: "Tổng quan", icon: "bar-chart" },
-                { key: "sales", label: "Việc bán hàng", icon: "trending-up" },
-                { key: "customers", label: "Khách hàng", icon: "users" },
-                { key: "products", label: "Các sản phẩm", icon: "package" },
-            ].map((tab) => (
-                <TouchableOpacity
-                    key={tab.key}
-                    style={[
-                        styles.tabButton,
-                        activeTab === tab.key && styles.activeTabButton,
-                    ]}
-                    onPress={() => setActiveTab(tab.key)}
-                >
-                    <Feather
-                        name={tab.icon}
-                        size={16}
-                        color={
-                            activeTab === tab.key
-                                ? Colors.whiteColor
-                                : Colors.textSecondary
-                        }
-                    />
-                    <Text
-                        style={[
-                            styles.tabText,
-                            activeTab === tab.key && styles.activeTabText,
-                        ]}
-                    >
-                        {tab.label}
-                    </Text>
-                </TouchableOpacity>
-            ))}
-        </View>
-    );
+  <ScrollView 
+    horizontal 
+    showsHorizontalScrollIndicator={false} 
+    contentContainerStyle={styles.tabContainer}
+  >
+    {[
+      { key: "overview", label: "Tổng quan", icon: "bar-chart" },
+      { key: "sales", label: "Việc bán hàng", icon: "trending-up" },
+      { key: "customers", label: "Khách hàng", icon: "users" },
+      { key: "products", label: "Các sản phẩm", icon: "package" },
+    ].map((tab) => (
+      <TouchableOpacity
+        key={tab.key}
+        style={[
+          styles.tabButton,
+          activeTab === tab.key && styles.activeTabButton,
+        ]}
+        onPress={() => setActiveTab(tab.key)}
+      >
+        <Feather
+          name={tab.icon}
+          size={16}
+          color={
+            activeTab === tab.key
+              ? Colors.whiteColor
+              : Colors.textSecondary
+          }
+        />
+        <Text
+          style={[
+            styles.tabText,
+            activeTab === tab.key && styles.activeTabText,
+          ]}
+        >
+          {tab.label}
+        </Text>
+      </TouchableOpacity>
+    ))}
+  </ScrollView>
+);
 
     const renderOverviewTab = () => (
         <View style={styles.tabContent}>

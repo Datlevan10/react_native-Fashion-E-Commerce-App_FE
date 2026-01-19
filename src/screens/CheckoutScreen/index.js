@@ -245,7 +245,8 @@ export default function CheckoutScreen({ navigation }) {
                     value={newPhoneNumber}
                     onChangeText={setNewPhoneNumber}
                     placeholder="Enter new phone number"
-                    keyboardType="phone-pad"
+                    keyboardType="decimal-pad"
+                    maxLength={10}
                   />
                 </View>
                 <TouchableOpacity

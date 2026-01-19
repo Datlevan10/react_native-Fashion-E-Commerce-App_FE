@@ -548,7 +548,8 @@ const OrderScreen = ({ navigation, route }) => {
                                 handleInputChange("shipping_phone", value)
                             }
                             placeholder="Nhập số điện thoại của bạn"
-                            keyboardType="phone-pad"
+                            keyboardType="decimal-pad"
+                            maxLength={10}
                         />
                     </View>
                 </View>
